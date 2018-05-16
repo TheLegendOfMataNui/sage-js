@@ -1,0 +1,9 @@
+{
+	"private": true,
+	"workspaces": [
+		"core",
+		"cli",
+		"res-osi",
+		"res-osi-asm"
+	]
+}

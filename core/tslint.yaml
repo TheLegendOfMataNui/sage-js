@@ -1,0 +1,14 @@
+extends:
+- ../tslint.yaml
+
+linterOptions:
+  exclude:
+  - lib
+
+rulesDirectory:
+
+formattersDirectory:
+
+rules:
+
+jsRules:

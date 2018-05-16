@@ -1,0 +1,77 @@
+import {typed} from '../../typed';
+import {ExceptionValue} from '../../exception/value';
+import {Primitive} from '../class';
+
+/**
+ * The base class for string types.
+ *
+ * @param value Value of the string.
+ */
+export abstract class PrimitiveString extends Primitive {
+
+	/**
+	 * String value.
+	 */
+	public readonly value: string;
+
+	constructor(value = '') {
+		super();
+		this.value = value;
+
+		// Make sure value is not modified by mistake.
+		Object.defineProperty(this, 'value', {
+			configurable: false,
+			enumerable: true,
+			writable: false,
+			value
+		});
+	}
+
+	/**
+	 * Convert to encoded string.
+	 *
+	 * @return Encoded string.
+	 */
+	public stringEncode() {
+		return JSON.stringify(this.value);
+	}
+
+	/**
+	 * Decode new from string.
+	 *
+	 * @param str String encoded.
+	 * @return New instancce.
+	 */
+	public stringDecodeNew(str: string) {
+		const Constructor = this.constructor as
+			new(value: string) => PrimitiveString;
+		let s = '';
+		try {
+			s = JSON.parse(str);
+		}
+		catch (err) {
+			const msg = err.message || '';
+			throw new ExceptionValue(`Cannot decode: ${msg}`);
+		}
+		return new Constructor(s) as this;
+	}
+
+	/**
+	 * Get the float value.
+	 *
+	 * @return Float value.
+	 */
+	public valueOf() {
+		return this.value;
+	}
+
+	/**
+	 * Get the float value as string.
+	 *
+	 * @return Float string.
+	 */
+	public toString() {
+		return `${this.value}`;
+	}
+}
+typed.decorate('PrimitiveString')(PrimitiveString);

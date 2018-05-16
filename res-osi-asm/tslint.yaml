@@ -1,0 +1,18 @@
+extends:
+- ../tslint.yaml
+
+linterOptions:
+  exclude:
+  - lib
+  - antlr
+  - src/antlr/ASMLexer.ts
+  - src/antlr/ASMListener.ts
+  - src/antlr/ASMParser.ts
+
+rulesDirectory:
+
+formattersDirectory:
+
+rules:
+
+jsRules:

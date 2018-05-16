@@ -1,0 +1,26 @@
+{
+	"compileOnSave": false,
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "commonjs",
+		"moduleResolution": "Node",
+		"lib": ["ESNext", "ES2017.SharedMemory"],
+		"newLine": "lf",
+
+		"alwaysStrict": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"forceConsistentCasingInFileNames": true,
+
+		"strictFunctionTypes": false,
+		"strictNullChecks": true,
+		"strictPropertyInitialization": true,
+
+		"noImplicitAny": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+
+		"declaration": true,
+		"emitDeclarationOnly": true
+	}
+}

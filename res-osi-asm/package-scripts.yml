@@ -1,0 +1,33 @@
+scripts:
+  lint:
+    default: concurrently "nps lint.scripts" "nps lint.src"
+    watch: concurrently "nps lint.scripts || true" "nps lint.src || true"
+    scripts: eslint .
+    src: tslint -p . -t stylish
+
+  clean:
+    default: concurrently "nps clean.logs" "nps clean.antlr" "nps clean.lib"
+    logs: rimraf npm-debug.log* yarn-debug.log* yarn-error.log*
+    antlr: rimraf antlr/*.ts antlr/*.interp antlr/*.tokens antlr/*.java antlr/*.ts antlr/*.class
+    lib: rimraf lib
+
+  build:
+    default: concurrently "nps build.lib"
+    antlr:
+      default: concurrently "nps build.antlr.asm"
+      asm:
+        default: nps build.antlr.asm.build build.antlr.asm.copy
+        build: antlr4ts antlr/ASM.g4
+        copy: cp antlr/ASM*.ts src/antlr/
+    lib:
+      default: concurrently "nps build.lib.dts" "nps build.lib.cjs" "nps build.lib.mjs"
+      dts: tsc
+      cjs: gulp buildLibCjs
+      mjs: gulp buildLibMjs
+
+  test:
+    default: concurrently "nps test.node"
+    node: jasmine
+
+  watch:
+    nodemon --exec 'nps clean lint.watch build test'
