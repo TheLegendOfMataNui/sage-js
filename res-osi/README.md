@@ -29,7 +29,6 @@ Includes a number of abstract instructions that can be used to make manipulating
 | GetMemberValueString          | 3    | sp8n          | Replaces GetMemberValue with inline strings from symbol table                              |
 | SetMemberValueString          | 3    | sp8n          | Replaces SetMemberValue with inline strings from symbol table                              |
 
-
 \* Instructions that jump to targets include an offset to handle jumps to point between instructions (compensates for off-by-one error in some original code).
 
 ## BCL
