@@ -1,7 +1,7 @@
 {
 	"name": "@sage-js/res-osi",
 	"description": "SAGE resource OSI",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"keywords": [],
 	"main": "lib/index",
 	"types": "lib/index.d.ts",
