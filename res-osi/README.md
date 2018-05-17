@@ -21,6 +21,14 @@ Includes a number of abstract instructions that can be used to make manipulating
 | BranchTarget                  | 0    | i32u          | Target for CompareAndBranchIfFalseTarget and BranchAlwaysTarget with same ID               |
 | BranchAlwaysTarget            | 3    | i32u i16s     | Replaces BranchAlways, with target and offset*                                             |
 | CompareAndBranchIfFalseTarget | 3    | i32u i16s     | Replaces CompareAndBranchIfFalse, with target and offset*                                  |
+| PushConstantStringString      | 3    | sp8n          | Replaces PushConstantString with inline strings from string table                          |
+| GetThisMemberFunctionString   | 3    | sp8n          | Replaces GetThisMemberFunction with inline strings from symbol table                       |
+| GetThisMemberValueString      | 3    | sp8n          | Replaces GetThisMemberValue with inline strings from symbol table                          |
+| SetThisMemberValueString      | 3    | sp8n          | Replaces SetThisMemberValue with inline strings from symbol table                          |
+| GetMemberFunctionString       | 3    | sp8n          | Replaces GetMemberFunction with inline strings from symbol table                           |
+| GetMemberValueString          | 3    | sp8n          | Replaces GetMemberValue with inline strings from symbol table                              |
+| SetMemberValueString          | 3    | sp8n          | Replaces SetMemberValue with inline strings from symbol table                              |
+
 
 \* Instructions that jump to targets include an offset to handle jumps to point between instructions (compensates for off-by-one error in some original code).
 
