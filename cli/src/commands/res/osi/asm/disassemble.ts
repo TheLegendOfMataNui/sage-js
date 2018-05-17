@@ -40,7 +40,21 @@ export default class ResOSIASMDisassemble extends Command {
 	 * Flags.
 	 */
 	public static flags = {
-		help: flags.help({char: 'h'})
+		help: flags.help({char: 'h'}),
+		'no-transform-string': flags.boolean({
+			description: 'no transform string inline'
+		}),
+		'no-transform-symbol': flags.boolean({
+			description: 'no transform symbol inline'
+		}),
+		'no-transform-jump': flags.boolean({
+			description:
+				'no transform jump targets (not position independent)'
+		}),
+		'no-transform-branch': flags.boolean({
+			description:
+				'no transform branch targets (not position independent)'
+		})
 	};
 
 	/**
@@ -78,9 +92,19 @@ export default class ResOSIASMDisassemble extends Command {
 		const osi = new OSI();
 		view.readReadable(osi);
 
-		// Transform BCL instructions to abstract instructions.
-		osi.transformAbstractJumpAdd();
-		osi.transformAbstractBranchAdd();
+		// Transform BCL instructions to abstract instructions, unless disabled.
+		if (!flags['no-transform-jump']) {
+			osi.transformAbstractJumpAdd();
+		}
+		if (!flags['no-transform-branch']) {
+			osi.transformAbstractBranchAdd();
+		}
+		if (!flags['no-transform-string']) {
+			osi.transformAbstractStringAdd();
+		}
+		if (!flags['no-transform-symbol']) {
+			osi.transformAbstractSymbolAdd();
+		}
 
 		// Disassemble OSI data to an AST.
 		const disassembler = new AssemblyDisassembler();

@@ -96,7 +96,11 @@ ARGUMENTS
   ASM  assembly file to output
 
 OPTIONS
-  -h, --help  show CLI help
+  -h, --help             show CLI help
+  --no-transform-branch  no transform branch targets (not position independent)
+  --no-transform-jump    no transform jump targets (not position independent)
+  --no-transform-string  no transform string inline
+  --no-transform-symbol  no transform symbol inline
 
 ALIASES
   $ sage-js res:osi:asm:d

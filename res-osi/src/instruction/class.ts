@@ -1,8 +1,8 @@
 import {
+	Primitive,
 	Structure
 } from '@sage-js/core';
 import {ExceptionInvalid} from '../exception/invalid';
-import {InstructionArgType} from '../types';
 import {typed} from '../typed';
 
 /**
@@ -59,12 +59,12 @@ export abstract class Instruction extends Structure {
 	 * @param index Argument index.
 	 * @return Argument value or null.
 	 */
-	public argGet(index: number): InstructionArgType {
+	public argGet(index: number): Primitive {
 		const r = (this as any)[`arg${index}`];
 		if (!r) {
 			throw new ExceptionInvalid(`Invalid argument index: ${index}`);
 		}
-		return r as InstructionArgType;
+		return r as Primitive;
 	}
 
 	/**
@@ -73,7 +73,7 @@ export abstract class Instruction extends Structure {
 	 * @param index Argument index.
 	 * @return Argument value or null.
 	 */
-	public argSet(index: number, value: InstructionArgType) {
+	public argSet(index: number, value: Primitive) {
 		const Type = (this.constructor as any)[`ARG${index}`];
 		const cast = typed.cast(value, Type);
 		if (!cast) {

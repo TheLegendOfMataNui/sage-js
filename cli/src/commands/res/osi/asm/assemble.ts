@@ -85,6 +85,9 @@ export default class ResOSIASMAssemble extends Command {
 		// Transform abstract instructions to BCL instructions.
 		osi.transformAbstractJumpRemove();
 		osi.transformAbstractBranchRemove();
+		osi.transformAbstractStringRemove();
+		osi.transformAbstractSymbolRemove();
+		osi.updateOffsets();
 
 		// Write OSI to buffer.
 		const buffer = Buffer.alloc(osi.size);

@@ -1,4 +1,5 @@
 import {
+	Primitive,
 	PrimitiveInt,
 	PrimitiveFloat,
 	PrimitiveString,
@@ -12,7 +13,6 @@ import {
 	ClassDefinitionProperty,
 	ClassDefinitionMethod,
 	ISubroutineTableEntry,
-	InstructionArgType,
 	Instruction,
 	InstructionAbstractCompareAndBranchIfFalseBranchTarget,
 	InstructionAbstractBranchAlwaysBranchTarget,
@@ -752,7 +752,7 @@ export class AssemblyDisassembler extends Assembly {
 	 */
 	public disassembleInstructionArgument(
 		osi: OSI,
-		argument: InstructionArgType,
+		argument: Primitive,
 		argumentIndex: number,
 		instruction: Instruction
 	): ASTNodeArgument {

@@ -610,7 +610,7 @@ export class AssemblyAssembler extends Assembly {
 		const Instruction = instructionByName(name);
 		if (!Instruction) {
 			throw new ExceptionASTNode(
-				'Argument is not a number',
+				`Unknown instruction name: ${name}`,
 				ast
 			);
 		}

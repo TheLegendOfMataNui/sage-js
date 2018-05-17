@@ -1,9 +1,9 @@
 import {
-	BufferView
+	BufferView,
+	Primitive
 } from '@sage-js/core';
 import {typed} from '../../typed';
 import {ExceptionInvalid} from '../../exception/invalid';
-import {InstructionAbstractArgType} from '../../types';
 import {Instruction} from '../class';
 
 /**
@@ -72,8 +72,8 @@ extends Instruction {
 	 * @param index Argument index.
 	 * @return Argument value or null.
 	 */
-	public argGet(index: number): InstructionAbstractArgType {
-		return super.argGet(index) as InstructionAbstractArgType;
+	public argGet(index: number): Primitive {
+		return super.argGet(index) as Primitive;
 	}
 
 	/**
@@ -82,7 +82,7 @@ extends Instruction {
 	 * @param index Argument index.
 	 * @return Argument value or null.
 	 */
-	public argSet(index: number, value: InstructionAbstractArgType) {
+	public argSet(index: number, value: Primitive) {
 		super.argSet(index, value);
 	}
 }

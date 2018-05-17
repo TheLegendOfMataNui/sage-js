@@ -1,11 +1,11 @@
 import {
 	BufferView,
+	Primitive,
 	PrimitiveInt8U,
 	utilNumberToHex
 } from '@sage-js/core';
 import {ExceptionInvalid} from '../../exception/invalid';
 import {typed} from '../../typed';
-import {InstructionBCLArgType} from '../../types';
 import {Instruction} from '../class';
 
 /**
@@ -44,8 +44,8 @@ extends Instruction {
 	 * @param index Argument index.
 	 * @return Argument value or null.
 	 */
-	public argGet(index: number): InstructionBCLArgType {
-		return super.argGet(index) as InstructionBCLArgType;
+	public argGet(index: number): Primitive {
+		return super.argGet(index) as Primitive;
 	}
 
 	/**
@@ -54,7 +54,7 @@ extends Instruction {
 	 * @param index Argument index.
 	 * @return Argument value or null.
 	 */
-	public argSet(index: number, value: InstructionBCLArgType) {
+	public argSet(index: number, value: Primitive) {
 		super.argSet(index, value);
 	}
 

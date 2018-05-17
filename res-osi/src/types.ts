@@ -1,12 +1,5 @@
 import {
-	PrimitiveInt8S,
-	PrimitiveInt8U,
-	PrimitiveInt16S,
-	PrimitiveInt16U,
-	PrimitiveInt32S,
 	PrimitiveInt32U,
-	PrimitiveFloat32,
-	PrimitiveFloat64,
 	PrimitiveStringP8N
 } from '@sage-js/core';
 import {ClassDefinition} from './classdefinition/class';
@@ -14,30 +7,6 @@ import {Subroutine} from './subroutine';
 import {Instruction} from './instruction/class';
 import {InstructionBCL} from './instruction/bcl/class';
 import {InstructionAbstract} from './instruction/abstract/class';
-
-export type InstructionBCLArgType =
-	PrimitiveInt8S |
-	PrimitiveInt8U |
-	PrimitiveInt16S |
-	PrimitiveInt16U |
-	PrimitiveInt32S |
-	PrimitiveInt32U |
-	PrimitiveFloat32 |
-	PrimitiveFloat64;
-
-export type InstructionAbstractArgType =
-	PrimitiveInt8S |
-	PrimitiveInt8U |
-	PrimitiveInt16S |
-	PrimitiveInt16U |
-	PrimitiveInt32S |
-	PrimitiveInt32U |
-	PrimitiveFloat32 |
-	PrimitiveFloat64;
-
-export type InstructionArgType =
-	InstructionBCLArgType |
-	InstructionAbstractArgType;
 
 export interface IClassDefinitionTableEntry {
 	structure: ClassDefinition;

@@ -1,8 +1,10 @@
 import {
 	Structure,
 	BufferView,
+	PrimitiveInt16U,
 	PrimitiveInt32S,
 	PrimitiveInt32U,
+	PrimitiveStringP8N,
 	utilNumberToHex
 } from '@sage-js/core';
 import {typed} from './typed';
@@ -22,6 +24,66 @@ import {InstructionAbstractJumpTarget} from './instruction/abstract/jumptarget';
 import {
 	InstructionAbstractPushConstanti32JumpTarget
 } from './instruction/abstract/pushconstanti32jumptarget';
+import {
+	InstructionBCLPushConstantString
+} from './instruction/bcl/pushconstantstring';
+import {
+	InstructionAbstractPushConstantStringString
+} from './instruction/abstract/pushconstantstringstring';
+
+import {
+	InstructionBCLGetThisMemberFunction
+} from './instruction/bcl/getthismemberfunction';
+import {
+	InstructionBCLGetThisMemberValue
+} from './instruction/bcl/getthismembervalue';
+import {
+	InstructionBCLSetThisMemberValue
+} from './instruction/bcl/setthismembervalue';
+import {
+	InstructionBCLGetMemberFunction
+} from './instruction/bcl/getmemberfunction';
+import {
+	InstructionBCLGetMemberValue
+} from './instruction/bcl/getmembervalue';
+import {
+	InstructionBCLSetMemberValue
+} from './instruction/bcl/setmembervalue';
+import {
+	InstructionAbstractGetThisMemberFunctionString
+} from './instruction/abstract/getthismemberfunctionstring';
+import {
+	InstructionAbstractGetThisMemberValueString
+} from './instruction/abstract/getthismembervaluestring';
+import {
+	InstructionAbstractSetThisMemberValueString
+} from './instruction/abstract/setthismembervaluestring';
+import {
+	InstructionAbstractGetMemberFunctionString
+} from './instruction/abstract/getmemberfunctionstring';
+import {
+	InstructionAbstractGetMemberValueString
+} from './instruction/abstract/getmembervaluestring';
+import {
+	InstructionAbstractSetMemberValueString
+} from './instruction/abstract/setmembervaluestring';
+
+const InstructionSymbolBCLs = [
+	InstructionBCLGetThisMemberFunction,
+	InstructionBCLGetThisMemberValue,
+	InstructionBCLSetThisMemberValue,
+	InstructionBCLGetMemberFunction,
+	InstructionBCLGetMemberValue,
+	InstructionBCLSetMemberValue
+];
+const InstructionSymbolAbstracts = [
+	InstructionAbstractGetThisMemberFunctionString,
+	InstructionAbstractGetThisMemberValueString,
+	InstructionAbstractSetThisMemberValueString,
+	InstructionAbstractGetMemberFunctionString,
+	InstructionAbstractGetMemberValueString,
+	InstructionAbstractSetMemberValueString
+];
 
 /**
  * Find the previous offset BCL instruction.
@@ -470,6 +532,174 @@ export class OSI extends Structure {
 	public transformAbstractBranchRemove() {
 		for (const {subroutine} of this.subroutines.itter()) {
 			subroutine.transformAbstractBranchRemove();
+		}
+	}
+
+	/**
+	 * Transform bytecode string references to abstract.
+	 */
+	public transformAbstractStringAdd() {
+		const tableEntries = this.header.stringTable.entries;
+		for (const {subroutine} of this.subroutines.itter()) {
+			const instructions = subroutine.instructions;
+			for (let i = 0; i < instructions.length; i++) {
+				const instruction = instructions[i];
+				const pushStr = typed.cast(
+					instruction,
+					InstructionBCLPushConstantString
+				);
+				if (!pushStr) {
+					continue;
+				}
+
+				// Try to lookup string, or skip.
+				const index = pushStr.arg0.value;
+				const str = tableEntries[index];
+				if (!str) {
+					continue;
+				}
+
+				// Replace with abstract instruction.
+				const inst = new InstructionAbstractPushConstantStringString();
+				inst.arg0 = str;
+				instructions[i] = inst;
+			}
+		}
+	}
+
+	/**
+	 * Transform abstract string references to bytecode.
+	 * Remember to update offsets after this.
+	 */
+	public transformAbstractStringRemove() {
+		const tableEntries = this.header.stringTable.entries;
+		const stringToIndex: Map<string, number> = new Map();
+		for (let i = 0; i < tableEntries.length; i++) {
+			stringToIndex.set(tableEntries[i].value, i);
+		}
+
+		const addEntry = (str: PrimitiveStringP8N) => {
+			const i = tableEntries.length;
+			stringToIndex.set(str.value, i);
+			tableEntries.push(str);
+			return i;
+		};
+
+		for (const {subroutine} of this.subroutines.itter()) {
+			const instructions = subroutine.instructions;
+			for (let i = 0; i < instructions.length; i++) {
+				const instruction = instructions[i];
+				const cast = typed.cast(
+					instruction,
+					InstructionAbstractPushConstantStringString
+				);
+				if (!cast) {
+					continue;
+				}
+
+				// Lookup index, create new if needed.
+				let index = stringToIndex.get(cast.arg0.value);
+				if (index === undefined) {
+					index = addEntry(cast.arg0);
+				}
+
+				// Replace with BCL instruction.
+				const inst = new InstructionBCLPushConstantString();
+				inst.arg0 = new PrimitiveInt16U(index);
+				instructions[i] = inst;
+			}
+		}
+	}
+
+	/**
+	 * Transform bytecode symbol references to abstract.
+	 */
+	public transformAbstractSymbolAdd() {
+		const tableEntries = this.header.symbolTable.entries;
+		for (const {subroutine} of this.subroutines.itter()) {
+			const instructions = subroutine.instructions;
+			for (let i = 0; i < instructions.length; i++) {
+				const instruction = instructions[i];
+
+				for (let j = 0; j < InstructionSymbolBCLs.length; j++) {
+					const InstructionBCL = InstructionSymbolBCLs[j];
+					const InstructionAbstract = InstructionSymbolAbstracts[j];
+
+					const pushSymbol = typed.cast(
+						instruction,
+						InstructionBCL
+					);
+					if (!pushSymbol) {
+						continue;
+					}
+
+					// Try to lookup symbol, or skip.
+					const index = pushSymbol.arg0.value;
+					const str = tableEntries[index];
+					if (!str) {
+						break;
+					}
+
+					// Replace with abstract instruction.
+					const inst = new InstructionAbstract();
+					inst.arg0 = str;
+					instructions[i] = inst;
+
+					break;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Transform abstract symbol references to bytecode.
+	 * Remember to update offsets after this.
+	 */
+	public transformAbstractSymbolRemove() {
+		const tableEntries = this.header.symbolTable.entries;
+		const stringToIndex: Map<string, number> = new Map();
+		for (let i = 0; i < tableEntries.length; i++) {
+			stringToIndex.set(tableEntries[i].value, i);
+		}
+
+		const addEntry = (str: PrimitiveStringP8N) => {
+			const i = tableEntries.length;
+			stringToIndex.set(str.value, i);
+			tableEntries.push(str);
+			return i;
+		};
+
+		for (const {subroutine} of this.subroutines.itter()) {
+			const instructions = subroutine.instructions;
+			for (let i = 0; i < instructions.length; i++) {
+				const instruction = instructions[i];
+
+				for (let j = 0; j < InstructionSymbolBCLs.length; j++) {
+					const InstructionBCL = InstructionSymbolBCLs[j];
+					const InstructionAbstract = InstructionSymbolAbstracts[j];
+
+					const cast = typed.cast(
+						instruction,
+						InstructionAbstract
+					);
+					if (!cast) {
+						continue;
+					}
+
+					// Lookup index, create new if needed.
+					let index = stringToIndex.get(cast.arg0.value);
+					if (index === undefined) {
+						index = addEntry(cast.arg0);
+					}
+
+					// Replace with BCL instruction.
+					const inst = new InstructionBCL();
+					inst.arg0 = new PrimitiveInt16U(index);
+					instructions[i] = inst;
+
+					break;
+				}
+			}
 		}
 	}
 }
