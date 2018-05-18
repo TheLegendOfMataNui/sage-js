@@ -13,7 +13,8 @@
 		"lint": "nps lint",
 		"build": "nps build",
 		"test": "nps test",
-		"watch": "nps watch"
+		"watch": "nps watch",
+		"prepack": "nps clean lint build test"
 	},
 	"repository": "https://github.com/TheLegendOfMataNui/sage-js.git",
 	"bugs": "https://github.com/TheLegendOfMataNui/sage-js/issues",
