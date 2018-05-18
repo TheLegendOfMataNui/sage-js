@@ -17,7 +17,7 @@ extends InstructionBCL {
 	/**
 	 * Instruction size.
 	 */
-	public static readonly SIZE = 6;
+	public static readonly SIZE = 4;
 
 	/**
 	 * Opcode name.
@@ -32,7 +32,7 @@ extends InstructionBCL {
 	/**
 	 * Argument count.
 	 */
-	public static readonly ARGC = 3;
+	public static readonly ARGC = 2;
 
 	/**
 	 * Argument 0.
@@ -42,12 +42,7 @@ extends InstructionBCL {
 	/**
 	 * Argument 1.
 	 */
-	public static readonly ARG1 = PrimitiveInt16U;
-
-	/**
-	 * Argument 2.
-	 */
-	public static readonly ARG2 = PrimitiveInt8S;
+	public static readonly ARG1 = PrimitiveInt8S;
 
 	/**
 	 * Argument 0.
@@ -57,12 +52,7 @@ extends InstructionBCL {
 	/**
 	 * Argument 1.
 	 */
-	public arg1 = new PrimitiveInt16U();
-
-	/**
-	 * Argument 2.
-	 */
-	public arg2 = new PrimitiveInt8S();
+	public arg1 = new PrimitiveInt8S();
 
 	/**
 	 * Resource constructor.
@@ -80,7 +70,6 @@ extends InstructionBCL {
 		const r = this.createNew();
 		r.arg0 = this.arg0;
 		r.arg1 = this.arg1;
-		r.arg2 = this.arg2;
 		return r;
 	}
 
@@ -93,7 +82,6 @@ extends InstructionBCL {
 		this._readOpcode(view);
 		this.arg0 = view.readReadableNew(this.arg0);
 		this.arg1 = view.readReadableNew(this.arg1);
-		this.arg2 = view.readReadableNew(this.arg2);
 	}
 
 	/**
@@ -105,6 +93,5 @@ extends InstructionBCL {
 		view.writeWritable(this.opcode);
 		view.writeWritable(this.arg0);
 		view.writeWritable(this.arg1);
-		view.writeWritable(this.arg2);
 	}
 }

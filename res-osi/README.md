@@ -100,11 +100,11 @@ Includes a number of abstract instructions that can be used to make manipulating
 | 0x78 | ShiftRight                  | 1    |               | -2 +1 | Bitwise shift right last 2 values on stack                      |
 | 0x7A | Increment                   | 1    |               | -1 +1 | Increment value of last value on stack by 1                     |
 | 0x7B | Decrement                   | 1    |               | -1 +1 | Decrement value of last value on stack by 1                     |
-| 0x80 | GetGameVariable             | 5    | i16u i16u     |       | *Implementation appears non-functional*                         |
-| 0x81 | SetGameVariable             | 5    | i16u i16u     |       | *Implementation appears non-functional*                         |
-| 0x82 | CallGameFunction            | 6    | i16u i16u i8s | ?\*   | Call game function by hashed namespace and name with N args     |
-| 0x83 | CallGameFunctionFromString  | 6    | i16u i16u i8s | ?\*   | Call game function by string namespace and name with N args     |
-| 0x84 | CallGameFunctionDirect      | 6    | i32s i8s      | ?\*   | Call game function by address (*should only appear in memory*)  |
+| 0x80 | GetGameVariable             | 5    | i16u i16u     |       | Get variable by ns and name string index *seems non-functional* |
+| 0x81 | SetGameVariable             | 5    | i16u i16u     |       | Set variable by ns and name string index *seems non-functional* |
+| 0x82 | CallGameFunction            | 6    | i16u i16u i8s | ?\*   | Call native by ns and name string index, N args                 |
+| 0x83 | CallGameFunctionFromString  | 6    | i16u i8s      | ?\*   | Call native by ns string index and stack string, N args         |
+| 0x84 | CallGameFunctionDirect      | 6    | i32s i8s      | ?\*   | Call native by address, N args (*should only exist in memory*)  |
 | 0x90 | CreateArray                 | 1    |               | +1    | Create array                                                    |
 | 0x91 | GetArrayValue               | 1    |               | -2 +1 | Get array or string table element                               |
 | 0x92 | ElementsInArray             | 1    |               | -1 +1 | Get array or string table length                                |
