@@ -69,7 +69,7 @@ export default class ResOSIASMAssemble extends Command {
 
 		// Decode ASM to AST.
 		const decoder = new ParserDecoder();
-		const ast = decoder.decode(asm);
+		const ast = decoder.decode(asm, args.asm);
 
 		// Throw for syntax errors.
 		// TODO: Better error messages:
