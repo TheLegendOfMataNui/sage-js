@@ -558,6 +558,7 @@ export class AssemblyDisassembler extends Assembly {
 	) {
 		const strings = osi.header.stringTable.entries;
 		const symbols = osi.header.symbolTable.entries;
+		const globals = osi.header.globalTable.entries;
 
 		const r: ASTNodeStatement[] = [];
 
@@ -639,7 +640,20 @@ export class AssemblyDisassembler extends Assembly {
 				}
 				const index = cast.arg0.value;
 				// tslint:disable-next-line: no-bitwise
-				comment = index & 0x8000 ? 'global' : 'local';
+				if (index & 0x8000) {
+					comment = 'global';
+
+					// tslint:disable-next-line: no-bitwise
+					const nameIndex = index ^ 0x8000;
+					const globalName = globals[nameIndex];
+					if (globalName) {
+						comment += ' ' + globalName.stringEncode();
+					}
+				}
+				else {
+					comment = 'local';
+				}
+				break OUTER;
 			}
 
 			// Add newline after branchers.
