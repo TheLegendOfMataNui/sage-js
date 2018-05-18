@@ -27,6 +27,10 @@ import {
 	InstructionBCLGetMemberValue,
 	InstructionBCLSetMemberValue,
 	InstructionBCLLineNumberAlt1,
+	InstructionBCLGetGameVariable,
+	InstructionBCLSetGameVariable,
+	InstructionBCLCallGameFunction,
+	InstructionBCLCallGameFunctionFromString,
 	InstructionBCLCallGameFunctionDirect,
 	InstructionBCLGetVariableValue,
 	InstructionBCLSetVariableValue,
@@ -604,6 +608,9 @@ export class AssemblyDisassembler extends Assembly {
 					if (str) {
 						comment = str.stringEncode();
 					}
+					else {
+						comment = '?';
+					}
 					break OUTER;
 				}
 			}
@@ -626,6 +633,53 @@ export class AssemblyDisassembler extends Assembly {
 				if (symbol) {
 					comment = symbol.stringEncode();
 				}
+				else {
+					comment = '?';
+				}
+				break OUTER;
+			}
+
+			// Lookup strings for functions.
+			{
+				const cast = typed.cast(
+					instruction,
+					InstructionBCLCallGameFunctionFromString
+				);
+				if (cast) {
+					const index = cast.arg0.value;
+					const str = strings[index];
+					if (str) {
+						comment = str.stringEncode();
+					}
+					else {
+						comment = '?';
+					}
+					break OUTER;
+				}
+			}
+			for (const Instruction of [
+				InstructionBCLGetGameVariable,
+				InstructionBCLSetGameVariable,
+				InstructionBCLCallGameFunction,
+			]) {
+				const cast = typed.cast(instruction, Instruction);
+				if (!cast) {
+					continue;
+				}
+				const indexNS = cast.arg0.value;
+				const indexName = cast.arg1.value;
+				const info = ['?', '?'];
+
+				const stringNS = strings[indexNS];
+				if (stringNS) {
+					info[0] = stringNS.stringEncode();
+				}
+				const stringName = strings[indexName];
+				if (stringName) {
+					info[1] = stringName.stringEncode();
+				}
+				comment = info.join('.');
+
 				break OUTER;
 			}
 
