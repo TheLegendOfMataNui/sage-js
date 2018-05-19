@@ -11,3 +11,7 @@ export * from './setmembervaluestring';
 export * from './getthismemberfunctionstring';
 export * from './getthismembervaluestring';
 export * from './setthismembervaluestring';
+export * from './getgamevariablestring';
+export * from './setgamevariablestring';
+export * from './callgamefunctionstring';
+export * from './callgamefunctionfromstringstring';

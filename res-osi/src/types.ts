@@ -32,3 +32,9 @@ export type MapInstructionAbstractByName =
 
 export type MapInstructionByName =
 	Map<string, new() => Instruction>;
+
+export interface ITransformString {
+	BCL: new() => InstructionBCL;
+	ABS: new() => InstructionAbstract;
+	args: Set<number>;
+}
