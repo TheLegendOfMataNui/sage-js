@@ -15,3 +15,5 @@ export * from './getgamevariablestring';
 export * from './setgamevariablestring';
 export * from './callgamefunctionstring';
 export * from './callgamefunctionfromstringstring';
+export * from './getvariablevalueglobalstring';
+export * from './setvariablevalueglobalstring';

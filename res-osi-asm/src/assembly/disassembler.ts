@@ -703,6 +703,9 @@ export class AssemblyDisassembler extends Assembly {
 					if (globalName) {
 						comment += ' ' + globalName.stringEncode();
 					}
+					else {
+						comment += ' ?';
+					}
 				}
 				else {
 					comment = 'local';
