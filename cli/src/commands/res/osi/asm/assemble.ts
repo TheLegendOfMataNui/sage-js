@@ -87,6 +87,7 @@ export default class ResOSIASMAssemble extends Command {
 		osi.transformAbstractBranchRemove();
 		osi.transformAbstractStringRemove();
 		osi.transformAbstractSymbolRemove();
+		osi.transformAbstractGlobalRemove();
 		osi.updateOffsets();
 
 		// Write OSI to buffer.

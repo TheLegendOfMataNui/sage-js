@@ -1,7 +1,6 @@
 import {
 	Structure,
 	BufferView,
-	PrimitiveInt,
 	PrimitiveInt16U,
 	PrimitiveInt32S,
 	PrimitiveInt32U,
@@ -120,6 +119,22 @@ import {
 	InstructionAbstractSetMemberValueString
 } from './instruction/abstract/setmembervaluestring';
 
+// GetVariableValue
+import {
+	InstructionBCLGetVariableValue
+} from './instruction/bcl/getvariablevalue';
+import {
+	InstructionAbstractGetVariableValueGlobalString
+} from './instruction/abstract/getvariablevalueglobalstring';
+
+// SetVariableValue
+import {
+	InstructionBCLSetVariableValue
+} from './instruction/bcl/setvariablevalue';
+import {
+	InstructionAbstractSetVariableValueGlobalString
+} from './instruction/abstract/setvariablevalueglobalstring';
+
 const InstructionStrings: ITransformString[] = [
 	{
 		BCL: InstructionBCLPushConstantString,
@@ -177,6 +192,19 @@ const InstructionSymbols: ITransformString[] = [
 	{
 		BCL: InstructionBCLSetMemberValue,
 		ABS: InstructionAbstractSetMemberValueString,
+		args: new Set([0])
+	}
+];
+
+const InstructionGlobals: ITransformString[] = [
+	{
+		BCL: InstructionBCLGetVariableValue,
+		ABS: InstructionAbstractGetVariableValueGlobalString,
+		args: new Set([0])
+	},
+	{
+		BCL: InstructionBCLSetVariableValue,
+		ABS: InstructionAbstractSetVariableValueGlobalString,
 		args: new Set([0])
 	}
 ];
@@ -674,6 +702,37 @@ export class OSI extends Structure {
 	}
 
 	/**
+	 * Transform bytecode symbol references to abstract.
+	 */
+	public transformAbstractGlobalAdd() {
+		this._transformAbstractStringTableAdd(
+			this.header.globalTable,
+			InstructionGlobals,
+			index => {
+				// tslint:disable-next-line: no-bitwise
+				if (!(index.value & 0x8000)) {
+					return null;
+				}
+				// tslint:disable-next-line: no-bitwise
+				return new PrimitiveInt16U(index.value ^ 0x8000);
+			}
+		);
+	}
+
+	/**
+	 * Transform abstract symbol references to bytecode.
+	 * Remember to update offsets after this.
+	 */
+	public transformAbstractGlobalRemove() {
+		this._transformAbstractStringTableRemove(
+			this.header.globalTable,
+			InstructionGlobals,
+			// tslint:disable-next-line: no-bitwise
+			index => new PrimitiveInt16U(index.value | 0x8000)
+		);
+	}
+
+	/**
 	 * Generic transform for inline string table instrucitons add.
 	 *
 	 * @param table Table instance.
@@ -681,7 +740,10 @@ export class OSI extends Structure {
 	 */
 	protected _transformAbstractStringTableAdd(
 		table: StringP8NTable,
-		transforms: ITransformString[]
+		transforms: ITransformString[],
+		convertIndex: (
+			(index: PrimitiveInt16U) => PrimitiveInt16U | null
+		) | null = null
 	) {
 		const tableEntries = table.entries;
 		for (const {subroutine} of this.subroutines.itter()) {
@@ -704,7 +766,14 @@ export class OSI extends Structure {
 							continue;
 						}
 
-						const index = typed.tryCast(a, PrimitiveInt);
+						let index = typed.tryCast(a, PrimitiveInt16U);
+						if (convertIndex) {
+							const convert = convertIndex(index);
+							if (!convert) {
+								break OUTER;
+							}
+							index = convert;
+						}
 						const str = tableEntries[index.value];
 						if (!str) {
 							break OUTER;
@@ -728,11 +797,15 @@ export class OSI extends Structure {
 	 */
 	protected _transformAbstractStringTableRemove(
 		table: StringP8NTable,
-		transforms: ITransformString[]
+		transforms: ITransformString[],
+		convertIndex: (
+			(index: PrimitiveInt16U) => PrimitiveInt16U | null
+		) | null = null
 	) {
 		const tableEntries = table.entries;
 		const stringToIndex: Map<string, number> = new Map();
-		for (let i = 0; i < tableEntries.length; i++) {
+		// Loop backwards to favor first instance.
+		for (let i = tableEntries.length; i--;) {
 			stringToIndex.set(tableEntries[i].value, i);
 		}
 
@@ -748,7 +821,7 @@ export class OSI extends Structure {
 			for (let i = 0; i < instructions.length; i++) {
 				const instruction = instructions[i];
 
-				for (const {BCL, ABS, args} of transforms) {
+				OUTER: for (const {BCL, ABS, args} of transforms) {
 					const cast = typed.cast(instruction, ABS);
 					if (!cast) {
 						continue;
@@ -764,13 +837,20 @@ export class OSI extends Structure {
 						}
 
 						const str = typed.tryCast(a, PrimitiveStringP8N);
-						let index = stringToIndex.get(str.value);
-						if (index === undefined) {
-							index = addEntry(str);
+						let indexNumber = stringToIndex.get(str.value);
+						if (indexNumber === undefined) {
+							indexNumber = addEntry(str);
 						}
-						const int = new PrimitiveInt16U(index);
+						let index = new PrimitiveInt16U(indexNumber);
+						if (convertIndex) {
+							const convert = convertIndex(index);
+							if (!convert) {
+								break OUTER;
+							}
+							index = convert;
+						}
 
-						inst.argSet(j, int);
+						inst.argSet(j, index);
 					}
 
 					instructions[i] = inst;

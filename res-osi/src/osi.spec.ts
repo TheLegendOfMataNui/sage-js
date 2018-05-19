@@ -48,6 +48,22 @@ import {
 	InstructionAbstractSetMemberValueString
 } from './instruction/abstract/setmembervaluestring';
 
+// GetVariableValue
+import {
+	InstructionBCLGetVariableValue
+} from './instruction/bcl/getvariablevalue';
+import {
+	InstructionAbstractGetVariableValueGlobalString
+} from './instruction/abstract/getvariablevalueglobalstring';
+
+// SetVariableValue
+import {
+	InstructionBCLSetVariableValue
+} from './instruction/bcl/setvariablevalue';
+import {
+	InstructionAbstractSetVariableValueGlobalString
+} from './instruction/abstract/setvariablevalueglobalstring';
+
 import {OSI} from './osi';
 
 describe('OSI', () => {
@@ -164,5 +180,163 @@ describe('OSI', () => {
 				}
 			});
 		}
+	});
+
+	describe('transformAbstractGlobals*', () => {
+		it('GetVariableValue (global)', () => {
+			const osi = new OSI();
+			osi.header.versionMajor = new PrimitiveInt16S(4);
+			osi.header.versionMinor = new PrimitiveInt16S(1);
+			osi.header.initVersion();
+
+			const strp = new PrimitiveStringP8N('globalvar');
+			const strp2 = new PrimitiveStringP8N('globalvar');
+			const index = new PrimitiveInt16U(0x8000);
+
+			osi.header.globalTable.entries.push(strp, strp2);
+
+			const inst = new InstructionBCLGetVariableValue();
+			inst.arg0 = index;
+
+			const sub = osi.subroutines.addNew();
+			sub.subroutine.instructions.push(inst);
+
+			osi.transformAbstractGlobalAdd();
+
+			const instAbs = typed.tryCast(
+				sub.subroutine.instructions[0],
+				InstructionAbstractGetVariableValueGlobalString
+			);
+			expect(instAbs.arg0.value).toBe(strp.value);
+
+			osi.transformAbstractGlobalRemove();
+
+			const instBCL = typed.tryCast(
+				sub.subroutine.instructions[0],
+				InstructionBCLGetVariableValue
+			);
+			expect(instBCL.arg0.value).toBe(index.value);
+
+			osi.transformAbstractGlobalAdd();
+			osi.header.globalTable.entries = [];
+			osi.transformAbstractGlobalRemove();
+
+			const addedStr = osi.header.globalTable.entries[0];
+			if (addedStr) {
+				expect(addedStr.value).toBe(strp.value);
+			}
+			else {
+				expect(addedStr).toBeTruthy();
+			}
+		});
+
+		it('GetVariableValue (local)', () => {
+			const osi = new OSI();
+			osi.header.versionMajor = new PrimitiveInt16S(4);
+			osi.header.versionMinor = new PrimitiveInt16S(1);
+			osi.header.initVersion();
+
+			const index = new PrimitiveInt16U(0);
+
+			const inst = new InstructionBCLGetVariableValue();
+			inst.arg0 = index;
+
+			const sub = osi.subroutines.addNew();
+			sub.subroutine.instructions.push(inst);
+
+			osi.transformAbstractGlobalAdd();
+
+			const instBCL1 = typed.tryCast(
+				sub.subroutine.instructions[0],
+				InstructionBCLGetVariableValue
+			);
+			expect(instBCL1.arg0.value).toBe(index.value);
+
+			osi.transformAbstractGlobalRemove();
+
+			const instBCL2 = typed.tryCast(
+				sub.subroutine.instructions[0],
+				InstructionBCLGetVariableValue
+			);
+			expect(instBCL2.arg0.value).toBe(index.value);
+		});
+
+		it('SetVariableValue (global)', () => {
+			const osi = new OSI();
+			osi.header.versionMajor = new PrimitiveInt16S(4);
+			osi.header.versionMinor = new PrimitiveInt16S(1);
+			osi.header.initVersion();
+
+			const strp = new PrimitiveStringP8N('globalvar');
+			const strp2 = new PrimitiveStringP8N('globalvar');
+			const index = new PrimitiveInt16U(0x8000);
+
+			osi.header.globalTable.entries.push(strp, strp2);
+
+			const inst = new InstructionBCLSetVariableValue();
+			inst.arg0 = index;
+
+			const sub = osi.subroutines.addNew();
+			sub.subroutine.instructions.push(inst);
+
+			osi.transformAbstractGlobalAdd();
+
+			const instAbs = typed.tryCast(
+				sub.subroutine.instructions[0],
+				InstructionAbstractSetVariableValueGlobalString
+			);
+			expect(instAbs.arg0.value).toBe(strp.value);
+
+			osi.transformAbstractGlobalRemove();
+
+			const instBCL = typed.tryCast(
+				sub.subroutine.instructions[0],
+				InstructionBCLSetVariableValue
+			);
+			expect(instBCL.arg0.value).toBe(index.value);
+
+			osi.transformAbstractGlobalAdd();
+			osi.header.globalTable.entries = [];
+			osi.transformAbstractGlobalRemove();
+
+			const addedStr = osi.header.globalTable.entries[0];
+			if (addedStr) {
+				expect(addedStr.value).toBe(strp.value);
+			}
+			else {
+				expect(addedStr).toBeTruthy();
+			}
+		});
+
+		it('SetVariableValue (local)', () => {
+			const osi = new OSI();
+			osi.header.versionMajor = new PrimitiveInt16S(4);
+			osi.header.versionMinor = new PrimitiveInt16S(1);
+			osi.header.initVersion();
+
+			const index = new PrimitiveInt16U(0);
+
+			const inst = new InstructionBCLSetVariableValue();
+			inst.arg0 = index;
+
+			const sub = osi.subroutines.addNew();
+			sub.subroutine.instructions.push(inst);
+
+			osi.transformAbstractGlobalAdd();
+
+			const instBCL1 = typed.tryCast(
+				sub.subroutine.instructions[0],
+				InstructionBCLSetVariableValue
+			);
+			expect(instBCL1.arg0.value).toBe(index.value);
+
+			osi.transformAbstractGlobalRemove();
+
+			const instBCL2 = typed.tryCast(
+				sub.subroutine.instructions[0],
+				InstructionBCLSetVariableValue
+			);
+			expect(instBCL2.arg0.value).toBe(index.value);
+		});
 	});
 });
