@@ -64,5 +64,7 @@ export default class Info extends Command {
 		]) {
 			this.log(`  ${info[0]}: ${info[1]}`);
 		}
+
+		this.log('');
 	}
 }
