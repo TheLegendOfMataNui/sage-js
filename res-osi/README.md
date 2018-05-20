@@ -99,7 +99,7 @@ Includes a number of abstract instructions that can be used to make manipulating
 | 0x73 | Divide                      | 1    |               | -2 +1 | Divide the last 2 values on stack                               |
 | 0x74 | Power                       | 1    |               | -2 +1 | Raise to power the last 2 values on stack                       |
 | 0x75 | Modulus                     | 1    |               | -2 +1 | Modulus operator the last 2 values on stack                     |
-| 0x76 | BitwiseNot                  | 1    |               | -2 +1 | Bitwise not last 2 values on stack                              |
+| 0x76 | BitwiseNot                  | 1    |               | -1 +1 | Bitwise not last value on stack                                 |
 | 0x77 | ShiftLeft                   | 1    |               | -2 +1 | Bitwise shift left last 2 values on stack                       |
 | 0x78 | ShiftRight                  | 1    |               | -2 +1 | Bitwise shift right last 2 values on stack                      |
 | 0x7A | Increment                   | 1    |               | -1 +1 | Increment value of last value on stack by 1                     |
