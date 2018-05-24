@@ -64,6 +64,14 @@ import {
 	InstructionAbstractSetVariableValueGlobalString
 } from './instruction/abstract/setvariablevalueglobalstring';
 
+// CreateObject
+import {
+	InstructionBCLCreateObject
+} from './instruction/bcl/createobject';
+import {
+	InstructionAbstractCreateObjectString
+} from './instruction/abstract/createobjectstring';
+
 import {OSI} from './osi';
 
 describe('OSI', () => {
@@ -337,6 +345,44 @@ describe('OSI', () => {
 				InstructionBCLSetVariableValue
 			);
 			expect(instBCL2.arg0.value).toBe(index.value);
+		});
+	});
+
+	describe('transformAbstractClass*', () => {
+		it('CreateObject', () => {
+			const osi = new OSI();
+			osi.header.versionMajor = new PrimitiveInt16S(4);
+			osi.header.versionMinor = new PrimitiveInt16S(1);
+			osi.header.initVersion();
+
+			const cstruct = new osi.header.classTable.ClassDefinition();
+			const cname = new PrimitiveStringP8N('classical');
+			osi.header.classTable.entries.push({
+				name: cname,
+				structure: cstruct
+			});
+
+			const inst = new InstructionBCLCreateObject();
+			inst.arg0 = new PrimitiveInt16U(0);
+
+			const sub = osi.subroutines.addNew();
+			sub.subroutine.instructions.push(inst);
+
+			osi.transformAbstractClassAdd();
+
+			const instAbs = typed.tryCast(
+				sub.subroutine.instructions[0],
+				InstructionAbstractCreateObjectString
+			);
+			expect(instAbs.arg0.value).toBe(cname.value);
+
+			osi.transformAbstractClassRemove();
+
+			const instBCL = typed.tryCast(
+				sub.subroutine.instructions[0],
+				InstructionBCLCreateObject
+			);
+			expect(instBCL.arg0.value).toBe(0);
 		});
 	});
 });

@@ -135,6 +135,14 @@ import {
 	InstructionAbstractSetVariableValueGlobalString
 } from './instruction/abstract/setvariablevalueglobalstring';
 
+// CreateObject
+import {
+	InstructionBCLCreateObject
+} from './instruction/bcl/createobject';
+import {
+	InstructionAbstractCreateObjectString
+} from './instruction/abstract/createobjectstring';
+
 const InstructionStrings: ITransformString[] = [
 	{
 		BCL: InstructionBCLPushConstantString,
@@ -730,6 +738,78 @@ export class OSI extends Structure {
 			// tslint:disable-next-line: no-bitwise
 			index => new PrimitiveInt16U(index.value | 0x8000)
 		);
+	}
+
+	/**
+	 * Transform bytecode class references to abstract.
+	 */
+	public transformAbstractClassAdd() {
+		const entries = this.header.classTable.entries;
+		for (const {subroutine} of this.subroutines.itter()) {
+			const instructions = subroutine.instructions;
+			for (let i = 0; i < instructions.length; i++) {
+				const instruction = instructions[i];
+
+				const cast = typed.cast(
+					instruction, InstructionBCLCreateObject
+				);
+				if (!cast) {
+					continue;
+				}
+
+				const index = cast.arg0.value;
+				const classInfo = entries[index];
+				if (!classInfo) {
+					continue;
+				}
+
+				const inst = new InstructionAbstractCreateObjectString();
+				inst.arg0 = classInfo.name;
+
+				instructions[i] = inst;
+			}
+		}
+	}
+
+	/**
+	 * Transform abstract class references to bytecode.
+	 */
+	public transformAbstractClassRemove() {
+		const classes: Map<string, number> = new Map();
+		const entries = this.header.classTable.entries;
+		for (let i = 0; i < entries.length; i++) {
+			const classInfo = entries[i];
+			const name = classInfo.name.value;
+			if (classes.has(name)) {
+				throw new ExceptionInvalid(`Duplicate class name: ${name}`);
+			}
+			classes.set(name, i);
+		}
+
+		for (const {subroutine} of this.subroutines.itter()) {
+			const instructions = subroutine.instructions;
+			for (let i = 0; i < instructions.length; i++) {
+				const instruction = instructions[i];
+
+				const cast = typed.cast(
+					instruction, InstructionAbstractCreateObjectString
+				);
+				if (!cast) {
+					continue;
+				}
+
+				const name = cast.arg0.value;
+				const index = classes.get(name);
+				if (index === undefined) {
+					throw new ExceptionInvalid(`Unknown class name: ${name}`);
+				}
+
+				const inst = new InstructionBCLCreateObject();
+				inst.arg0 = new PrimitiveInt16U(index);
+
+				instructions[i] = inst;
+			}
+		}
 	}
 
 	/**
