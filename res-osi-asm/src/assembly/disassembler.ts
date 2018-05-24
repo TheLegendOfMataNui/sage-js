@@ -20,6 +20,7 @@ import {
 	InstructionBCLBranchAlways,
 	InstructionAbstractBranchTarget,
 	InstructionBCLPushConstantString,
+	InstructionBCLCreateObject,
 	InstructionBCLGetThisMemberFunction,
 	InstructionBCLGetThisMemberValue,
 	InstructionBCLSetThisMemberValue,
@@ -568,6 +569,7 @@ export class AssemblyDisassembler extends Assembly {
 		const strings = osi.header.stringTable.entries;
 		const symbols = osi.header.symbolTable.entries;
 		const globals = osi.header.globalTable.entries;
+		const classes = osi.header.classTable.entries;
 
 		const r: ASTNodeStatement[] = [];
 
@@ -612,6 +614,23 @@ export class AssemblyDisassembler extends Assembly {
 					const str = strings[index];
 					if (str) {
 						comment = str.stringEncode();
+					}
+					else {
+						comment = '?';
+					}
+					break OUTER;
+				}
+			}
+
+			// Lookup class.
+			{
+				const cast =
+					typed.cast(instruction, InstructionBCLCreateObject);
+				if (cast) {
+					const index = cast.arg0.value;
+					const classEntry = classes[index];
+					if (classEntry) {
+						comment = classEntry.name.stringEncode();
 					}
 					else {
 						comment = '?';
