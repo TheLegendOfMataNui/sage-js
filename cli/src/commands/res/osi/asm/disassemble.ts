@@ -50,6 +50,9 @@ export default class ResOSIASMDisassemble extends Command {
 		'no-transform-global': flags.boolean({
 			description: 'no transform global inline'
 		}),
+		'no-transform-class': flags.boolean({
+			description: 'no transform class inline'
+		}),
 		'no-transform-jump': flags.boolean({
 			description:
 				'no transform jump targets (not position independent)'
@@ -110,6 +113,9 @@ export default class ResOSIASMDisassemble extends Command {
 		}
 		if (!flags['no-transform-global']) {
 			osi.transformAbstractGlobalAdd();
+		}
+		if (!flags['no-transform-class']) {
+			osi.transformAbstractClassAdd();
 		}
 
 		// Disassemble OSI data to an AST.
