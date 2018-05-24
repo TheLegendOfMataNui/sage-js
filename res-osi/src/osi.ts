@@ -879,7 +879,7 @@ export class OSI extends Structure {
 		table: StringP8NTable,
 		transforms: ITransformString[],
 		convertIndex: (
-			(index: PrimitiveInt16U) => PrimitiveInt16U | null
+			(index: PrimitiveInt16U) => PrimitiveInt16U
 		) | null = null
 	) {
 		const tableEntries = table.entries;
@@ -901,7 +901,7 @@ export class OSI extends Structure {
 			for (let i = 0; i < instructions.length; i++) {
 				const instruction = instructions[i];
 
-				OUTER: for (const {BCL, ABS, args} of transforms) {
+				for (const {BCL, ABS, args} of transforms) {
 					const cast = typed.cast(instruction, ABS);
 					if (!cast) {
 						continue;
@@ -923,11 +923,7 @@ export class OSI extends Structure {
 						}
 						let index = new PrimitiveInt16U(indexNumber);
 						if (convertIndex) {
-							const convert = convertIndex(index);
-							if (!convert) {
-								break OUTER;
-							}
-							index = convert;
+							index = convertIndex(index);
 						}
 
 						inst.argSet(j, index);
