@@ -45,6 +45,8 @@ export abstract class PrimitiveString extends Primitive {
 	public stringDecodeNew(str: string) {
 		const Constructor = this.constructor as
 			new(value: string) => PrimitiveString;
+
+		// Try to decode JSON.
 		let s = '';
 		try {
 			s = JSON.parse(str);
@@ -53,6 +55,13 @@ export abstract class PrimitiveString extends Primitive {
 			const msg = err.message || '';
 			throw new ExceptionValue(`Cannot decode: ${msg}`);
 		}
+
+		// Check the decode type.
+		const st = typeof s;
+		if (st !== 'string') {
+			throw new ExceptionValue(`Unexpected decode type: ${st}`);
+		}
+
 		return new Constructor(s) as this;
 	}
 
