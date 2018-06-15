@@ -41,6 +41,9 @@ export default class ResOSIASMDisassemble extends Command {
 	 */
 	public static flags = {
 		help: flags.help({char: 'h'}),
+		'no-transform-class-symbols': flags.boolean({
+			description: 'no transform class symbols inline'
+		}),
 		'no-transform-string': flags.boolean({
 			description: 'no transform string inline'
 		}),
@@ -120,6 +123,9 @@ export default class ResOSIASMDisassemble extends Command {
 
 		// Disassemble OSI data to an AST.
 		const disassembler = new AssemblyDisassembler();
+		if (flags['no-transform-class-symbols']) {
+			disassembler.disableTransformSymbols = true;
+		}
 		const ast = disassembler.disassemble(osi);
 
 		// Add banner comments to the AST.
