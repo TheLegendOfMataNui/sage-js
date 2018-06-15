@@ -13,7 +13,7 @@ scripts:
     manifest: rimraf oclif.manifest.json
 
   build:
-    default: concurrently "nps build.lib" "nps build.manifest" "nps build.readme"
+    default: nps build.lib build.manifest build.readme
     lib:
       default: concurrently "nps build.lib.dts" "nps build.lib.cjs" "nps build.lib.mjs"
       dts: tsc

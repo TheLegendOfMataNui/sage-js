@@ -1,9 +1,14 @@
 {
 	"private": true,
-	"workspaces": [
-		"core",
-		"cli",
-		"res-osi",
-		"res-osi-asm"
-	]
+	"workspaces": {
+		"packages": [
+			"core",
+			"cli",
+			"res-osi",
+			"res-osi-asm"
+		],
+		"nohoist": [
+			"**/@oclif/plugin-help"
+		]
+	}
 }

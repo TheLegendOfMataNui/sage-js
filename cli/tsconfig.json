@@ -1,6 +1,10 @@
 {
 	"extends": "../tsconfig.json",
 	"compilerOptions": {
+		"types": [
+			"node",
+			"jasmine"
+		],
 		"outDir": "lib",
 		"rootDirs": [
 			"./src"
