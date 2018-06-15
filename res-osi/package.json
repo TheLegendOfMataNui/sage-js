@@ -1,7 +1,7 @@
 {
 	"name": "@sage-js/res-osi",
 	"description": "SAGE resource OSI",
-	"version": "0.5.0",
+	"version": "0.6.0",
 	"keywords": [],
 	"main": "lib/index",
 	"types": "lib/index.d.ts",
@@ -20,7 +20,7 @@
 	"license": "MPL-2.0",
 	"dependencies": {
 		"@babel/runtime": "^7.0.0-beta.51",
-		"@sage-js/core": "^0.0.0"
+		"@sage-js/core": "^0.1.0"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.0.0-beta.51",
