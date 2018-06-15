@@ -1,4 +1,8 @@
-import {PrimitiveInt32U} from '@sage-js/core';
+import {
+	PrimitiveInt16U,
+	PrimitiveInt32U,
+	PrimitiveStringP8N
+} from '@sage-js/core';
 import {
 	IClassDefinitionTableEntry,
 	ClassDefinitionMethod,
@@ -37,3 +41,5 @@ export type MapIdentifierToASTNodeStatementBlock =
 
 export type MapIdToSubroutineOffset =
 	Map<number, PrimitiveInt32U>;
+
+export type SymbolToIndex = (s: PrimitiveStringP8N) => PrimitiveInt16U;

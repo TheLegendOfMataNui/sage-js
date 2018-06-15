@@ -1,8 +1,10 @@
 import {
 	Primitive,
 	PrimitiveInt,
+	PrimitiveInt16U,
 	PrimitiveFloat,
 	PrimitiveString,
+	PrimitiveStringP8N,
 	utilNumberToHex
 } from '@sage-js/core';
 import {
@@ -62,6 +64,11 @@ import {Assembly} from './class';
  * AssemblyDisassembler constructor.
  */
 export class AssemblyDisassembler extends Assembly {
+
+	/**
+	 * Disable transforming class property and method symbols to strings.
+	 */
+	public disableTransformSymbols = false;
 
 	constructor() {
 		super();
@@ -402,13 +409,13 @@ export class AssemblyDisassembler extends Assembly {
 
 		const ast = this._disassembleCreateStatementInstruction('property');
 
-		ast.arguments.entries.push(
-			this._disassembleCreateArgumentFromInt(property.symbol)
+		const nameArg = this._disassembleConvertSymbolToArgumentComment(
+			symbols,
+			property.symbol
 		);
-
-		const symbol = symbols[property.symbol.value];
-		if (symbol) {
-			this._disassembleSetComment(ast.comment, symbol.stringEncode());
+		ast.arguments.entries.push(nameArg.arg);
+		if (nameArg.comment !== null) {
+			this._disassembleSetComment(ast.comment, nameArg.comment);
 		}
 
 		return [ast];
@@ -438,18 +445,18 @@ export class AssemblyDisassembler extends Assembly {
 
 		const ast = this._disassembleCreateStatementInstruction('method');
 
-		ast.arguments.entries.push(
-			this._disassembleCreateArgumentFromInt(method.symbol)
+		const nameArg = this._disassembleConvertSymbolToArgumentComment(
+			symbols,
+			method.symbol
 		);
+		ast.arguments.entries.push(nameArg.arg);
+		if (nameArg.comment !== null) {
+			this._disassembleSetComment(ast.comment, nameArg.comment);
+		}
 
 		ast.arguments.entries.push(
 			this._disassembleCreateArgumentFromNumber(id)
 		);
-
-		const symbol = symbols[method.symbol.value];
-		if (symbol) {
-			this._disassembleSetComment(ast.comment, symbol.stringEncode());
-		}
 
 		return [ast];
 	}
@@ -1059,5 +1066,29 @@ export class AssemblyDisassembler extends Assembly {
 		const ast = new ASTNodeStatementInstruction();
 		ast.identifier.text = id;
 		return ast;
+	}
+
+	/**
+	 * Convert symbol to argument and comment.
+	 *
+	 * @param symbols Symbols list.
+	 * @param symbol Symbol ID.
+	 * @return Arg an comment values.
+	 */
+	protected _disassembleConvertSymbolToArgumentComment(
+		symbols: PrimitiveStringP8N[],
+		symbol: PrimitiveInt16U
+	) {
+		const sym = symbols[symbol.value];
+		if (this.disableTransformSymbols || !sym) {
+			return {
+				arg: this._disassembleCreateArgumentFromInt(symbol),
+				comment: sym ? sym.stringEncode() : null
+			};
+		}
+		return {
+			arg: this._disassembleCreateArgumentFromString(sym),
+			comment: null
+		};
 	}
 }
