@@ -8,7 +8,7 @@
 			"res-osi-asm"
 		],
 		"nohoist": [
-			"**/@oclif/plugin-help"
+			"**/@oclif/**"
 		]
 	}
 }
