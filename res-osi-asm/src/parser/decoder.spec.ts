@@ -101,4 +101,43 @@ describe('ParserDecoder', () => {
 			});
 		}
 	});
+
+	describe('unbalanced', () => {
+		it('missing end', () => {
+			const decoder = new ParserDecoder();
+			expect(() => {
+				try {
+					decoder.decode([
+						'begin BLOCK_A',
+						'  inst',
+						''
+					].join('\n'));
+				}
+				catch (err) {
+					expect(err.line).toBe(3);
+					expect(err.column).toBe(1);
+					throw err;
+				}
+			}).toThrow();
+		});
+
+		it('extra end', () => {
+			const decoder = new ParserDecoder();
+			expect(() => {
+				try {
+					decoder.decode([
+						'',
+						'  inst',
+						'end',
+						''
+					].join('\n'));
+				}
+				catch (err) {
+					expect(err.line).toBe(3);
+					expect(err.column).toBe(1);
+					throw err;
+				}
+			}).toThrow();
+		});
+	});
 });

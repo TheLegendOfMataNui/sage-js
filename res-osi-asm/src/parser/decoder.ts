@@ -425,6 +425,11 @@ export class ParserDecoder extends Parser {
 			}
 		});
 
+		// If syntax errors, throw first one.
+		if (this.syntaxErrors.length) {
+			throw this.syntaxErrors[0];
+		}
+
 		const tokenStream = new CommonTokenStream(lexer);
 
 		const parser = new ASMParser(tokenStream);
@@ -445,9 +450,23 @@ export class ParserDecoder extends Parser {
 			}
 		});
 
+		// If syntax errors, throw first one.
+		if (this.syntaxErrors.length) {
+			throw this.syntaxErrors[0];
+		}
+
+		// Trigger parsing, may cause syntax errors.
+		const file = parser.file();
+
+		// If syntax errors, throw first one.
+		if (this.syntaxErrors.length) {
+			throw this.syntaxErrors[0];
+		}
+
+		// File parsed without errors, create AST.
 		const fileListener = new ASMListenerFile();
 		fileListener.sourceFile = sourceFile;
-		parser.file().enterRule(fileListener);
+		file.enterRule(fileListener);
 		return fileListener.file;
 	}
 }
