@@ -8,7 +8,6 @@
 			"res-osi-asm"
 		],
 		"nohoist": [
-			"**/@oclif/**"
 		]
 	}
 }

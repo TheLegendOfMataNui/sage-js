@@ -670,16 +670,16 @@
     debug "^3.1.0"
     tslib "^1.9.2"
 
-"@oclif/config@^1.6.30":
-  version "1.6.30"
-  resolved "https://registry.yarnpkg.com/@oclif/config/-/config-1.6.30.tgz#ec5d60c86a5f5e4c04a02c73c43459d56140fafd"
+"@oclif/config@^1.6.31":
+  version "1.6.31"
+  resolved "https://registry.yarnpkg.com/@oclif/config/-/config-1.6.31.tgz#10b97f16b8318b5b2eba0c1d6737e9c151ceb083"
   dependencies:
     debug "^3.1.0"
     tslib "^1.9.2"
 
-"@oclif/dev-cli@^1.13.31":
-  version "1.13.31"
-  resolved "https://registry.yarnpkg.com/@oclif/dev-cli/-/dev-cli-1.13.31.tgz#ddcca19e1346de3656b63210305c87acdc98fd44"
+"@oclif/dev-cli@^1.13.32":
+  version "1.13.32"
+  resolved "https://registry.yarnpkg.com/@oclif/dev-cli/-/dev-cli-1.13.32.tgz#e41a90691db8be8ce4b15909ca8c8ffc2fd9d72a"
   dependencies:
     "@oclif/command" "^1.4.33"
     "@oclif/config" "^1.6.27"

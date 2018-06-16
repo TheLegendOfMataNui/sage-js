@@ -24,7 +24,7 @@
 	"dependencies": {
 		"@babel/runtime": "^7.0.0-beta.51",
 		"@oclif/command": "^1.4.33",
-		"@oclif/config": "^1.6.30",
+		"@oclif/config": "^1.6.31",
 		"@oclif/plugin-help": "^2.0.5",
 		"@sage-js/core": "^0.1.0",
 		"@sage-js/res-osi": "^0.6.0",
@@ -42,7 +42,7 @@
 		"@babel/preset-env": "^7.0.0-beta.51",
 		"@babel/preset-typescript": "^7.0.0-beta.51",
 		"@babel/register": "^7.0.0-beta.51",
-		"@oclif/dev-cli": "^1.13.31",
+		"@oclif/dev-cli": "^1.13.32",
 		"@oclif/test": "^1.1.0",
 		"@types/chai": "^4.1.4",
 		"@types/jasmine": "^2.8.8",
