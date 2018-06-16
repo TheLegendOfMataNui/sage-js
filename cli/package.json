@@ -1,7 +1,7 @@
 {
 	"name": "@sage-js/cli",
 	"description": "SAGE CLI",
-	"version": "0.7.0",
+	"version": "0.8.0",
 	"keywords": [],
 	"main": "lib/index",
 	"types": "lib/index.d.ts",
@@ -28,7 +28,7 @@
 		"@oclif/plugin-help": "^2.0.5",
 		"@sage-js/core": "^0.1.0",
 		"@sage-js/res-osi": "^0.6.0",
-		"@sage-js/res-osi-asm": "^0.7.0",
+		"@sage-js/res-osi-asm": "^0.8.0",
 		"@types/fs-extra": "^5.0.3",
 		"fs-extra": "^6.0.1",
 		"source-map-support": "^0.5.6"

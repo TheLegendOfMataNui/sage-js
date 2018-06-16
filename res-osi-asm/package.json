@@ -1,7 +1,7 @@
 {
 	"name": "@sage-js/res-osi-asm",
 	"description": "SAGE resource OSI ASM",
-	"version": "0.7.0",
+	"version": "0.8.0",
 	"keywords": [],
 	"main": "lib/index",
 	"types": "lib/index.d.ts",
