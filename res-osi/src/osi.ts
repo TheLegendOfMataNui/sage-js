@@ -18,7 +18,6 @@ import {typed} from './typed';
 import {ExceptionInternal} from './exception/internal';
 import {ExceptionInvalid} from './exception/invalid';
 import {Header} from './header';
-// import {ClassDefinition} from './classdefinition/class';
 import {FunctionDefinition} from './functiondefinition';
 import {ClassDefinitionMethod} from './classdefinitionmethod';
 import {Subroutine} from './subroutine';
