@@ -10,11 +10,15 @@ import {
 import {
 	StringP8NTable
 } from './stringp8ntable';
-import {ITransformString} from './types';
+import {
+	ITransformString,
+	IClassDefinitionTableEntry
+} from './types';
 import {typed} from './typed';
 import {ExceptionInternal} from './exception/internal';
 import {ExceptionInvalid} from './exception/invalid';
 import {Header} from './header';
+// import {ClassDefinition} from './classdefinition/class';
 import {FunctionDefinition} from './functiondefinition';
 import {ClassDefinitionMethod} from './classdefinitionmethod';
 import {Subroutine} from './subroutine';
@@ -395,6 +399,251 @@ export class OSI extends Structure {
 	public bufferWrite(view: BufferView) {
 		view.writeWritable(this.header);
 		view.writeWritable(this.subroutines);
+	}
+
+	/**
+	 * Attempts to map classes to possible ancestor classes.
+	 * Uses the properties and methods to find the possible matches.
+	 * A child class has the same properties and methods as a parent class.
+	 * Some false positives are fairly likely.
+	 *
+	 * @return Mapped classes to some possible ancestors.
+	 */
+	public mapClassPossibleAncestors() {
+		const classList = this.header.classTable.entries;
+
+		const r: Map<
+			IClassDefinitionTableEntry,
+			IClassDefinitionTableEntry[]
+		> = new Map();
+
+		for (const cInfo of classList) {
+			const cStruct = cInfo.structure;
+			const cProperties = new Set(
+				cStruct.classPropertyTable.entries.map(p => p.symbol.value)
+			);
+			const cMethods = new Set(
+				cStruct.classMethodTable.entries.map(m => m.symbol.value)
+			);
+			const candidates: IClassDefinitionTableEntry[] = [];
+
+			// Search for parent candidates.
+			LOOP_PARENTS: for (const pInfo of classList) {
+				if (cInfo === pInfo) {
+					continue;
+				}
+
+				const pStruct = pInfo.structure;
+
+				// Reject if property not in child.
+				for (const property of pStruct.classPropertyTable.entries) {
+					if (!cProperties.has(property.symbol.value)) {
+						continue LOOP_PARENTS;
+					}
+				}
+
+				// Reject if method not in child.
+				for (const method of pStruct.classMethodTable.entries) {
+					if (!cMethods.has(method.symbol.value)) {
+						continue LOOP_PARENTS;
+					}
+				}
+
+				// Add to candidates list.
+				candidates.push(pInfo);
+			}
+
+			// Map class to the candidates list.
+			r.set(cInfo, candidates);
+		}
+
+		return r;
+	}
+
+	/**
+	 * Attempts to map classes to possible parent classes.
+	 * See mapClassPossibleAncestors for the first pass.
+	 * Filters to only the direct parent be checking how many new constructors.
+	 * A direct child class should only add one new constructor.
+	 * Some false positives are possible but highly unlikely.
+	 *
+	 * @return Mapped classes to some possible parents.
+	 */
+	public mapClassPossibleParents() {
+		const classList = this.header.classTable.entries;
+		const symbolList = this.header.symbolTable.entries;
+
+		const r: Map<
+			IClassDefinitionTableEntry,
+			IClassDefinitionTableEntry[]
+		> = new Map();
+
+		// Find constructor offsets, once a constructor always one.
+		const hasConstructors: Map<
+			IClassDefinitionTableEntry,
+			boolean
+		> = new Map();
+		const constructors: Set<number> = new Set();
+		for (const cInfo of classList) {
+			const cStruct = cInfo.structure;
+			for (const method of cStruct.classMethodTable.entries) {
+				const symbol = symbolList[method.symbol.value];
+				if (!symbol) {
+					continue;
+				}
+				if (cInfo.name.value !== symbol.value) {
+					continue;
+				}
+				hasConstructors.set(cInfo, true);
+				constructors.add(method.offset.value);
+			}
+		}
+
+		// Loop over possible ancestors.
+		const mapPossibleAncestors = this.mapClassPossibleAncestors();
+		for (const [cInfo, aInfos] of mapPossibleAncestors) {
+			const cStruct = cInfo.structure;
+			const hasConstructor = hasConstructors.get(cInfo) || false;
+
+			// Search for parent candidates.
+			const candidates: IClassDefinitionTableEntry[] = [];
+			LOOP_ANCESTORS: for (const aInfo of aInfos) {
+				const aStruct = aInfo.structure;
+
+				// Search methods added in the child for constructors.
+				let addedConstructors = 0;
+				const aMethods = new Set(
+					aStruct.classMethodTable.entries.map(m => m.symbol.value)
+				);
+				for (const method of cStruct.classMethodTable.entries) {
+					// Skip methods from ancestor.
+					if (aMethods.has(method.symbol.value)) {
+						continue;
+					}
+
+					// Skip the non-constructor methods.
+					if (!constructors.has(method.offset.value)) {
+						continue;
+					}
+
+					// Not a direct parent class if:
+					// If no constructor expected but one was found.
+					// If multiple constructors added.
+					if (!hasConstructor || ++addedConstructors > 1) {
+						continue LOOP_ANCESTORS;
+					}
+				}
+
+				candidates.push(aInfo);
+			}
+
+			r.set(cInfo, candidates);
+		}
+
+		return r;
+	}
+
+	/**
+	 * Attempts to map classes to parents.
+	 *
+	 * @return Mapped classes to parents.
+	 */
+	public mapClassParents() {
+		const symbolList = this.header.symbolTable.entries;
+
+		const r: Map<
+			IClassDefinitionTableEntry,
+			IClassDefinitionTableEntry | null
+		> = new Map();
+
+		// Get the list of possible parents.
+		const mapPossibleParents = this.mapClassPossibleParents();
+
+		// Find constructor offsets, once a constructor always one.
+		const constructors: Set<number> = new Set();
+		for (const cInfo of this.header.classTable.entries) {
+			const cStruct = cInfo.structure;
+			for (const method of cStruct.classMethodTable.entries) {
+				const symbol = symbolList[method.symbol.value];
+				if (!symbol) {
+					continue;
+				}
+				if (cInfo.name.value !== symbol.value) {
+					continue;
+				}
+				constructors.add(method.offset.value);
+			}
+		}
+
+		// In far edgecase it may be possible a class has multiple candidates.
+		// In such a case, it might be possible to analyze the constructor.
+		// Then based on what super constructor is called reduce candidates.
+		// Not currently implemented but could be done here.
+
+		for (const [cInfo, pInfos] of mapPossibleParents) {
+			const cStruct = cInfo.structure;
+
+			let candidates = pInfos;
+			let candidatesProbability = -1;
+
+			const candidateProbability = (
+				candidate: IClassDefinitionTableEntry,
+				probably: number
+			) => {
+				// If candidate has higher probability, reset the list and max.
+				if (probably > candidatesProbability) {
+					candidates = [];
+					candidatesProbability = probably;
+				}
+				// If candidate has highest probability, add to list.
+				if (probably === candidatesProbability) {
+					candidates.push(candidate);
+				}
+			};
+
+			// Prefer candidates with most methods using same subroutines.
+			const cMethods: Map<number, number> = new Map();
+			for (const m of cStruct.classMethodTable.entries) {
+				cMethods.set(m.symbol.value, m.offset.value);
+			}
+			for (const pInfo of candidates.slice()) {
+				let probably = 0;
+				for (const m of pInfo.structure.classMethodTable.entries) {
+					const cMethod = cMethods.get(m.symbol.value);
+					if (cMethod === undefined) {
+						throw new ExceptionInternal('Invalid internal state');
+					}
+					// Check if same subroutine was inherited.
+					if (cMethod !== m.offset.value) {
+						probably++;
+					}
+				}
+				candidateProbability(pInfo, probably);
+			}
+
+			// Prefer remaining candidates with most methods in common.
+			candidatesProbability = -1;
+			for (const pInfo of candidates.slice()) {
+				candidateProbability(
+					pInfo,
+					pInfo.structure.classMethodTable.entries.length
+				);
+			}
+
+			// Prefer remaining candidates with most properties in common.
+			candidatesProbability = -1;
+			for (const pInfo of candidates.slice()) {
+				candidateProbability(
+					pInfo,
+					pInfo.structure.classPropertyTable.entries.length
+				);
+			}
+
+			// Set what should be only one remaining candidate or null.
+			r.set(cInfo, candidates.length ? candidates[0] : null);
+		}
+
+		return r;
 	}
 
 	/**
