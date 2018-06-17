@@ -344,9 +344,7 @@ export class OSI extends Structure {
 			const subroutine = this.subroutines.getBySubroutine(sub);
 			if (!subroutine) {
 				// This should be impossible.
-				throw new ExceptionInternal(
-					'Invalid internal state'
-				);
+				throw new ExceptionInternal('Invalid internal state');
 			}
 			func.offset = subroutine.offset;
 		}
@@ -354,9 +352,7 @@ export class OSI extends Structure {
 			const subroutine = this.subroutines.getBySubroutine(sub);
 			if (!subroutine) {
 				// This should be impossible.
-				throw new ExceptionInternal(
-					'Invalid internal state'
-				);
+				throw new ExceptionInternal('Invalid internal state');
 			}
 			method.offset = subroutine.offset;
 		}
@@ -611,6 +607,7 @@ export class OSI extends Structure {
 				for (const m of pInfo.structure.classMethodTable.entries) {
 					const cMethod = cMethods.get(m.symbol.value);
 					if (cMethod === undefined) {
+						// This should be impossible.
 						throw new ExceptionInternal('Invalid internal state');
 					}
 					// Check if same subroutine was inherited.
