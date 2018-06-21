@@ -130,7 +130,7 @@ export class Subroutine extends Structure {
 			const opcode = view.getInt8U();
 			const InstructionBCL = instructionBCLByOpcode(opcode);
 			if (!InstructionBCL) {
-				throw new ExceptionInstruction(
+				throw new ExceptionInvalid(
 					`Unused opcode: 0x${utilNumberToHex(opcode)}`
 				);
 			}
