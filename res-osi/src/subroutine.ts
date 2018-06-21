@@ -152,7 +152,8 @@ export class Subroutine extends Structure {
 					if (branchTo < 0) {
 						const info = `${offset} + ${branch} = ${branchTo}`;
 						throw new ExceptionInstruction(
-							`Branch jumps back past the start: ${info}`
+							`Branch jumps back past the start: ${info}`,
+							brancher
 						);
 					}
 				}
@@ -203,6 +204,7 @@ export class Subroutine extends Structure {
 				offset: number;
 			}
 		> = new Map();
+		let branchMInstruction: Instruction | null = null;
 		let branchMOffset = -1;
 		let branchMBranch = -1;
 		const claimedIds: Set<number> = new Set();
@@ -263,12 +265,14 @@ export class Subroutine extends Structure {
 			if (branchTo < 0) {
 				const info = `${offset} + ${branch} = ${branchTo}`;
 				throw new ExceptionInstruction(
-					`Branch jumps back past the start: ${info}`
+					`Branch jumps back past the start: ${info}`,
+					brancher
 				);
 			}
 
 			// Remember the furthest branch.
 			if (branchTo > branchMOffset + branchMBranch) {
+				branchMInstruction = brancher;
 				branchMOffset = offset;
 				branchMBranch = branch;
 			}
@@ -293,10 +297,17 @@ export class Subroutine extends Structure {
 			branchMOffset > -1 &&
 			(branchMOffset - branchMBranch) > offset - 1
 		) {
+			if (!branchMInstruction) {
+				// This should be impossible.
+				throw new ExceptionInternal('Max branching instruction null');
+			}
+
 			const branchTo = branchMOffset + branchMBranch;
 			const info = `${branchMOffset} + ${branchMBranch} = ${branchTo}`;
+
 			throw new ExceptionInstruction(
-				`Branch jumps forward past the end: ${info}`
+				`Branch jumps forward past the end: ${info}`,
+				branchMInstruction
 			);
 		}
 
