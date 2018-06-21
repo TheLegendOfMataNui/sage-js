@@ -1221,6 +1221,7 @@ export class OSI extends Structure {
 
 		const tableEntries = table.entries;
 		const stringToIndex: Map<string, number> = new Map();
+
 		// Loop backwards to favor first instance.
 		for (let i = tableEntries.length; i--;) {
 			stringToIndex.set(tableEntries[i].value, i);
