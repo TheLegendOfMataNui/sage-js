@@ -6,7 +6,7 @@ import {
 } from '@sage-js/core';
 import {ExceptionInternal} from './exception/internal';
 import {ExceptionInvalid} from './exception/invalid';
-import {ExceptionInstruction} from './exception/instruction';
+import {ExceptionSubroutine} from './exception/subroutine';
 import {
 	ISubroutineTableEntry,
 	SubroutineTableEntryEach
@@ -410,7 +410,7 @@ export class SubroutineTable extends Structure {
 			// tslint:disable-next-line: early-exit
 			if (nextExpected !== null && offsetNext > nextExpected) {
 				const info = `${offsetNext} > ${nextExpected}`;
-				throw new ExceptionInstruction(
+				throw new ExceptionSubroutine(
 					`Read into another subroutine: ${info}`
 				);
 			}
@@ -419,7 +419,7 @@ export class SubroutineTable extends Structure {
 		// tslint:disable-next-line: early-exit
 		if (subOffsets.length) {
 			const remaining = subOffsets.length;
-			throw new ExceptionInstruction(
+			throw new ExceptionSubroutine(
 				`Did not find all expected subroutines, missed: ${remaining}`
 			);
 		}
