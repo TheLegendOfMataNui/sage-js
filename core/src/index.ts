@@ -2,6 +2,7 @@ export * from './meta';
 export * from './types';
 export * from './typed';
 export * from './constants';
+export * from './node';
 export * from './util';
 export * from './assert';
 export * from './exception';

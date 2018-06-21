@@ -1,3 +1,10 @@
+import {
+	nodeUtilInspectSymbol,
+	nodeUtilInspectProperty
+} from './node';
+
+const nodeUtilInspectProp = nodeUtilInspectSymbol || nodeUtilInspectProperty;
+
 /**
  * Decorate property with defaults.
  *
@@ -96,5 +103,23 @@ export function decoratorWritable(writable: boolean) {
 	) {
 		const d = descriptor as PropertyDescriptor;
 		d.writable = writable;
+	};
+}
+
+/**
+ * Decorate node inspect property.
+ *
+ * @return Decorator function.
+ */
+export function decoratorInspect() {
+	return function(
+		target: any,
+		key: string | symbol,
+		descriptor?: PropertyDescriptor
+	) {
+		if (!descriptor || key === nodeUtilInspectProp) {
+			return;
+		}
+		Object.defineProperty(target, nodeUtilInspectProp, descriptor);
 	};
 }

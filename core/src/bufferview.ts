@@ -23,7 +23,10 @@ import {
 import {ExceptionValue} from './exception/value';
 import {ExceptionReadonly} from './exception/readonly';
 import {assertIntegerRange} from './assert';
-import {decoratorProperty} from './decorators';
+import {
+	decoratorProperty,
+	decoratorInspect
+} from './decorators';
 
 const regexHex = /^[0-9A-F]{1,2}$/i;
 const regexNoHex = /[^0-9A-F]/ig;
@@ -926,17 +929,19 @@ export class BufferView extends Object {
 	 * @param opts Inspect options.
 	 * @return Formatted string.
 	 */
+	@decoratorInspect()
 	public inspect(depth: number, opts: NodeJS.InspectOptions) {
-		return (
-			`${this.constructor.name} { ` +
+		return [
+			this.constructor.name,
+			'{',
 			[
 				`size: ${this.size}`,
 				`offset: ${this.offset}`,
 				`endianL: ${this.endianL}`,
 				`readonly: ${this.readonly}`
-			].join(', ') +
-			' }'
-		);
+			].join(', '),
+			'}'
+		].join(' ');
 	}
 
 	/**
