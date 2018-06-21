@@ -239,11 +239,13 @@ export class BufferView extends Object {
 	 * @return Copied instance.
 	 */
 	public copy(readonly = false) {
+		const Constructor = this.constructor as typeof BufferView;
+
 		// Get data view as an array, copying data.
 		const d = viewAs8Array(Uint8Array, this._dataview, true);
 
 		// Create a new view from the copied data.
-		return new BufferView(d, this.endianL, 0, -1, readonly);
+		return new Constructor(d, this.endianL, 0, -1, readonly);
 	}
 
 	/**
@@ -255,13 +257,15 @@ export class BufferView extends Object {
 	 * @return New instance.
 	 */
 	public getView(size = -1, offset = -1, readonly = false) {
+		const Constructor = this.constructor as typeof BufferView;
+
 		this.assertRemaining(size, offset);
 		offset = offset < 0 ? this.offset : offset;
 		readonly = this.readonly || readonly;
 
 		// Create a sub view of the current view.
 		const d = this._dataview;
-		return new BufferView(d, this.endianL, offset, size, readonly);
+		return new Constructor(d, this.endianL, offset, size, readonly);
 	}
 
 	/**
@@ -875,7 +879,7 @@ export class BufferView extends Object {
 		// ArrayBuffer will very likely throw on max size.
 		assertIntegerRange(size, 'size', 0, MAX_SAFE_INTEGER);
 		const buffer = new ArrayBuffer(size);
-		return new BufferView(buffer, endianL, 0, -1, readonly);
+		return new this(buffer, endianL, 0, -1, readonly);
 	}
 
 	/**
@@ -899,7 +903,7 @@ export class BufferView extends Object {
 			}
 			a[i] = parseInt(byte, 16);
 		}
-		return new BufferView(a, endianL, 0, -1, readonly);
+		return new this(a, endianL, 0, -1, readonly);
 	}
 
 	/**
@@ -919,7 +923,7 @@ export class BufferView extends Object {
 		for (let i = 0; i < size; i++) {
 			a[i] = parseInt(matched[i], 16);
 		}
-		return new BufferView(a, endianL, 0, -1, readonly);
+		return new this(a, endianL, 0, -1, readonly);
 	}
 
 	/**
@@ -976,7 +980,7 @@ export class BufferView extends Object {
 		}
 
 		// Create new instance with this data.
-		return new BufferView(bytes, endianL, 0, -1, readonly);
+		return new this(bytes, endianL, 0, -1, readonly);
 	}
 
 	/**
