@@ -3,7 +3,7 @@ import {
 	Primitive
 } from '@sage-js/core';
 import {typed} from '../../typed';
-import {ExceptionInvalid} from '../../exception/invalid';
+import {ExceptionInstruction} from '../../exception/instruction';
 import {Instruction} from '../class';
 
 /**
@@ -54,7 +54,10 @@ extends Instruction {
 	 * @param view View to read from.
 	 */
 	public bufferRead(view: BufferView) {
-		throw new ExceptionInvalid('Abstract instruction not readable');
+		throw new ExceptionInstruction(
+			'Abstract instruction not readable',
+			this
+		);
 	}
 
 	/**
@@ -63,7 +66,10 @@ extends Instruction {
 	 * @param view View to write to.
 	 */
 	public bufferWrite(view: BufferView) {
-		throw new ExceptionInvalid('Abstract instruction not writable');
+		throw new ExceptionInstruction(
+			'Abstract instruction not writable',
+			this
+		);
 	}
 
 	/**
