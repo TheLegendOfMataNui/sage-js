@@ -646,6 +646,9 @@ export class OSI extends Structure {
 	 * Transform jump instructions to abstract ones.
 	 */
 	public transformAbstractJumpAdd() {
+		const replaced: Map<Instruction, Instruction> = new Map();
+		const added: Set<Instruction> = new Set();
+
 		const targetsNeeded: Set<number> = new Set();
 		const targets: Map<
 			number,
@@ -753,6 +756,7 @@ export class OSI extends Structure {
 					// Insert the target at this index.
 					const jt = new InstructionAbstractJumpTarget();
 					jt.arg0 = new PrimitiveInt32U(newTargetId());
+					added.add(jt);
 					subroutine.instructions.splice(i, 0, jt);
 					targets.set(offsetI, jt);
 					i++;
@@ -800,14 +804,23 @@ export class OSI extends Structure {
 			const inst = new InstructionAbstractPushConstanti32JumpTarget();
 			inst.arg0 = target.arg0;
 			inst.arg1 = new PrimitiveInt32S(adjust);
+			replaced.set(info.instructions[info.index], inst);
 			info.instructions[info.index] = inst;
 		}
+
+		return {
+			replaced,
+			added
+		};
 	}
 
 	/**
 	 * Transform abstract jump instructions into bytecode.
 	 */
 	public transformAbstractJumpRemove() {
+		const replaced: Map<Instruction, Instruction> = new Map();
+		const removed: Set<Instruction> = new Set();
+
 		const targeters: {
 			instruction: InstructionAbstractPushConstanti32JumpTarget;
 			instructions: Instruction[];
@@ -882,14 +895,21 @@ export class OSI extends Structure {
 
 			const bc = new InstructionBCLPushConstanti32();
 			bc.arg0 = amount;
+			replaced.set(targeter.instructions[index], bc);
 			targeter.instructions[index] = bc;
 		}
 
 		// Remove the jump targets by index.
 		for (let i = targetsRemove.length; i--;) {
 			const info = targetsRemove[i];
+			removed.add(info.instructions[info.index]);
 			info.instructions.splice(info.index, 1);
 		}
+
+		return {
+			replaced,
+			removed
+		};
 	}
 
 	/**
@@ -897,9 +917,23 @@ export class OSI extends Structure {
 	 * Calls the method on every subroutine.
 	 */
 	public transformAbstractBranchAdd() {
+		const replaced: Map<Instruction, Instruction> = new Map();
+		const added: Set<Instruction> = new Set();
+
 		for (const {subroutine} of this.subroutines.itter()) {
-			subroutine.transformAbstractBranchAdd();
+			const info = subroutine.transformAbstractBranchAdd();
+			for (const [a, b] of info.replaced) {
+				replaced.set(a, b);
+			}
+			for (const a of info.added) {
+				added.add(a);
+			}
 		}
+
+		return {
+			replaced,
+			added
+		};
 	}
 
 	/**
@@ -907,16 +941,30 @@ export class OSI extends Structure {
 	 * Calls the method on every subroutine.
 	 */
 	public transformAbstractBranchRemove() {
+		const replaced: Map<Instruction, Instruction> = new Map();
+		const removed: Set<Instruction> = new Set();
+
 		for (const {subroutine} of this.subroutines.itter()) {
-			subroutine.transformAbstractBranchRemove();
+			const info = subroutine.transformAbstractBranchRemove();
+			for (const [a, b] of info.replaced) {
+				replaced.set(a, b);
+			}
+			for (const a of info.removed) {
+				removed.add(a);
+			}
 		}
+
+		return {
+			replaced,
+			removed
+		};
 	}
 
 	/**
 	 * Transform bytecode string references to abstract.
 	 */
 	public transformAbstractStringAdd() {
-		this._transformAbstractStringTableAdd(
+		return this._transformAbstractStringTableAdd(
 			this.header.stringTable,
 			InstructionStrings
 		);
@@ -927,7 +975,7 @@ export class OSI extends Structure {
 	 * Remember to update offsets after this.
 	 */
 	public transformAbstractStringRemove() {
-		this._transformAbstractStringTableRemove(
+		return this._transformAbstractStringTableRemove(
 			this.header.stringTable,
 			InstructionStrings
 		);
@@ -937,7 +985,7 @@ export class OSI extends Structure {
 	 * Transform bytecode symbol references to abstract.
 	 */
 	public transformAbstractSymbolAdd() {
-		this._transformAbstractStringTableAdd(
+		return this._transformAbstractStringTableAdd(
 			this.header.symbolTable,
 			InstructionSymbols
 		);
@@ -948,7 +996,7 @@ export class OSI extends Structure {
 	 * Remember to update offsets after this.
 	 */
 	public transformAbstractSymbolRemove() {
-		this._transformAbstractStringTableRemove(
+		return this._transformAbstractStringTableRemove(
 			this.header.symbolTable,
 			InstructionSymbols
 		);
@@ -958,7 +1006,7 @@ export class OSI extends Structure {
 	 * Transform bytecode symbol references to abstract.
 	 */
 	public transformAbstractGlobalAdd() {
-		this._transformAbstractStringTableAdd(
+		return this._transformAbstractStringTableAdd(
 			this.header.globalTable,
 			InstructionGlobals,
 			index => {
@@ -977,7 +1025,7 @@ export class OSI extends Structure {
 	 * Remember to update offsets after this.
 	 */
 	public transformAbstractGlobalRemove() {
-		this._transformAbstractStringTableRemove(
+		return this._transformAbstractStringTableRemove(
 			this.header.globalTable,
 			InstructionGlobals,
 			// tslint:disable-next-line: no-bitwise
@@ -989,7 +1037,21 @@ export class OSI extends Structure {
 	 * Transform bytecode class references to abstract.
 	 */
 	public transformAbstractClassAdd() {
+		const replaced: Map<Instruction, Instruction> = new Map();
+		const skipped: Set<Instruction> = new Set();
+
+		// Check that there are no duplicate class names.
+		const classes = new Set();
 		const entries = this.header.classTable.entries;
+		for (const classInfo of entries) {
+			const name = classInfo.name.value;
+			if (classes.has(name)) {
+				throw new ExceptionInvalid(`Duplicate class name: ${name}`);
+			}
+			classes.add(name);
+		}
+		classes.clear();
+
 		for (const {subroutine} of this.subroutines.itter()) {
 			const instructions = subroutine.instructions;
 			for (let i = 0; i < instructions.length; i++) {
@@ -1005,21 +1067,32 @@ export class OSI extends Structure {
 				const index = cast.arg0.value;
 				const classInfo = entries[index];
 				if (!classInfo) {
+					skipped.add(instruction);
 					continue;
 				}
 
 				const inst = new InstructionAbstractCreateObjectString();
 				inst.arg0 = classInfo.name;
 
+				replaced.set(instruction, inst);
 				instructions[i] = inst;
 			}
 		}
+
+		return {
+			replaced,
+			skipped
+		};
 	}
 
 	/**
 	 * Transform abstract class references to bytecode.
 	 */
 	public transformAbstractClassRemove() {
+		const replaced: Map<Instruction, Instruction> = new Map();
+		const skipped: Set<Instruction> = new Set();
+
+		// Map class names to indexes, checking there are no duplicates.
 		const classes: Map<string, number> = new Map();
 		const entries = this.header.classTable.entries;
 		for (let i = 0; i < entries.length; i++) {
@@ -1046,15 +1119,22 @@ export class OSI extends Structure {
 				const name = cast.arg0.value;
 				const index = classes.get(name);
 				if (index === undefined) {
-					throw new ExceptionInvalid(`Unknown class name: ${name}`);
+					skipped.add(instruction);
+					continue;
 				}
 
 				const inst = new InstructionBCLCreateObject();
 				inst.arg0 = new PrimitiveInt16U(index);
 
+				replaced.set(instruction, inst);
 				instructions[i] = inst;
 			}
 		}
+
+		return {
+			replaced,
+			skipped
+		};
 	}
 
 	/**
@@ -1070,6 +1150,9 @@ export class OSI extends Structure {
 			(index: PrimitiveInt16U) => PrimitiveInt16U | null
 		) | null = null
 	) {
+		const replaced: Map<Instruction, Instruction> = new Map();
+		const skipped: Set<Instruction> = new Set();
+
 		const tableEntries = table.entries;
 		for (const {subroutine} of this.subroutines.itter()) {
 			const instructions = subroutine.instructions;
@@ -1101,17 +1184,24 @@ export class OSI extends Structure {
 						}
 						const str = tableEntries[index.value];
 						if (!str) {
+							skipped.add(instruction);
 							break OUTER;
 						}
 
 						inst.argSet(j, str);
 					}
 
+					replaced.set(instruction, inst);
 					instructions[i] = inst;
 					break;
 				}
 			}
 		}
+
+		return {
+			replaced,
+			skipped
+		};
 	}
 
 	/**
@@ -1127,6 +1217,8 @@ export class OSI extends Structure {
 			(index: PrimitiveInt16U) => PrimitiveInt16U
 		) | null = null
 	) {
+		const replaced: Map<Instruction, Instruction> = new Map();
+
 		const tableEntries = table.entries;
 		const stringToIndex: Map<string, number> = new Map();
 		// Loop backwards to favor first instance.
@@ -1174,10 +1266,15 @@ export class OSI extends Structure {
 						inst.argSet(j, index);
 					}
 
+					replaced.set(instruction, inst);
 					instructions[i] = inst;
 					break;
 				}
 			}
 		}
+
+		return {
+			replaced
+		};
 	}
 }

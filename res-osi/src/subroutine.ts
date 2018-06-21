@@ -187,6 +187,9 @@ export class Subroutine extends Structure {
 	 * Transform branch instructions to abstract ones.
 	 */
 	public transformAbstractBranchAdd() {
+		const replaced: Map<Instruction, Instruction> = new Map();
+		const added: Set<Instruction> = new Set();
+
 		const targetsNeeded: Set<number> = new Set();
 		const targets: Map<
 			number,
@@ -278,7 +281,10 @@ export class Subroutine extends Structure {
 
 		// If none are needed, return now.
 		if (!needsUpdate) {
-			return;
+			return {
+				replaced,
+				added
+			};
 		}
 
 		// If the max branch jumps past end, throw error.
@@ -327,6 +333,7 @@ export class Subroutine extends Structure {
 				// Insert the target at this index.
 				const bt = new InstructionAbstractBranchTarget();
 				bt.arg0 = new PrimitiveInt32U(newTargetId());
+				added.add(bt);
 				this.instructions.splice(i, 0, bt);
 				targets.set(offset, bt);
 				i++;
@@ -381,14 +388,23 @@ export class Subroutine extends Structure {
 			}
 
 			const inst = brancherToAbstract(brancher, target, adjust);
+			replaced.set(this.instructions[info.index], inst);
 			this.instructions[info.index] = inst;
 		}
+
+		return {
+			replaced,
+			added
+		};
 	}
 
 	/**
 	 * Transform abstract branch instructions into bytecode.
 	 */
 	public transformAbstractBranchRemove() {
+		const replaced: Map<Instruction, Instruction> = new Map();
+		const removed: Set<Instruction> = new Set();
+
 		const branchers: {
 			instruction: InstructionAbstractBranchers;
 			offset: number;
@@ -479,6 +495,7 @@ export class Subroutine extends Structure {
 				const bc =
 					new InstructionBCLCompareAndBranchIfFalse();
 				bc.arg0 = amount;
+				replaced.set(this.instructions[index], bc);
 				this.instructions[index] = bc;
 				continue;
 			}
@@ -491,7 +508,13 @@ export class Subroutine extends Structure {
 		// Remove the branch targets by index.
 		for (let i = targetsRemove.length; i--;) {
 			const index = targetsRemove[i];
+			removed.add(this.instructions[index]);
 			this.instructions.splice(index, 1);
 		}
+
+		return {
+			replaced,
+			removed
+		};
 	}
 }
