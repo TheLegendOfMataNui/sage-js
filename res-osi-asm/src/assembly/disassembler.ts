@@ -335,6 +335,7 @@ export class AssemblyDisassembler extends Assembly {
 		subroutineOffsetToId: MapSubroutineOffsetToId
 	): ASTNodeStatement[] {
 		const ast = this._disassembleCreateStatementBlock('classes');
+		const parents = osi.mapClassParents();
 
 		const entries = ast.statements.entries;
 		const classEntries = osi.header.classTable.entries;
@@ -344,7 +345,8 @@ export class AssemblyDisassembler extends Assembly {
 				osi,
 				definition,
 				i,
-				subroutineOffsetToId
+				subroutineOffsetToId,
+				parents.get(definition) || null
 			));
 		}
 
@@ -363,12 +365,19 @@ export class AssemblyDisassembler extends Assembly {
 		osi: OSI,
 		classDefinition: IClassDefinitionTableEntry,
 		index: number,
-		subroutineOffsetToId: MapSubroutineOffsetToId
+		subroutineOffsetToId: MapSubroutineOffsetToId,
+		parent: IClassDefinitionTableEntry | null
 	): ASTNodeStatement[] {
 		const {name, structure} = classDefinition;
 
+		const comments = [`${index}`];
+		if (parent) {
+			const parentName = parent.name.stringEncode();
+			comments.push(`extends ${parentName}`);
+		}
+
 		const ast = this._disassembleCreateStatementBlock('class');
-		this._disassembleSetComment(ast.begin.comment, `${index}`);
+		this._disassembleSetComment(ast.begin.comment, comments.join(', '));
 
 		ast.begin.arguments.entries.push(
 			this._disassembleCreateArgumentFromString(name)
