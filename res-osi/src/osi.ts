@@ -544,8 +544,6 @@ export class OSI extends Structure {
 	 * @return Mapped classes to parents.
 	 */
 	public mapClassParents() {
-		const symbolList = this.header.symbolTable.entries;
-
 		const r: Map<
 			IClassDefinitionTableEntry,
 			IClassDefinitionTableEntry | null
@@ -553,22 +551,6 @@ export class OSI extends Structure {
 
 		// Get the list of possible parents.
 		const mapPossibleParents = this.mapClassPossibleParents();
-
-		// Find constructor offsets, once a constructor always one.
-		const constructors: Set<number> = new Set();
-		for (const cInfo of this.header.classTable.entries) {
-			const cStruct = cInfo.structure;
-			for (const method of cStruct.classMethodTable.entries) {
-				const symbol = symbolList[method.symbol.value];
-				if (!symbol) {
-					continue;
-				}
-				if (cInfo.name.value !== symbol.value) {
-					continue;
-				}
-				constructors.add(method.offset.value);
-			}
-		}
 
 		// In far edgecase it may be possible a class has multiple candidates.
 		// In such a case, it might be possible to analyze the constructor.
