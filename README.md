@@ -5,6 +5,27 @@ SAGE-JS monorepo.
 Check the individual package directories for information on each component.
 
 
+# Installing
+
+The individual packages are published to NPM under the [sage-js organization](https://www.npmjs.com/org/sage-js).
+
+## CLI
+
+To install the CLI, first install Node (version 10+) then install the CLI via NPM.
+
+```bash
+npm install -g @sage-js/cli
+```
+
+## API
+
+To use the JavaScript packages programatically, install the packages you need to your own project.
+
+```bash
+npm install @sage-js/core
+```
+
+
 # Notes
 
 These packages are in early development, and updates may introduce breaking changes without warning.
