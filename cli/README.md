@@ -15,7 +15,7 @@ $ npm install -g @sage-js/cli
 $ sage-js COMMAND
 running command...
 $ sage-js (-v|--version|version)
-@sage-js/cli/0.9.0 darwin-x64 node-v10.5.0
+@sage-js/cli/0.9.0 darwin-x64 node-v10.11.0
 $ sage-js --help [COMMAND]
 USAGE
   $ sage-js COMMAND
@@ -46,7 +46,7 @@ OPTIONS
   --all  see all commands in CLI
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.0.5/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.3/src/commands/help.ts)_
 
 ## `sage-js info`
 

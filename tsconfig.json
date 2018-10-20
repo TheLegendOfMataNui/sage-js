@@ -4,6 +4,7 @@
 		"target": "ESNext",
 		"module": "commonjs",
 		"moduleResolution": "Node",
+		"allowSyntheticDefaultImports": true,
 		"lib": ["ESNext", "ES2017.SharedMemory"],
 		"newLine": "lf",
 

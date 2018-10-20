@@ -8,8 +8,8 @@ import {InstructionBCL} from './bcl/class';
 import * as bcl from './bcl';
 
 let inited = false;
-const constructorByName: MapInstructionBCLByName = new Map();
-const constructorByOpcode: MapInstructionBCLByOpcode = new Map();
+const constructorByName = new Map() as MapInstructionBCLByName;
+const constructorByOpcode = new Map() as MapInstructionBCLByOpcode;
 
 /**
  * Init mappings.

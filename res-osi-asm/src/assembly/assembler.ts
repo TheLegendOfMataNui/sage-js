@@ -130,7 +130,7 @@ export class AssemblyAssembler extends Assembly {
 		this.assembleSources(blockSources, osi);
 
 		// Create subroutines with some dummy offsets.
-		const idToOffset: MapIdToSubroutineOffset = new Map();
+		const idToOffset = new Map() as MapIdToSubroutineOffset;
 		this.assembleSubroutines(blocksSubroutines, osi, idToOffset);
 
 		// Create functions and classes using those dummy offsets.
@@ -422,7 +422,7 @@ export class AssemblyAssembler extends Assembly {
 		this._assembleAssertBlockByIdentifierEmpty(blocksByID);
 
 		// Map existing symbol strings to indexes.
-		const symbolMap: Map<string, PrimitiveInt16U> = new Map();
+		const symbolMap = new Map<string, PrimitiveInt16U>();
 		const symbolList = osi.header.symbolTable.entries;
 		for (let i = 0; i < symbolList.length; i++) {
 			const symbol = symbolList[i];
@@ -849,7 +849,7 @@ export class AssemblyAssembler extends Assembly {
 	protected _assembleIdentifierMappedInstructions(
 		instructions: ASTNodeStatementInstruction[]
 	) {
-		const r: MapIdentifierToASTNodeStatementInstruction = new Map();
+		const r = new Map() as MapIdentifierToASTNodeStatementInstruction;
 		for (const instruction of instructions) {
 			const id = instruction.identifier.text;
 			const list = r.get(id) || [];
@@ -867,7 +867,7 @@ export class AssemblyAssembler extends Assembly {
 	protected _assembleIdentifierMappedBlocks(
 		blocks: ASTNodeStatementBlock[]
 	) {
-		const r: MapIdentifierToASTNodeStatementBlock = new Map();
+		const r = new Map() as MapIdentifierToASTNodeStatementBlock;
 		for (const block of blocks) {
 			const id = block.begin.identifier.text;
 			const list = r.get(id) || [];

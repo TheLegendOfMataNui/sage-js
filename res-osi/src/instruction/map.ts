@@ -5,7 +5,7 @@ import {instructionAbstractByNameAll} from './abstractmap';
 import {instructionBCLByNameAll} from './bclmap';
 
 let inited = false;
-const constructorByName: MapInstructionByName = new Map();
+const constructorByName = new Map() as MapInstructionByName;
 
 /**
  * Insert an entry into the map.

@@ -7,7 +7,6 @@
 			"res-osi",
 			"res-osi-asm"
 		],
-		"nohoist": [
-		]
+		"nohoist": []
 	}
 }

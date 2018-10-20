@@ -303,10 +303,10 @@ export class OSI extends Structure {
 	 */
 	public updateOffsets() {
 		// Assmeble mappings from functions and methods to subroutines.
-		const functions: Map<FunctionDefinition, Subroutine> =
-			new Map();
-		const methods: Map<ClassDefinitionMethod, Subroutine> =
-			new Map();
+		const functions =
+			new Map<FunctionDefinition, Subroutine>();
+		const methods =
+			new Map<ClassDefinitionMethod, Subroutine>();
 
 		for (const func of this.header.functionTable.entries) {
 			const sub = this.subroutines.getByOffset(func.offset);
@@ -407,10 +407,10 @@ export class OSI extends Structure {
 	public mapClassPossibleAncestors() {
 		const classList = this.header.classTable.entries;
 
-		const r: Map<
+		const r = new Map() as Map<
 			IClassDefinitionTableEntry,
 			IClassDefinitionTableEntry[]
-		> = new Map();
+		>;
 
 		for (const cInfo of classList) {
 			const cStruct = cInfo.structure;
@@ -468,17 +468,17 @@ export class OSI extends Structure {
 		const classList = this.header.classTable.entries;
 		const symbolList = this.header.symbolTable.entries;
 
-		const r: Map<
+		const r = new Map() as Map<
 			IClassDefinitionTableEntry,
 			IClassDefinitionTableEntry[]
-		> = new Map();
+		>;
 
 		// Find constructor offsets, once a constructor always one.
-		const hasConstructors: Map<
+		const hasConstructors = new Map() as Map<
 			IClassDefinitionTableEntry,
 			boolean
-		> = new Map();
-		const constructors: Set<number> = new Set();
+		>;
+		const constructors = new Set<number>();
 		for (const cInfo of classList) {
 			const cStruct = cInfo.structure;
 			for (const method of cStruct.classMethodTable.entries) {
@@ -544,10 +544,10 @@ export class OSI extends Structure {
 	 * @return Mapped classes to parents.
 	 */
 	public mapClassParents() {
-		const r: Map<
+		const r = new Map() as Map<
 			IClassDefinitionTableEntry,
 			IClassDefinitionTableEntry | null
-		> = new Map();
+		>;
 
 		// Get the list of possible parents.
 		const mapPossibleParents = this.mapClassPossibleParents();
@@ -579,7 +579,7 @@ export class OSI extends Structure {
 			};
 
 			// Prefer candidates with most methods using same subroutines.
-			const cMethods: Map<number, number> = new Map();
+			const cMethods = new Map<number, number>();
 			for (const m of cStruct.classMethodTable.entries) {
 				cMethods.set(m.symbol.value, m.offset.value);
 			}
@@ -628,23 +628,23 @@ export class OSI extends Structure {
 	 * Transform jump instructions to abstract ones.
 	 */
 	public transformAbstractJumpAdd() {
-		const replaced: Map<Instruction, Instruction> = new Map();
-		const added: Set<Instruction> = new Set();
+		const replaced = new Map<Instruction, Instruction>();
+		const added = new Set<Instruction>();
 
-		const targetsNeeded: Set<number> = new Set();
-		const targets: Map<
+		const targetsNeeded = new Set<number>();
+		const targets = new Map() as Map<
 			number,
 			InstructionAbstractJumpTarget
-		> = new Map();
+		>;
 		const offsets = new Set([this.subroutines.baseOffset.value]);
-		const targeters: Map<
+		const targeters = new Map() as Map<
 			InstructionBCLPushConstanti32,
 			{
 				instructions: Instruction[];
 				index: number;
 			}
-		> = new Map();
-		const claimedIds: Set<number> = new Set();
+		>;
+		const claimedIds = new Set<number>();
 		let targetId = 0;
 
 		// Get first new ID not already in use.
@@ -706,7 +706,7 @@ export class OSI extends Structure {
 
 		// Adjust any label offsets that start inside instructions.
 		// Compensates for any potentailly invalid code.
-		const targetsAdjusted: Map<number, number> = new Map();
+		const targetsAdjusted = new Map<number, number>();
 		for (const target of targetsNeeded) {
 			// If an instructions starts at this offset, no need to adjust it.
 			if (offsets.has(target)) {
@@ -800,8 +800,8 @@ export class OSI extends Structure {
 	 * Transform abstract jump instructions into bytecode.
 	 */
 	public transformAbstractJumpRemove() {
-		const replaced: Map<Instruction, Instruction> = new Map();
-		const removed: Set<Instruction> = new Set();
+		const replaced = new Map<Instruction, Instruction>();
+		const removed = new Set<Instruction>();
 
 		const targeters: {
 			instruction: InstructionAbstractPushConstanti32JumpTarget;
@@ -809,7 +809,7 @@ export class OSI extends Structure {
 			index: number;
 			amount: PrimitiveInt32S;
 		}[] = [];
-		const targets: Map<number, number> = new Map();
+		const targets = new Map<number, number>();
 		const targetsRemove: {
 			instructions: Instruction[];
 			index: number;
@@ -899,8 +899,8 @@ export class OSI extends Structure {
 	 * Calls the method on every subroutine.
 	 */
 	public transformAbstractBranchAdd() {
-		const replaced: Map<Instruction, Instruction> = new Map();
-		const added: Set<Instruction> = new Set();
+		const replaced = new Map<Instruction, Instruction>();
+		const added = new Set<Instruction>();
 
 		for (const {subroutine} of this.subroutines.itter()) {
 			const info = subroutine.transformAbstractBranchAdd();
@@ -923,8 +923,8 @@ export class OSI extends Structure {
 	 * Calls the method on every subroutine.
 	 */
 	public transformAbstractBranchRemove() {
-		const replaced: Map<Instruction, Instruction> = new Map();
-		const removed: Set<Instruction> = new Set();
+		const replaced = new Map<Instruction, Instruction>();
+		const removed = new Set<Instruction>();
 
 		for (const {subroutine} of this.subroutines.itter()) {
 			const info = subroutine.transformAbstractBranchRemove();
@@ -1019,11 +1019,11 @@ export class OSI extends Structure {
 	 * Transform bytecode class references to abstract.
 	 */
 	public transformAbstractClassAdd() {
-		const replaced: Map<Instruction, Instruction> = new Map();
-		const skipped: Set<Instruction> = new Set();
+		const replaced = new Map<Instruction, Instruction>();
+		const skipped = new Set<Instruction>();
 
 		// Check that there are no duplicate class names.
-		const classes = new Set();
+		const classes = new Set<string>();
 		const entries = this.header.classTable.entries;
 		for (const classInfo of entries) {
 			const name = classInfo.name.value;
@@ -1071,11 +1071,11 @@ export class OSI extends Structure {
 	 * Transform abstract class references to bytecode.
 	 */
 	public transformAbstractClassRemove() {
-		const replaced: Map<Instruction, Instruction> = new Map();
-		const skipped: Set<Instruction> = new Set();
+		const replaced = new Map<Instruction, Instruction>();
+		const skipped = new Set<Instruction>();
 
 		// Map class names to indexes, checking there are no duplicates.
-		const classes: Map<string, number> = new Map();
+		const classes = new Map<string, number>();
 		const entries = this.header.classTable.entries;
 		for (let i = 0; i < entries.length; i++) {
 			const classInfo = entries[i];
@@ -1132,8 +1132,8 @@ export class OSI extends Structure {
 			(index: PrimitiveInt16U) => PrimitiveInt16U | null
 		) | null = null
 	) {
-		const replaced: Map<Instruction, Instruction> = new Map();
-		const skipped: Set<Instruction> = new Set();
+		const replaced = new Map<Instruction, Instruction>();
+		const skipped = new Set<Instruction>();
 
 		const tableEntries = table.entries;
 		for (const {subroutine} of this.subroutines.itter()) {
@@ -1199,10 +1199,10 @@ export class OSI extends Structure {
 			(index: PrimitiveInt16U) => PrimitiveInt16U
 		) | null = null
 	) {
-		const replaced: Map<Instruction, Instruction> = new Map();
+		const replaced = new Map<Instruction, Instruction>();
 
 		const tableEntries = table.entries;
-		const stringToIndex: Map<string, number> = new Map();
+		const stringToIndex = new Map<string, number>();
 
 		// Loop backwards to favor first instance.
 		for (let i = tableEntries.length; i--;) {

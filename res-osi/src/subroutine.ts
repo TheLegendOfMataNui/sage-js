@@ -188,26 +188,26 @@ export class Subroutine extends Structure {
 	 * Transform branch instructions to abstract ones.
 	 */
 	public transformAbstractBranchAdd() {
-		const replaced: Map<Instruction, Instruction> = new Map();
-		const added: Set<Instruction> = new Set();
+		const replaced = new Map<Instruction, Instruction>();
+		const added = new Set<Instruction>();
 
-		const targetsNeeded: Set<number> = new Set();
-		const targets: Map<
+		const targetsNeeded = new Set<number>();
+		const targets = new Map() as Map<
 			number,
 			InstructionAbstractBranchTarget
-		> = new Map();
+		>;
 		const offsets = new Set([0]);
-		const branchers: Map<
+		const branchers = new Map() as Map<
 			InstructionBCLBranchers,
 			{
 				index: number;
 				offset: number;
 			}
-		> = new Map();
+		>;
 		let branchMInstruction: Instruction | null = null;
 		let branchMOffset = -1;
 		let branchMBranch = -1;
-		const claimedIds: Set<number> = new Set();
+		const claimedIds = new Set<number>();
 		let targetId = 0;
 		let needsUpdate = false;
 
@@ -313,7 +313,7 @@ export class Subroutine extends Structure {
 
 		// Adjust any label offsets that start inside instructions.
 		// Compensates for invalid code produced by original compiler.
-		const targetsAdjusted: Map<number, number> = new Map();
+		const targetsAdjusted = new Map<number, number>();
 		for (const target of targetsNeeded) {
 			// If an instructions starts at this offset, no need to adjust it.
 			if (offsets.has(target)) {
@@ -413,8 +413,8 @@ export class Subroutine extends Structure {
 	 * Transform abstract branch instructions into bytecode.
 	 */
 	public transformAbstractBranchRemove() {
-		const replaced: Map<Instruction, Instruction> = new Map();
-		const removed: Set<Instruction> = new Set();
+		const replaced = new Map<Instruction, Instruction>();
+		const removed = new Set<Instruction>();
 
 		const branchers: {
 			instruction: InstructionAbstractBranchers;
@@ -422,7 +422,7 @@ export class Subroutine extends Structure {
 			index: number;
 			amount: PrimitiveInt16S;
 		}[] = [];
-		const targets: Map<number, number> = new Map();
+		const targets = new Map<number, number>();
 		const targetsRemove: number[] = [];
 
 		// Find the existing targets and branchers.

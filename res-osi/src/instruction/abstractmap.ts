@@ -5,7 +5,7 @@ import {InstructionAbstract} from './abstract/class';
 import * as abstract from './abstract';
 
 let inited = false;
-const constructorByName: MapInstructionAbstractByName = new Map();
+const constructorByName = new Map() as MapInstructionAbstractByName;
 
 /**
  * Init mappings.

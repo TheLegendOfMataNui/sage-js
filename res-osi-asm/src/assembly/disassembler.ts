@@ -492,7 +492,7 @@ export class AssemblyDisassembler extends Assembly {
 		const symbols = osi.header.symbolTable.entries;
 		const sources = osi.header.sourceTable.entries;
 
-		const sourceMapRange: MapSourceRange = new Map();
+		const sourceMapRange = new Map() as MapSourceRange;
 
 		const off = offset.value;
 		const id = subroutineOffsetToId.get(off);
@@ -916,7 +916,7 @@ export class AssemblyDisassembler extends Assembly {
 		osi: OSI
 	): MapSubroutineOffsetToId {
 		// Create subroutine offset to ID mappings.
-		const r: MapSubroutineOffsetToId = new Map();
+		const r = new Map() as MapSubroutineOffsetToId;
 		let subroutineID = 0;
 		for (const {offset} of osi.subroutines.itter()) {
 			const off = offset.value;
@@ -939,7 +939,7 @@ export class AssemblyDisassembler extends Assembly {
 		osi: OSI
 	): MapFunctionOffsetToDefinitions {
 		// Create subroutine offset to function mappings.
-		const r: MapFunctionOffsetToDefinitions = new Map();
+		const r = new Map() as MapFunctionOffsetToDefinitions;
 		for (const func of osi.header.functionTable.entries) {
 			const off = func.offset.value;
 			const list = r.get(off) || [];
@@ -959,8 +959,7 @@ export class AssemblyDisassembler extends Assembly {
 		osi: OSI
 	): MapClassMethodOffsetToDefinitions {
 		// Create subroutine offset to class and method mappings.
-		const r: MapClassMethodOffsetToDefinitions =
-			new Map();
+		const r = new Map() as MapClassMethodOffsetToDefinitions;
 		for (const classInfo of osi.header.classTable.entries) {
 			const structure = classInfo.structure;
 			for (const method of structure.classMethodTable.entries) {
