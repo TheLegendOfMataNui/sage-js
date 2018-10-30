@@ -54,8 +54,8 @@ Includes a number of abstract instructions that can be used to make manipulating
 | 0x16 | GetThisMemberValue          | 3    | i16u          |    +1 | Get this property by symbol index                               |
 | 0x17 | GetThisMemberFunction       | 3    | i16u          |    +1 | Get this method address by symbol index                         |
 | 0x18 | GetMemberValueFromString    | 1    |               | -2 +1 | Get object property by string index                             |
-| 0x19 | GetMemberFunctionFromString | 1    |               | -2 +1 | Get object property by string index                             |
-| 0x1A | SetMemberValueFromString    | 1    |               | -3    | Set object method address by string index                       |
+| 0x19 | GetMemberFunctionFromString | 1    |               | -2 +1 | Get object method address by string index                       |
+| 0x1A | SetMemberValueFromString    | 1    |               | -3    | Set object property by string index                             |
 | 0x21 | GetVariableValue            | 3    | i16u          |    +1 | Get variable by index (highest bit means global)                |
 | 0x22 | SetVariableValue            | 3    | i16u          | -1    | Set variable by index (highest bit means global)                |
 | 0x23 | CreateStackVariables        | 2    | i8s           |    +N | Add N number of stack variables                                 |
