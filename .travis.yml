@@ -15,18 +15,7 @@ before_install:
   - export PATH="$HOME/.yarn/bin:$PATH"
 
 script:
-  - pushd core
-  - yarn run prepack
-  - popd
-
-  - pushd res-osi
-  - yarn run prepack
-  - popd
-
-  - pushd res-osi-asm
-  - yarn run prepack
-  - popd
-
-  - pushd cli
-  - yarn run prepack
-  - popd
+  - pushd core; yarn run prepack; popd
+  - pushd res-osi; yarn run prepack; popd
+  - pushd res-osi-asm; yarn run prepack; popd
+  - pushd cli; yarn run prepack; popd
