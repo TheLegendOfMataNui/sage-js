@@ -1,9 +1,9 @@
 language: node_js
 
 node_js:
-  - "v10.0.0"
-  - "v11.0.0"
   - "v11.1.0"
+  - "v11.0.0"
+  - "v10.0.0"
 
 cache:
   yarn: true
@@ -11,7 +11,18 @@ cache:
     - "node_modules"
 
 script:
-  - pushd core; yarn run prepack; popd
-  - pushd res-osi; yarn run prepack; popd
-  - pushd res-osi-asm; yarn run prepack; popd
-  - pushd cli; yarn run prepack; popd
+  - pushd core
+  - yarn run prepack
+  - popd
+
+  - pushd res-osi
+  - yarn run prepack
+  - popd
+
+  - pushd res-osi-asm
+  - yarn run prepack
+  - popd
+
+  - pushd cli
+  - yarn run prepack
+  - popd
