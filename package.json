@@ -3,9 +3,9 @@
 	"workspaces": {
 		"packages": [
 			"core",
-			"cli",
 			"res-osi",
-			"res-osi-asm"
+			"res-osi-asm",
+			"cli"
 		],
 		"nohoist": []
 	}
