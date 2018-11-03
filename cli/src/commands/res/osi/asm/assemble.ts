@@ -83,13 +83,13 @@ export default class ResOSIASMAssemble extends Command {
 		const osi = assembler.assemble(ast);
 
 		// Transform abstract instructions to BCL instructions.
-		osi.transformAbstractJumpRemove();
-		osi.transformAbstractBranchRemove();
-		osi.transformAbstractStringRemove();
-		osi.transformAbstractSymbolRemove();
-		osi.transformAbstractGlobalRemove();
 		osi.transformAbstractClassRemove();
+		osi.transformAbstractGlobalRemove();
+		osi.transformAbstractSymbolRemove();
+		osi.transformAbstractStringRemove();
 		osi.updateOffsets();
+		osi.transformAbstractBranchRemove();
+		osi.transformAbstractJumpRemove();
 
 		// Write OSI to buffer.
 		const buffer = Buffer.alloc(osi.size);
