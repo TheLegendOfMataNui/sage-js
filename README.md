@@ -2,6 +2,8 @@
 
 SAGE-JS monorepo.
 
+[![Build Status](https://travis-ci.org/TheLegendOfMataNui/sage-js.svg?branch=master)](https://travis-ci.org/TheLegendOfMataNui/sage-js)
+
 Check the individual package directories for information on each component.
 
 
