@@ -1120,7 +1120,7 @@ export class OSI extends Structure {
 	}
 
 	/**
-	 * Generic transform for inline string table instrucitons add.
+	 * Generic transform for inline string table instructions add.
 	 *
 	 * @param table Table instance.
 	 * @param transforms Transforms list.
@@ -1187,7 +1187,7 @@ export class OSI extends Structure {
 	}
 
 	/**
-	 * Generic transform for inline string table instrucitons remove.
+	 * Generic transform for inline string table instructions remove.
 	 *
 	 * @param table Table instance.
 	 * @param transforms Transforms list.
