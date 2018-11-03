@@ -82,7 +82,6 @@ function brancherToAbstract(
  * Subroutine constructor.
  */
 export class Subroutine extends Structure {
-
 	/**
 	 * Subroutine instructions.
 	 */

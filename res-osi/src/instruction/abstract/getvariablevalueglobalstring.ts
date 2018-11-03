@@ -13,7 +13,6 @@ import {InstructionAbstract} from './class';
 @typed.decorate('InstructionAbstractGetVariableValueGlobalString')
 export class InstructionAbstractGetVariableValueGlobalString
 extends InstructionAbstract {
-
 	/**
 	 * Instruction size.
 	 */

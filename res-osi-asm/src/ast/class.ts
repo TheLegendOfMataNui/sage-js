@@ -4,7 +4,6 @@ import {typed} from '../typed';
  * AST constructor.
  */
 export abstract class AST extends Object {
-
 	constructor() {
 		super();
 	}

@@ -5,7 +5,6 @@ import {ASTNode} from '../class';
  * ASTNodeArgument constructor.
  */
 export abstract class ASTNodeArgument extends ASTNode {
-
 	/**
 	 * Argument text.
 	 */

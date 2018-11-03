@@ -45,7 +45,6 @@ import {Assembly} from './class';
  * AssemblyDisassembler constructor.
  */
 export class AssemblyAssembler extends Assembly {
-
 	constructor() {
 		super();
 	}

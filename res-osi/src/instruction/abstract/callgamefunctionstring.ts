@@ -14,7 +14,6 @@ import {InstructionAbstract} from './class';
 @typed.decorate('InstructionAbstractCallGameFunctionString')
 export class InstructionAbstractCallGameFunctionString
 extends InstructionAbstract {
-
 	/**
 	 * Instruction size.
 	 */

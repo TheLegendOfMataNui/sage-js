@@ -8,7 +8,6 @@ import {FunctionDefinition} from './functiondefinition';
  * FunctionDefinitionTable constructor.
  */
 export class FunctionDefinitionTable extends Structure {
-
 	/**
 	 * FunctionDefinition entries.
 	 */

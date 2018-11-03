@@ -261,9 +261,9 @@ rules:
 
   # ESLint: Best Practices:
   no-multi-spaces: true
-  # ter-no-proto: true
-  # ter-no-script-url: true
-  # ter-no-self-compare: true
+  ter-no-proto: true
+  ter-no-script-url: true
+  ter-no-self-compare: true
 
   # ESLint: Node.js and CommonJS:
   handle-callback-err: true
@@ -305,10 +305,9 @@ rules:
   - never
   - objectsInObjects: false
     arraysInObjects: false
-  # Bug: https://github.com/buzinas/tslint-eslint-rules/issues/296
-  # ter-padded-blocks:
-  # - true
-  # - never
+  ter-padded-blocks:
+  - true
+  - never
   space-in-parens:
   - true
   - never

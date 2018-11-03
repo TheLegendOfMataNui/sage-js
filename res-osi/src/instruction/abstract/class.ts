@@ -11,7 +11,6 @@ import {Instruction} from '../class';
  */
 export abstract class InstructionAbstract
 extends Instruction {
-
 	/**
 	 * Byte size.
 	 */

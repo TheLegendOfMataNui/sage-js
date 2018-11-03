@@ -8,7 +8,6 @@ import {Exception} from './class';
  */
 @typed.decorateException('ExceptionRange')
 export class ExceptionRange extends Exception {
-
 	constructor(message: string) {
 		super(message);
 	}

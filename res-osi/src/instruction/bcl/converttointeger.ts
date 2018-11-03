@@ -11,7 +11,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCLConvertToInteger')
 export class InstructionBCLConvertToInteger
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */

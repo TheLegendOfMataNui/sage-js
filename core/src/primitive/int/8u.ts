@@ -10,7 +10,6 @@ import {PrimitiveInt} from './class';
  */
 @typed.decorate('PrimitiveInt8U')
 export class PrimitiveInt8U extends PrimitiveInt {
-
 	/**
 	 * The maximum allowed value.
 	 */

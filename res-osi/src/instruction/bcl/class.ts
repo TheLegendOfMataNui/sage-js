@@ -13,7 +13,6 @@ import {Instruction} from '../class';
  */
 export abstract class InstructionBCL
 extends Instruction {
-
 	/**
 	 * Byte size.
 	 */

@@ -11,7 +11,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCLIsArray')
 export class InstructionBCLIsArray
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */

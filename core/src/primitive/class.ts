@@ -10,7 +10,6 @@ import {BufferView} from '../bufferview';
  */
 export abstract class Primitive extends Object
 implements IBufferReadableNew, IBufferWriteable {
-
 	constructor() {
 		super();
 	}

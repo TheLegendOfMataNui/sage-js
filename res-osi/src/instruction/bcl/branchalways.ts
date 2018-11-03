@@ -12,7 +12,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCLBranchAlways')
 export class InstructionBCLBranchAlways
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */

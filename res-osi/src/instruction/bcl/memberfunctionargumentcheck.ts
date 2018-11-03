@@ -12,7 +12,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCLMemberFunctionArgumentCheck')
 export class InstructionBCLMemberFunctionArgumentCheck
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */

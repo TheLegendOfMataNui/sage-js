@@ -4,7 +4,6 @@ import {ClassDefinitionMethodTable} from './class';
  * ClassDefinitionMethodTable2 constructor.
  */
 export class ClassDefinitionMethodTable2 extends ClassDefinitionMethodTable {
-
 	/**
 	 * Size of entry count.
 	 */

@@ -9,7 +9,6 @@ import {ClassDefinitionProperty} from '../classdefinitionproperty';
  * ClassDefinitionPropertyTable constructor.
  */
 export abstract class ClassDefinitionPropertyTable extends Structure {
-
 	/**
 	 * Size of entry count.
 	 */

@@ -12,7 +12,6 @@ import {Primitive} from '../class';
  * @param value Value of the integer.
  */
 export abstract class PrimitiveInt extends Primitive {
-
 	/**
 	 * The maximum allowed value.
 	 */

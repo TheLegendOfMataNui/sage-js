@@ -21,7 +21,6 @@ import {Command} from '../command';
  * ResOSIASMDisassemble command.
  */
 export default class Info extends Command {
-
 	/**
 	 * Description.
 	 */

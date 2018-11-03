@@ -11,7 +11,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCLRemoveFromArray')
 export class InstructionBCLRemoveFromArray
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */

@@ -70,7 +70,6 @@ function copySourceData(file: SourceFile, ast: ASTNode, ctx: {
  */
 class ASMListenerFile extends Object
 implements ASMListener {
-
 	/**
 	 * Source file.
 	 */
@@ -105,7 +104,6 @@ implements ASMListener {
  */
 class ASMListenerStatements extends Object
 implements ASMListener {
-
 	/**
 	 * Source file.
 	 */
@@ -142,7 +140,6 @@ implements ASMListener {
  */
 class ASMListenerStatement extends Object
 implements ASMListener {
-
 	/**
 	 * Source file.
 	 */
@@ -276,7 +273,6 @@ implements ASMListener {
  */
 class ASMListenerArguments extends Object
 implements ASMListener {
-
 	/**
 	 * Source file.
 	 */
@@ -312,7 +308,6 @@ implements ASMListener {
  */
 class ASMListenerArgument extends Object
 implements ASMListener {
-
 	/**
 	 * Source file.
 	 */
@@ -378,7 +373,6 @@ implements ASMListener {
  * ParserDecoder constructor.
  */
 export class ParserDecoder extends Parser {
-
 	/**
 	 * Syntax errors since the last reset.
 	 */

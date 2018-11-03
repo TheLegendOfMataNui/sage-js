@@ -10,7 +10,6 @@ import {InstructionAbstract} from './class';
 @typed.decorate('InstructionAbstractBranchTarget')
 export class InstructionAbstractBranchTarget
 extends InstructionAbstract {
-
 	/**
 	 * Instruction size.
 	 */

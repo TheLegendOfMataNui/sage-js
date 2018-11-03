@@ -9,7 +9,6 @@ import {ASTNodeStatement} from './class';
  */
 @typed.decorate('ASTNodeStatementInstruction')
 export class ASTNodeStatementInstruction extends ASTNodeStatement {
-
 	/**
 	 * Instruction identifier.
 	 */

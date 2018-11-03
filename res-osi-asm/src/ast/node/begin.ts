@@ -9,7 +9,6 @@ import {ASTNode} from './class';
  */
 @typed.decorate('ASTNodeBegin')
 export class ASTNodeBegin extends ASTNode {
-
 	/**
 	 * Instruction identifier.
 	 */

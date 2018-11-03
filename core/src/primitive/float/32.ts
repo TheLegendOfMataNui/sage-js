@@ -9,7 +9,6 @@ import {PrimitiveFloat} from './class';
  */
 @typed.decorate('PrimitiveFloat32')
 export class PrimitiveFloat32 extends PrimitiveFloat {
-
 	/**
 	 * Bit size.
 	 */

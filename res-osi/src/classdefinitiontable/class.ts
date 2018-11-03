@@ -10,7 +10,6 @@ import {IClassDefinitionTableEntry} from '../types';
  * ClassDefinitionTable constructor.
  */
 export abstract class ClassDefinitionTable extends Structure {
-
 	/**
 	 * Size of entry count.
 	 */

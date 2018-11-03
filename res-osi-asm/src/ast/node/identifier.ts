@@ -6,7 +6,6 @@ import {ASTNode} from './class';
  */
 @typed.decorate('ASTNodeIdentifier')
 export class ASTNodeIdentifier extends ASTNode {
-
 	/**
 	 * Comment text.
 	 */

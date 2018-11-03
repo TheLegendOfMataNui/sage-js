@@ -5,7 +5,6 @@ import {ClassDefinitionTable} from './class';
  * ClassDefinitionTable2 constructor.
  */
 export class ClassDefinitionTable2 extends ClassDefinitionTable {
-
 	/**
 	 * Size of entry count.
 	 */

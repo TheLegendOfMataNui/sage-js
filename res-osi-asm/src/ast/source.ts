@@ -10,7 +10,6 @@ import {AST} from './class';
  */
 @typed.decorate('ASTSource')
 export class ASTSource extends AST {
-
 	/**
 	 * Start line, 1 indexed.
 	 */

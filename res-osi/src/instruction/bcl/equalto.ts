@@ -11,7 +11,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCLEqualTo')
 export class InstructionBCLEqualTo
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */

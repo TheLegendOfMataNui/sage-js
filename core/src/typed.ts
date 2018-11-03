@@ -11,7 +11,6 @@ import {NAME} from './meta';
  * @param parent Parent for making namespace.
  */
 export class Typed extends Object {
-
 	/**
 	 * Exception unique to prefix, but shared by namespaces.
 	 */
@@ -55,7 +54,6 @@ export class Typed extends Object {
 
 		let Exception = parent ? parent.Exception : null;
 		if (!Exception) {
-
 			/**
 			 * Typed exception.
 			 *

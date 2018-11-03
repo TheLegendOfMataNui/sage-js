@@ -12,7 +12,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCLPushConstanti32')
 export class InstructionBCLPushConstanti32
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */

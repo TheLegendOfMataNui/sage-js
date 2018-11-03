@@ -11,7 +11,6 @@ import {ClassDefinitionMethodTable} from '../classdefinitionmethodtable/class';
  * ClassDefinition constructor.
  */
 export abstract class ClassDefinition extends Structure {
-
 	/**
 	 * Size of entry count.
 	 */

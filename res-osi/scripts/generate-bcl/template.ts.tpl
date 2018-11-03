@@ -10,7 +10,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCL${name}')
 export class InstructionBCL${name}
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */

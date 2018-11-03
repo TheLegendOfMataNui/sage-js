@@ -11,7 +11,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCLIsGameObject')
 export class InstructionBCLIsGameObject
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */

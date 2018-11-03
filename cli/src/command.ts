@@ -5,7 +5,6 @@ import {install as sourceMapSupportInstall} from 'source-map-support';
  * Command constructor.
  */
 export abstract class Command extends CommandBase {
-
 	/**
 	 * Init function.
 	 */

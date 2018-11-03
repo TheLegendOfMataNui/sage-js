@@ -49,7 +49,6 @@ describe('assert', () => {
 				assertSingleLine('\n', 'test');
 			}).toThrow(err);
 		});
-
 	});
 
 	describe('assertCstring', () => {
@@ -91,7 +90,6 @@ describe('assert', () => {
 				assertCstring('\x00', 'test');
 			}).toThrow(err);
 		});
-
 	});
 
 	describe('assertRange', () => {

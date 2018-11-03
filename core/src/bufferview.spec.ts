@@ -1649,7 +1649,6 @@ describe('BufferView', () => {
 		 * A mock readable class.
 		 */
 		class Readable extends Object {
-
 			/**
 			 * Test values.
 			 */
@@ -1708,7 +1707,6 @@ describe('BufferView', () => {
 		 * A mock writable class.
 		 */
 		class Writable extends Object {
-
 			/**
 			 * Test values.
 			 */

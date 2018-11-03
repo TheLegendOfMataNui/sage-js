@@ -6,7 +6,6 @@ import {ASTNodeArgument} from './class';
  */
 @typed.decorate('ASTNodeArgumentNumber')
 export class ASTNodeArgumentNumber extends ASTNodeArgument {
-
 	constructor() {
 		super();
 	}

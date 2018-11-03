@@ -14,7 +14,6 @@ import {InstructionAbstract} from './class';
 @typed.decorate('InstructionAbstractPushConstanti32JumpTarget')
 export class InstructionAbstractPushConstanti32JumpTarget
 extends InstructionAbstract {
-
 	/**
 	 * Instruction size.
 	 */

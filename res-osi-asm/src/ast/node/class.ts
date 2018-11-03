@@ -6,7 +6,6 @@ import {AST} from '../class';
  * ASTNode constructor.
  */
 export abstract class ASTNode extends AST {
-
 	/**
 	 * Location information.
 	 */

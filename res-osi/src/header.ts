@@ -16,7 +16,6 @@ import {ClassDefinitionTable2} from './classdefinitiontable/2';
  * Only reads the header, cannot read the assembly body.
  */
 export class Header extends Structure {
-
 	/**
 	 * File magic.
 	 */

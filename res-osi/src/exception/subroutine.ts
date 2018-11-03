@@ -8,7 +8,6 @@ import {Exception} from './class';
  */
 @typed.decorateException('ExceptionSubroutine')
 export class ExceptionSubroutine extends Exception {
-
 	constructor(message: string) {
 		super(message);
 	}

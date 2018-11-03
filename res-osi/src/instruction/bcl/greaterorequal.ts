@@ -11,7 +11,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCLGreaterOrEqual')
 export class InstructionBCLGreaterOrEqual
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */

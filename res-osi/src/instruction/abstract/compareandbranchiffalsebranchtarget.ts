@@ -14,7 +14,6 @@ import {InstructionAbstract} from './class';
 @typed.decorate('InstructionAbstractCompareAndBranchIfFalseBranchTarget')
 export class InstructionAbstractCompareAndBranchIfFalseBranchTarget
 extends InstructionAbstract {
-
 	/**
 	 * Instruction size.
 	 */

@@ -9,7 +9,6 @@ import {typed} from '../typed';
  * The base class for Instruction types.
  */
 export abstract class Instruction extends Structure {
-
 	/**
 	 * Instruction name.
 	 */

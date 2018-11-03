@@ -11,7 +11,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCLBitwiseNot')
 export class InstructionBCLBitwiseNot
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */

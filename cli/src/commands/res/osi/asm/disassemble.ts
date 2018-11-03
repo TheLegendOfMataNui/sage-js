@@ -18,7 +18,6 @@ import {Command} from '../../../../command';
  * ResOSIASMDisassemble command.
  */
 export default class ResOSIASMDisassemble extends Command {
-
 	/**
 	 * Aliases.
 	 */

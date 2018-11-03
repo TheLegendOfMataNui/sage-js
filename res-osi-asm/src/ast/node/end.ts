@@ -7,7 +7,6 @@ import {ASTNode} from './class';
  */
 @typed.decorate('ASTNodeEnd')
 export class ASTNodeEnd extends ASTNode {
-
 	/**
 	 * Line comment.
 	 */

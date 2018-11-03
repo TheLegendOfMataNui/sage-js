@@ -64,7 +64,6 @@ import {Assembly} from './class';
  * AssemblyDisassembler constructor.
  */
 export class AssemblyDisassembler extends Assembly {
-
 	/**
 	 * Disable transforming class property and method symbols to strings.
 	 */

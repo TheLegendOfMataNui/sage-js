@@ -10,6 +10,7 @@ import {assertIntegerRange} from './assert';
  */
 export function utilNumberIsNaN(value: number) {
 	// NaN is the only thing that is not strictly equal to itself.
+	// tslint:disable-next-line: ter-no-self-compare
 	return value !== value;
 }
 

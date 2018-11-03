@@ -6,7 +6,6 @@ import {ClassDefinition} from './class';
  * ClassDefinition constructor.
  */
 export class ClassDefinition1 extends ClassDefinition {
-
 	/**
 	 * Size of entry count.
 	 */

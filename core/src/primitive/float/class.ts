@@ -8,7 +8,6 @@ import {Primitive} from '../class';
  * @param value Value of the float.
  */
 export abstract class PrimitiveFloat extends Primitive {
-
 	/**
 	 * Bit size.
 	 */

@@ -11,7 +11,6 @@ import {ExceptionAST} from '../class';
  */
 @typed.decorateException('ExceptionASTNode')
 export class ExceptionASTNode extends ExceptionAST {
-
 	/**
 	 * Related node.
 	 */

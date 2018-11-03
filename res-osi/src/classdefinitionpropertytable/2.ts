@@ -5,7 +5,6 @@ import {ClassDefinitionPropertyTable} from './class';
  */
 export class ClassDefinitionPropertyTable2
 extends ClassDefinitionPropertyTable {
-
 	/**
 	 * Size of entry count.
 	 */

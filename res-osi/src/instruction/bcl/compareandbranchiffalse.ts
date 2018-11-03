@@ -12,7 +12,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCLCompareAndBranchIfFalse')
 export class InstructionBCLCompareAndBranchIfFalse
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */

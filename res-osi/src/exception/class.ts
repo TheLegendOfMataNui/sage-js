@@ -8,7 +8,6 @@ import {Exception as CoreException} from '@sage-js/core';
  */
 @typed.decorateException('Exception')
 export class Exception extends CoreException {
-
 	constructor(message: string) {
 		super(message);
 	}

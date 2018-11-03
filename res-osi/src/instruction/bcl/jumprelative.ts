@@ -12,7 +12,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCLJumpRelative')
 export class InstructionBCLJumpRelative
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */

@@ -12,7 +12,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCLJumpAbsolute')
 export class InstructionBCLJumpAbsolute
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */

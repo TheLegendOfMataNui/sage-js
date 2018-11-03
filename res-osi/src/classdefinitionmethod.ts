@@ -9,7 +9,6 @@ import {
  * ClassDefinitionMethod constructor.
  */
 export class ClassDefinitionMethod extends Structure {
-
 	/**
 	 * Symbol ID.
 	 */

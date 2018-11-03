@@ -17,7 +17,6 @@ import {Subroutine} from './subroutine';
  * SubroutineTable constructor.
  */
 export class SubroutineTable extends Structure {
-
 	/**
 	 * The current base offset.
 	 */

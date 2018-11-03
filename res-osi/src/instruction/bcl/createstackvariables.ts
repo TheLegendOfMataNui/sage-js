@@ -12,7 +12,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCLCreateStackVariables')
 export class InstructionBCLCreateStackVariables
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */

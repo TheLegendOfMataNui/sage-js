@@ -260,7 +260,6 @@ function findJumpOffsetBCL(
  * OSI class.
  */
 export class OSI extends Structure {
-
 	/**
 	 * File header.
 	 */

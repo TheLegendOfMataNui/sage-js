@@ -9,7 +9,6 @@ import {PrimitiveStringP} from './class';
  */
 @typed.decorate('PrimitiveStringP8')
 export class PrimitiveStringP8 extends PrimitiveStringP {
-
 	/**
 	 * Bit size for length.
 	 */

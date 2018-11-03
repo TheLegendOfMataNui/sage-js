@@ -8,7 +8,6 @@ import {Exception} from './class';
  */
 @typed.decorateException('ExceptionUnimplemented')
 export class ExceptionUnimplemented extends Exception {
-
 	constructor(message: string) {
 		super(message);
 	}

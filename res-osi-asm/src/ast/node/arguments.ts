@@ -7,7 +7,6 @@ import {ASTNode} from './class';
  */
 @typed.decorate('ASTNodeArguments')
 export class ASTNodeArguments extends ASTNode {
-
 	/**
 	 * Argument list.
 	 */

@@ -5,7 +5,6 @@ import {ASTNode} from '../class';
  * ASTNodeStatement constructor.
  */
 export abstract class ASTNodeStatement extends ASTNode {
-
 	constructor() {
 		super();
 	}

@@ -12,7 +12,6 @@ import {Exception} from './class';
  */
 @typed.decorateException('ExceptionSyntax')
 export class ExceptionSyntax extends Exception {
-
 	/**
 	 * Source file.
 	 */

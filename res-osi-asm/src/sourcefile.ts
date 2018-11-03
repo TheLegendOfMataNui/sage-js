@@ -4,7 +4,6 @@ import {utilNormalizeNewlines} from '@sage-js/core';
  * SourceFile constructor.
  */
 export class SourceFile extends Object {
-
 	/**
 	 * File code.
 	 */

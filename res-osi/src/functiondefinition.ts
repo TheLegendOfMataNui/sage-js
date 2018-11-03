@@ -10,7 +10,6 @@ import {
  * FunctionDefinition constructor.
  */
 export class FunctionDefinition extends Structure {
-
 	/**
 	 * FunctionDefinition name.
 	 */

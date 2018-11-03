@@ -8,7 +8,6 @@ import {
  * ClassDefinitionProperty constructor.
  */
 export class ClassDefinitionProperty extends Structure {
-
 	/**
 	 * Symbol ID.
 	 */

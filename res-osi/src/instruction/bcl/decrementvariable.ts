@@ -12,7 +12,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCLDecrementVariable')
 export class InstructionBCLDecrementVariable
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */

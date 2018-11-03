@@ -11,7 +11,6 @@ import {BufferView} from './bufferview';
  */
 export abstract class Structure extends Object
 implements ICreateNew, ICopyable, IBufferReadable, IBufferWriteable {
-
 	constructor() {
 		super();
 	}

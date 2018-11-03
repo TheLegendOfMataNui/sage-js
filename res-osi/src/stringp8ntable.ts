@@ -8,7 +8,6 @@ import {
  * StringP8NTable constructor.
  */
 export class StringP8NTable extends Structure {
-
 	/**
 	 * String entries.
 	 */

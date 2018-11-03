@@ -77,7 +77,6 @@ function exceptionInvalidBitsSize(bits: number) {
  * @param size Size of the data.
  */
 export class BufferView extends Object {
-
 	/**
 	 * Current offset.
 	 */

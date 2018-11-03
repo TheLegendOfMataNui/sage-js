@@ -10,7 +10,6 @@ import {Exception} from './class';
  */
 @typed.decorateException('ExceptionInstruction')
 export class ExceptionInstruction extends Exception {
-
 	/**
 	 * Triggering instruction.
 	 */

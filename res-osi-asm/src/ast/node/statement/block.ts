@@ -9,7 +9,6 @@ import {ASTNodeStatement} from './class';
  */
 @typed.decorate('ASTNodeStatementBlock')
 export class ASTNodeStatementBlock extends ASTNodeStatement {
-
 	/**
 	 * Block begin.
 	 */

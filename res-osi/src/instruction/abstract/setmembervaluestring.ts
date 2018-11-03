@@ -13,7 +13,6 @@ import {InstructionAbstract} from './class';
 @typed.decorate('InstructionAbstractSetMemberValueString')
 export class InstructionAbstractSetMemberValueString
 extends InstructionAbstract {
-
 	/**
 	 * Instruction size.
 	 */

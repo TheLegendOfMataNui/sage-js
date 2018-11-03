@@ -22,7 +22,6 @@ import {Parser} from './class';
  * ParserEncoder constructor.
  */
 export class ParserEncoder extends Parser {
-
 	/**
 	 * Indent size.
 	 */

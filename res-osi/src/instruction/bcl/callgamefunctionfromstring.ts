@@ -13,7 +13,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCLCallGameFunctionFromString')
 export class InstructionBCLCallGameFunctionFromString
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */

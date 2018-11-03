@@ -13,7 +13,6 @@ import {PrimitiveString} from '../class';
  * @param value Value of the string.
  */
 export abstract class PrimitiveStringP extends PrimitiveString {
-
 	/**
 	 * Length bit size.
 	 */

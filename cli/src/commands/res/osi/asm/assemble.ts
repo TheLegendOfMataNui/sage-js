@@ -14,7 +14,6 @@ import {Command} from '../../../../command';
  * ResOSIASMAssemble command.
  */
 export default class ResOSIASMAssemble extends Command {
-
 	/**
 	 * Aliases.
 	 */

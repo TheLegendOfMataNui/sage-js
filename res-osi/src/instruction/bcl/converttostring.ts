@@ -11,7 +11,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCLConvertToString')
 export class InstructionBCLConvertToString
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */

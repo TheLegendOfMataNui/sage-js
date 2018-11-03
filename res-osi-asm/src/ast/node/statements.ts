@@ -7,7 +7,6 @@ import {ASTNode} from './class';
  */
 @typed.decorate('ASTNodeStatements')
 export class ASTNodeStatements extends ASTNode {
-
 	/**
 	 * Child statements.
 	 */

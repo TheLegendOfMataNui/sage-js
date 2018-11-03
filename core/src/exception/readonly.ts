@@ -8,7 +8,6 @@ import {Exception} from './class';
  */
 @typed.decorateException('ExceptionReadonly')
 export class ExceptionReadonly extends Exception {
-
 	constructor(message: string) {
 		super(message);
 	}

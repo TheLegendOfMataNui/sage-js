@@ -12,7 +12,6 @@ import {InstructionBCL} from './class';
 @typed.decorate('InstructionBCLLineNumberAlt2')
 export class InstructionBCLLineNumberAlt2
 extends InstructionBCL {
-
 	/**
 	 * Instruction size.
 	 */
