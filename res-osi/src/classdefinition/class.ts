@@ -46,8 +46,7 @@ export abstract class ClassDefinition extends Structure {
 	 * Get entry count size.
 	 */
 	public get entryCountSize() {
-		const Constructor =
-			this.constructor as typeof ClassDefinitionMethodTable;
+		const Constructor = this.constructor as typeof ClassDefinition;
 		return Constructor.ENTRY_COUNT_SIZE;
 	}
 
