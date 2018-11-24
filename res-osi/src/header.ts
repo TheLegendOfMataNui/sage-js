@@ -104,22 +104,7 @@ export class Header extends Structure {
 		this.globalTable = this.globalTable.createNew();
 		this.functionTable = this.functionTable.createNew();
 
-		const classMemberCountSize = this.classMemberCountSize;
-		switch (classMemberCountSize) {
-			case 1: {
-				this.classTable = new ClassDefinitionTable1();
-				break;
-			}
-			case 2: {
-				this.classTable = new ClassDefinitionTable2();
-				break;
-			}
-			default: {
-				throw new ExceptionValue(
-					`Invalid classMemberCountSize: ${classMemberCountSize}`
-				);
-			}
-		}
+		this.classTable = this.newClassDefinitionTable();
 
 		this.symbolTable = this.symbolTable.createNew();
 		this.sourceTable = this.sourceTable.createNew();
@@ -169,6 +154,27 @@ export class Header extends Structure {
 	 */
 	public validateVersion() {
 		this._validateVersion(this.versionMajor, this.versionMinor);
+	}
+
+	/**
+	 * Create new class definition table based on classMemberCountSize.
+	 */
+	public newClassDefinitionTable() {
+		const classMemberCountSize = this.classMemberCountSize;
+		switch (classMemberCountSize) {
+			case 1: {
+				return new ClassDefinitionTable1();
+			}
+			case 2: {
+				return new ClassDefinitionTable2();
+			}
+			default: {
+				// Do nothing.
+			}
+		}
+		throw new ExceptionValue(
+			`Invalid classMemberCountSize: ${classMemberCountSize}`
+		);
 	}
 
 	/**
