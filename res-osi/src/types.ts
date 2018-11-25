@@ -3,6 +3,8 @@ import {
 	PrimitiveStringP8N
 } from '@sage-js/core';
 import {ClassDefinition} from './classdefinition/class';
+import {ClassDefinitionProperty} from './classdefinitionproperty';
+import {ClassDefinitionMethod} from './classdefinitionmethod';
 import {Subroutine} from './subroutine';
 import {Instruction} from './instruction/class';
 import {InstructionBCL} from './instruction/bcl/class';
@@ -17,6 +19,21 @@ export interface ISubroutineTableEntry {
 	offset: PrimitiveInt32U;
 	subroutine: Subroutine;
 }
+
+export type MapClassDefinitionExtends = Map<
+	ClassDefinition,
+	ClassDefinition | null
+>;
+
+export type MapClassDefinitionTableEntryExtends = Map<
+	IClassDefinitionTableEntry,
+	IClassDefinitionTableEntry | null
+>;
+
+export type MapClassDefinitionTableEntryExtendsOptions = Map<
+	IClassDefinitionTableEntry,
+	IClassDefinitionTableEntry[]
+>;
 
 export type SubroutineTableEntryEach =
 	(data: ISubroutineTableEntry) => void;
@@ -38,3 +55,21 @@ export interface ITransformString {
 	ABS: new() => InstructionAbstract;
 	args: Set<number>;
 }
+
+export interface IClassDefinitionPropertyFound {
+	definition: ClassDefinition;
+	index: number;
+	entry: ClassDefinitionProperty;
+}
+
+export type IClassDefinitionPropertyFind =
+	IClassDefinitionPropertyFound | null;
+
+export interface IClassDefinitionMethodFound {
+	definition: ClassDefinition;
+	index: number;
+	entry: ClassDefinitionMethod;
+}
+
+export type IClassDefinitionMethodFind =
+	IClassDefinitionMethodFound | null;

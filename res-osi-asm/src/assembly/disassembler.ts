@@ -12,6 +12,7 @@ import {
 	StringP8NTable,
 	FunctionDefinition,
 	IClassDefinitionTableEntry,
+	ClassDefinition,
 	ClassDefinitionProperty,
 	ClassDefinitionMethod,
 	ISubroutineTableEntry,
@@ -338,14 +339,27 @@ export class AssemblyDisassembler extends Assembly {
 
 		const entries = ast.statements.entries;
 		const classEntries = osi.header.classTable.entries;
+		const nameByStructure = new Map<ClassDefinition, PrimitiveStringP8N>();
+		for (const {name, structure} of classEntries) {
+			nameByStructure.set(structure, name);
+		}
 		for (let i = 0; i < classEntries.length; i++) {
 			const definition = classEntries[i];
+			let parentName: PrimitiveStringP8N | null = null;
+			const parent = parents.get(definition) || null;
+			const extend = definition.structure.extends;
+			if (parent) {
+				parentName = parent.name;
+			}
+			else if (extend) {
+				parentName = nameByStructure.get(extend) || null;
+			}
 			entries.push(...this.disassembleClass(
 				osi,
 				definition,
 				i,
 				subroutineOffsetToId,
-				parents.get(definition) || null
+				parentName
 			));
 		}
 
@@ -357,7 +371,9 @@ export class AssemblyDisassembler extends Assembly {
 	 *
 	 * @param osi OSI instance.
 	 * @param classDefinition Class definition.
+	 * @param index Table index.
 	 * @param subroutineOffsetToId Map of subroutine offsets to IDs.
+	 * @param parentName Parent name or null.
 	 * @return AST statements.
 	 */
 	public disassembleClass(
@@ -365,14 +381,14 @@ export class AssemblyDisassembler extends Assembly {
 		classDefinition: IClassDefinitionTableEntry,
 		index: number,
 		subroutineOffsetToId: MapSubroutineOffsetToId,
-		parent: IClassDefinitionTableEntry | null
+		parentName: PrimitiveStringP8N | null = null
 	): ASTNodeStatement[] {
 		const {name, structure} = classDefinition;
 
 		const comments = [`${index}`];
-		if (parent) {
-			const parentName = parent.name.stringEncode();
-			comments.push(`extends ${parentName}`);
+		if (parentName) {
+			const name = parentName.stringEncode();
+			comments.push(`extends ${name}`);
 		}
 
 		const ast = this._disassembleCreateStatementBlock('class');
@@ -384,14 +400,14 @@ export class AssemblyDisassembler extends Assembly {
 
 		const entries = ast.statements.entries;
 
-		for (const property of structure.classPropertyTable.entries) {
+		for (const property of structure.itterProperties()) {
 			entries.push(...this.disassembleClassProperty(
 				osi,
 				property
 			));
 		}
 
-		for (const method of structure.classMethodTable.entries) {
+		for (const method of structure.itterMethods()) {
 			entries.push(...this.disassembleClassMethod(
 				osi,
 				method,
@@ -961,7 +977,7 @@ export class AssemblyDisassembler extends Assembly {
 		const r = new Map() as MapClassMethodOffsetToDefinitions;
 		for (const classInfo of osi.header.classTable.entries) {
 			const structure = classInfo.structure;
-			for (const method of structure.classMethodTable.entries) {
+			for (const method of structure.itterMethods()) {
 				const off = method.offset.value;
 				const list = r.get(off) || [];
 				list.push({classInfo, method});
@@ -1095,7 +1111,7 @@ export class AssemblyDisassembler extends Assembly {
 		}
 		return {
 			arg: this._disassembleCreateArgumentFromString(sym),
-			comment: null
+			comment: symbol.stringEncode()
 		};
 	}
 }
