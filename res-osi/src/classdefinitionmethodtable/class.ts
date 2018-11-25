@@ -1,4 +1,5 @@
 import {
+	PrimitiveInt16U,
 	Structure,
 	BufferView,
 	ExceptionValue
@@ -48,7 +49,14 @@ export abstract class ClassDefinitionMethodTable extends Structure {
 	 */
 	public get size() {
 		// Size of length marker, plus the size of each entry.
-		let r = this.entryCountSize;
+		return this.entryCountSize + this.sizeContent;
+	}
+
+	/**
+	 * Byte size of content.
+	 */
+	public get sizeContent() {
+		let r = 0;
 		for (const entry of this.entries) {
 			r += entry.size;
 		}
@@ -112,5 +120,26 @@ export abstract class ClassDefinitionMethodTable extends Structure {
 		for (const entry of this.entries) {
 			view.writeWritable(entry);
 		}
+	}
+
+	/**
+	 * Find entry.
+	 *
+	 * @param symbol The symbol to find.
+	 * @return The index and entry.
+	 */
+	public find(symbol: PrimitiveInt16U) {
+		const entries = this.entries;
+		for (let i = 0; i < entries.length; i++) {
+			const entry = entries[i];
+			if (entry.symbol.value !== symbol.value) {
+				continue;
+			}
+			return {
+				index: i,
+				entry
+			};
+		}
+		return null;
 	}
 }

@@ -4,7 +4,10 @@ import {
 	PrimitiveStringP8N
 } from '@sage-js/core';
 import {ClassDefinition} from '../classdefinition/class';
-import {IClassDefinitionTableEntry} from '../types';
+import {
+	IClassDefinitionTableEntry,
+	MapClassDefinitionExtends
+} from '../types';
 
 /**
  * ClassDefinitionTable constructor.
@@ -108,6 +111,27 @@ export abstract class ClassDefinitionTable extends Structure {
 		}
 		for (const entry of this.entries) {
 			view.writeWritable(entry.name);
+		}
+	}
+
+	/**
+	 * Transform classes to add extends properties.
+	 *
+	 * @param map The mappings.
+	 */
+	public transformClassExtendsAdd(map: MapClassDefinitionExtends) {
+		for (const entry of this.entries) {
+			const extend = map.get(entry.structure) || null;
+			entry.structure.transformClassExtendsAdd(extend);
+		}
+	}
+
+	/**
+	 * Transform classes to remove extends properties.
+	 */
+	public transformClassExtendsRemove() {
+		for (const entry of this.entries) {
+			entry.structure.transformClassExtendsRemove();
 		}
 	}
 }

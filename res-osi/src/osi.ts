@@ -12,9 +12,13 @@ import {
 } from './stringp8ntable';
 import {
 	ITransformString,
-	IClassDefinitionTableEntry
+	IClassDefinitionTableEntry,
+	MapClassDefinitionTableEntryExtends,
+	MapClassDefinitionTableEntryExtendsOptions,
+	MapClassDefinitionExtends
 } from './types';
 import {typed} from './typed';
+import {utilMapClassDefinitionEntriesToExtends} from './util';
 import {ExceptionInternal} from './exception/internal';
 import {ExceptionInvalid} from './exception/invalid';
 import {Header} from './header';
@@ -467,16 +471,10 @@ export class OSI extends Structure {
 		const classList = this.header.classTable.entries;
 		const symbolList = this.header.symbolTable.entries;
 
-		const r = new Map() as Map<
-			IClassDefinitionTableEntry,
-			IClassDefinitionTableEntry[]
-		>;
+		const r = new Map() as MapClassDefinitionTableEntryExtendsOptions;
 
 		// Find constructor offsets, once a constructor always one.
-		const hasConstructors = new Map() as Map<
-			IClassDefinitionTableEntry,
-			boolean
-		>;
+		const hasConstructors = new Set<IClassDefinitionTableEntry>();
 		const constructors = new Set<number>();
 		for (const cInfo of classList) {
 			const cStruct = cInfo.structure;
@@ -488,7 +486,7 @@ export class OSI extends Structure {
 				if (cInfo.name.value !== symbol.value) {
 					continue;
 				}
-				hasConstructors.set(cInfo, true);
+				hasConstructors.add(cInfo);
 				constructors.add(method.offset.value);
 			}
 		}
@@ -497,7 +495,7 @@ export class OSI extends Structure {
 		const mapPossibleAncestors = this.mapClassPossibleAncestors();
 		for (const [cInfo, aInfos] of mapPossibleAncestors) {
 			const cStruct = cInfo.structure;
-			const hasConstructor = hasConstructors.get(cInfo) || false;
+			const hasConstructor = hasConstructors.has(cInfo);
 
 			// Search for parent candidates.
 			const candidates: IClassDefinitionTableEntry[] = [];
@@ -543,10 +541,7 @@ export class OSI extends Structure {
 	 * @return Mapped classes to parents.
 	 */
 	public mapClassParents() {
-		const r = new Map() as Map<
-			IClassDefinitionTableEntry,
-			IClassDefinitionTableEntry | null
-		>;
+		const r = new Map() as MapClassDefinitionTableEntryExtends;
 
 		// Get the list of possible parents.
 		const mapPossibleParents = this.mapClassPossibleParents();
@@ -621,6 +616,27 @@ export class OSI extends Structure {
 		}
 
 		return r;
+	}
+
+	/**
+	 * Transform classes to add extends properties.
+	 *
+	 * @param map Optional mappings, default created from mapClassParents.
+	 */
+	public transformClassExtendsAdd(
+		map: MapClassDefinitionExtends | null = null
+	) {
+		map = map || utilMapClassDefinitionEntriesToExtends(
+			this.mapClassParents()
+		);
+		this.header.transformClassExtendsAdd(map);
+	}
+
+	/**
+	 * Transform classes to remove extends properties.
+	 */
+	public transformClassExtendsRemove() {
+		this.header.transformClassExtendsRemove();
 	}
 
 	/**

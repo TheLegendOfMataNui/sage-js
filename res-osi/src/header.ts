@@ -5,6 +5,7 @@ import {
 	PrimitiveInt32U,
 	ExceptionValue
 } from '@sage-js/core';
+import {MapClassDefinitionExtends} from './types';
 import {StringP8NTable} from './stringp8ntable';
 import {FunctionDefinitionTable} from './functiondefinitiontable';
 import {ClassDefinitionTable} from './classdefinitiontable/class';
@@ -233,6 +234,22 @@ export class Header extends Structure {
 		if (this.hasSourceTable) {
 			view.writeWritable(this.sourceTable);
 		}
+	}
+
+	/**
+	 * Transform classes to add extends properties.
+	 *
+	 * @param map The mappings.
+	 */
+	public transformClassExtendsAdd(map: MapClassDefinitionExtends) {
+		this.classTable.transformClassExtendsAdd(map);
+	}
+
+	/**
+	 * Transform classes to remove extends properties.
+	 */
+	public transformClassExtendsRemove() {
+		this.classTable.transformClassExtendsRemove();
 	}
 
 	/**
