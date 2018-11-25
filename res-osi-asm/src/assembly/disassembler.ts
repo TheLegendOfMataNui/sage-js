@@ -12,6 +12,7 @@ import {
 	StringP8NTable,
 	FunctionDefinition,
 	IClassDefinitionTableEntry,
+	MapClassDefinitionTableEntryExtends,
 	ClassDefinition,
 	ClassDefinitionProperty,
 	ClassDefinitionMethod,
@@ -109,6 +110,14 @@ export class AssemblyDisassembler extends Assembly {
 		const classMethodByOffset =
 			this._disassembleMapClassMethodOffsetToDefinitions(osi);
 
+		const classParents = osi.mapClassParents();
+
+		const classMethodImplementByOffset =
+			this._disassembleMapclassMethodImplementsByOffset(
+				osi,
+				classParents
+			);
+
 		// Create the AST statements.
 		add(...this.disassembleMetadata(osi));
 		nl();
@@ -127,7 +136,8 @@ export class AssemblyDisassembler extends Assembly {
 		nl();
 		add(...this.disassembleClasses(
 			osi,
-			subroutineOffsetToId
+			subroutineOffsetToId,
+			classParents
 		));
 
 		for (const entry of osi.subroutines.itter()) {
@@ -137,7 +147,8 @@ export class AssemblyDisassembler extends Assembly {
 				entry,
 				subroutineOffsetToId,
 				functionsByOffset,
-				classMethodByOffset
+				classMethodByOffset,
+				classMethodImplementByOffset
 			));
 		}
 
@@ -328,14 +339,16 @@ export class AssemblyDisassembler extends Assembly {
 	 *
 	 * @param osi OSI instance.
 	 * @param subroutineOffsetToId Map of subroutine offsets to IDs.
+	 * @param parents Parent mappings.
 	 * @return AST statements.
 	 */
 	public disassembleClasses(
 		osi: OSI,
-		subroutineOffsetToId: MapSubroutineOffsetToId
+		subroutineOffsetToId: MapSubroutineOffsetToId,
+		parents: MapClassDefinitionTableEntryExtends | null = null
 	): ASTNodeStatement[] {
 		const ast = this._disassembleCreateStatementBlock('classes');
-		const parents = osi.mapClassParents();
+		parents = parents || osi.mapClassParents();
 
 		const entries = ast.statements.entries;
 		const classEntries = osi.header.classTable.entries;
@@ -493,6 +506,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * @param subroutineOffsetToId Map offsets to ID.
 	 * @param functionsByOffset Map function offset to function info.
 	 * @param classMethodByOffset Map class offset to method info.
+	 * @param classMethodImplementByOffset Map class offset to implement info.
 	 * @return AST statements.
 	 */
 	public disassembleSubroutine(
@@ -500,7 +514,8 @@ export class AssemblyDisassembler extends Assembly {
 		subroutineEntry: ISubroutineTableEntry,
 		subroutineOffsetToId: MapSubroutineOffsetToId,
 		functionsByOffset: MapFunctionOffsetToDefinitions,
-		classMethodByOffset: MapClassMethodOffsetToDefinitions
+		classMethodByOffset: MapClassMethodOffsetToDefinitions,
+		classMethodImplementByOffset: MapClassMethodOffsetToDefinitions
 	): ASTNodeStatement[] {
 		const {offset, subroutine} = subroutineEntry;
 
@@ -560,6 +575,18 @@ export class AssemblyDisassembler extends Assembly {
 		// Add comments for any function that references this.
 		for (const func of functionsByOffset.get(off) || []) {
 			addLine(`function: ${func.name.stringEncode()}`);
+		}
+
+		// Add comments for methods that did not inherit the subroutine.
+		for (const {
+			classInfo,
+			method
+		} of classMethodImplementByOffset.get(off) || []) {
+			const symbol = symbols[method.symbol.value];
+			const name = classInfo.name;
+			addLine(
+				`implement: ${name.stringEncode()}.${symbol.stringEncode()}`
+			);
 		}
 
 		// Add comments for any methods that references this.
@@ -982,6 +1009,59 @@ export class AssemblyDisassembler extends Assembly {
 				const list = r.get(off) || [];
 				list.push({classInfo, method});
 				r.set(off, list);
+			}
+		}
+		return r;
+	}
+
+	/**
+	 * Map class method offsets to class definitions of implementation.
+	 *
+	 * @param osi OSI instance.
+	 * @param parents Parent mappings.
+	 * @return Map object.
+	 */
+	protected _disassembleMapclassMethodImplementsByOffset(
+		osi: OSI,
+		parents: MapClassDefinitionTableEntryExtends | null = null
+	) {
+		parents = parents || osi.mapClassParents();
+
+		const methodSerialize = (method: ClassDefinitionMethod) =>
+			`${method.symbol.value},${method.offset.value}`;
+
+		// Create subroutine offset to class and method mappings.
+		const r = new Map() as MapClassMethodOffsetToDefinitions;
+		for (const classInfo of osi.header.classTable.entries) {
+			const structure = classInfo.structure;
+			const extend = structure.extends;
+			const patentInfo = parents.get(classInfo) || null;
+			const extending = patentInfo ? patentInfo.structure : extend;
+			// console.log(extending);
+
+			// List methods that may be inherited.
+			const inherited = new Set<string>();
+			if (extending) {
+				for (const method of extending.itterMethods()) {
+					inherited.add(methodSerialize(method));
+				}
+			}
+
+			// Itterate methods to find those that are not being inherited.
+			for (const method of structure.itterMethods()) {
+				// Skip inherited.
+				if (inherited.has(methodSerialize(method))) {
+					continue;
+				}
+
+				// Add those not inherited to map.
+				const ov = method.offset.value;
+				const list = r.get(ov) || [];
+				r.set(ov, list);
+				list.push({
+					classInfo,
+					method
+				});
 			}
 		}
 		return r;
