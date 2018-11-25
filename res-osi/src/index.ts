@@ -1,6 +1,7 @@
 export * from './meta';
 export * from './types';
 export * from './typed';
+export * from './util';
 export * from './exception';
 export * from './osi';
 export * from './header';
