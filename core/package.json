@@ -1,7 +1,7 @@
 {
 	"name": "@sage-js/core",
 	"description": "SAGE core",
-	"version": "0.9.2",
+	"version": "0.10.0",
 	"keywords": [],
 	"main": "lib/index",
 	"types": "lib/index.d.ts",
