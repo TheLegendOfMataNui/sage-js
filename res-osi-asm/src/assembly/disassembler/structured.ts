@@ -191,7 +191,9 @@ export class AssemblyDisassemblerStructured extends AssemblyDisassembler {
 	): ASTNodeStatement[] {
 		const offset = functionDefinition.offset;
 		const ast = this._disassembleCreateStatementBlock('function');
-		this._disassembleSetComment(ast.begin.comment, `${index}`);
+		if (this.enableIndexComments) {
+			this._disassembleSetComment(ast.begin.comment, `${index}`);
+		}
 
 		const argEntries = ast.begin.arguments.entries;
 		argEntries.push(
@@ -240,7 +242,7 @@ export class AssemblyDisassemblerStructured extends AssemblyDisassembler {
 	): ASTNodeStatement[] {
 		const {name, structure} = classDefinition;
 
-		const comments = [`${index}`];
+		const comments = this.enableIndexComments ? [`${index}`] : [];
 
 		const extend = structure.extends;
 		const extendName = extend ?

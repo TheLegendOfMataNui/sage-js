@@ -73,6 +73,11 @@ export class AssemblyDisassembler extends Assembly {
 	 */
 	public disableTransformSymbols = false;
 
+	/**
+	 * Include comments for the index different things appear.
+	 */
+	public enableIndexComments = false;
+
 	constructor() {
 		super();
 	}
@@ -264,7 +269,9 @@ export class AssemblyDisassembler extends Assembly {
 				this._disassembleCreateArgumentFromString(entry)
 			);
 
-			this._disassembleSetComment(inst.comment, `${i}`);
+			if (this.enableIndexComments) {
+				this._disassembleSetComment(inst.comment, `${i}`);
+			}
 
 			entries.push(inst);
 		}
@@ -316,7 +323,9 @@ export class AssemblyDisassembler extends Assembly {
 		subroutineOffsetToId: MapSubroutineOffsetToId
 	): ASTNodeStatement[] {
 		const ast = this._disassembleCreateStatementInstruction('function');
-		this._disassembleSetComment(ast.comment, `${index}`);
+		if (this.enableIndexComments) {
+			this._disassembleSetComment(ast.comment, `${index}`);
+		}
 
 		const offset = functionDefinition.offset.value;
 		const id = subroutineOffsetToId.get(offset);
@@ -406,7 +415,7 @@ export class AssemblyDisassembler extends Assembly {
 	): ASTNodeStatement[] {
 		const {name, structure} = classDefinition;
 
-		const comments = [`${index}`];
+		const comments = this.enableIndexComments ? [`${index}`] : [];
 		if (parentName) {
 			const name = parentName.stringEncode();
 			comments.push(`extends ${name}`);
@@ -1237,7 +1246,7 @@ export class AssemblyDisassembler extends Assembly {
 		}
 		return {
 			arg: this._disassembleCreateArgumentFromString(sym),
-			comment: symbol.stringEncode()
+			comment: this.enableIndexComments ? symbol.stringEncode() : null
 		};
 	}
 }

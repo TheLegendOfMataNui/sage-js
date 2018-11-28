@@ -99,6 +99,7 @@ ARGUMENTS
 
 OPTIONS
   -h, --help                    show CLI help
+  --index-comments              include comments for index of things
   --no-transform-branch         no transform branch targets (not position independent)
   --no-transform-class          no transform class inline
   --no-transform-class-symbols  no transform class symbols inline
@@ -150,6 +151,8 @@ OPTIONS
   -e, --ext=ext                 [default: .osas] project sources file extensions
   -h, --help                    show CLI help
   -p, --project                 generate a project folder at destination
+  --index-comments              include comments for index of things
+  --no-class-nesting            no nesting of classes in directories
   --no-transform-branch         no transform branch targets (not position independent)
   --no-transform-class          no transform class inline
   --no-transform-class-extends  no transform class extends (duplicates code)

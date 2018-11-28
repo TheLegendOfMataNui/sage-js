@@ -41,6 +41,9 @@ export default class ResOSIASMDisassemble extends Command {
 	 */
 	public static readonly flags = {
 		help: flags.help({char: 'h'}),
+		'index-comments': flags.boolean({
+			description: 'include comments for index of things'
+		}),
 		'no-transform-class-symbols': flags.boolean({
 			description: 'no transform class symbols inline'
 		}),
@@ -121,11 +124,16 @@ export default class ResOSIASMDisassemble extends Command {
 			osi.transformAbstractClassAdd();
 		}
 
-		// Disassemble OSI data to an AST.
+		// Create disassembler.
 		const disassembler = new AssemblyDisassembler();
 		if (flags['no-transform-class-symbols']) {
 			disassembler.disableTransformSymbols = true;
 		}
+		if (flags['index-comments']) {
+			disassembler.enableIndexComments = true;
+		}
+
+		// Disassemble OSI data to an AST.
 		const ast = disassembler.disassemble(osi);
 
 		// Add banner comments to the AST.

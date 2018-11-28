@@ -5,7 +5,11 @@ import {
 	BufferView,
 	utilFilenameEncode
 } from '@sage-js/core';
-import {OSI} from '@sage-js/res-osi';
+import {
+	OSI,
+	IClassDefinitionTableEntry,
+	ClassDefinition
+} from '@sage-js/res-osi';
 import {
 	IDisassemblyStructuredFileMapper,
 	AssemblyDisassemblerStructured,
@@ -20,7 +24,10 @@ import {
 } from 'fs-extra';
 
 import {NAME, VERSION} from '../../../../meta';
-import {OSI_ASMS_PROJECT_FILE} from '../../../../constants';
+import {
+	OSI_ASMS_PROJECT_FILE,
+	OSI_ASMS_PROJECT_SOURCE_EXT
+} from '../../../../constants';
 import {Command} from '../../../../command';
 
 /**
@@ -56,8 +63,14 @@ export default class ResOSIASMSDisassemble extends Command {
 		}),
 		ext: flags.string({
 			char: 'e',
-			default: '.osas',
+			default: OSI_ASMS_PROJECT_SOURCE_EXT,
 			description: 'project sources file extensions'
+		}),
+		'index-comments': flags.boolean({
+			description: 'include comments for index of things'
+		}),
+		'no-class-nesting': flags.boolean({
+			description: 'no nesting of classes in directories'
 		}),
 		'no-transform-class-extends': flags.boolean({
 			description: 'no transform class extends (duplicates code)'
@@ -160,26 +173,34 @@ export default class ResOSIASMSDisassemble extends Command {
 			osi.transformClassExtendsAdd();
 		}
 
-		// Disassemble OSI data to an AST.
+		// Create disassembler.
 		const disassembler = new AssemblyDisassemblerStructured();
 		if (flags['no-transform-class-symbols']) {
 			disassembler.disableTransformSymbols = true;
 		}
+		if (flags['index-comments']) {
+			disassembler.enableIndexComments = true;
+		}
 
+		// Create the banner comments.
 		const banner = [
 			'Format: Structured Assembly',
 			`Generator: ${NAME}: ${VERSION}`,
 			`SHA256: ${sha256}`
 		];
 
+		// Disassemble OSI data to an AST, either single file or a project.
 		const out = args.asm;
-		if (flags.project) {
-			const ext = flags.ext || '';
-			await this._generateProject(osi, disassembler, banner, out, ext);
-		}
-		else {
+		if (!flags.project) {
 			await this._generateFile(osi, disassembler, banner, out);
+			return;
 		}
+
+		const ext = flags.ext || '';
+		const nesting = !flags['no-class-nesting'];
+		await this._generateProject(
+			osi, disassembler, banner, out, ext, nesting
+		);
 	}
 
 	/**
@@ -227,22 +248,25 @@ export default class ResOSIASMSDisassemble extends Command {
 	 * @param banner Banner comment.
 	 * @param dirpath Output directory.
 	 * @param ext File extension.
+	 * @param nesting Nest classes in directories.
 	 */
 	protected async _generateProject(
 		osi: OSI,
 		disassembler: AssemblyDisassemblerStructured,
 		banner: string[],
 		dirpath: string,
-		ext: string
+		ext: string,
+		nesting: boolean
 	) {
 		const subRefs: MapSubroutineReferenceCount[] = [];
 		const files = disassembler.disassembles(
 			osi,
-			this._createFileMapper(ext),
+			this._createFileMapper(osi, ext, nesting),
 			subRefs
 		);
 		this._reportMapSubroutineReferenceCount(osi, subRefs[0]);
 
+		// Encode all the files and assemble a list of all the sources.
 		const sources: string[] = [];
 		const encoder = new ParserEncoder();
 		for (const file of files) {
@@ -257,6 +281,7 @@ export default class ResOSIASMSDisassemble extends Command {
 				encoding: 'utf8'
 			});
 		}
+		sources.sort();
 
 		// Create project info file.
 		const projectInfo = {
@@ -275,18 +300,68 @@ export default class ResOSIASMSDisassemble extends Command {
 	/**
 	 * Create file mapper instance.
 	 *
+	 * @param osi OSI instance.
 	 * @param ext File extension.
+	 * @param nesting Nest classes in directories.
 	 * @return Mapper instance.
 	 */
-	protected _createFileMapper(ext: string):
+	protected _createFileMapper(osi: OSI, ext: string, nesting: boolean):
 	IDisassemblyStructuredFileMapper {
-		const dirOrFile = (name: string, dir: string, file: string) => {
+		if (nesting && !ext) {
+			throw new Error('Nesting classes requires a file extension');
+		}
+
+		const classNameByStructure = new Map<ClassDefinition, string>();
+		if (nesting) {
+			for (const {name, structure} of osi.header.classTable.entries) {
+				classNameByStructure.set(structure, name.value);
+			}
+		}
+
+		const classParentNames = (def: ClassDefinition) => {
+			const r = [];
+			let extend = def.extends;
+			for (; extend; extend = extend.extends) {
+				const name = classNameByStructure.get(extend) || '';
+				r.push(name);
+			}
+			return r;
+		};
+
+		const dirOrFile = (name: string, dirs: string[], file: string) => {
 			if (!name) {
 				return utilFilenameEncode(`${file}${ext}`);
 			}
 			const fn = utilFilenameEncode(`${name}${ext}`);
+			const dir = dirs.map(utilFilenameEncode).join('/');
 			return `${dir}/${fn}`;
 		};
+
+		const dirOrFileClass = (
+			osi: OSI,
+			def: IClassDefinitionTableEntry,
+			dirs: string[],
+			file: string
+		) => {
+			const name = def.name.value;
+			if (!nesting) {
+				return dirOrFile(name, dirs, file);
+			}
+			const parents = classParentNames(def.structure).reverse();
+			if (!parents.length) {
+				return dirOrFile(name, dirs, file);
+			}
+
+			const dirsNested = [...dirs];
+			for (const parent of parents) {
+				if (!parent) {
+					return dirOrFile(name, dirs, file);
+				}
+				dirsNested.push(parent);
+			}
+			return dirOrFile(name, dirsNested, file);
+		};
+
 		return {
 			metadata: osi => utilFilenameEncode(`metadata${ext}`),
 			strings: osi => utilFilenameEncode(`strings${ext}`),
@@ -294,9 +369,9 @@ export default class ResOSIASMSDisassemble extends Command {
 			symbols: osi => utilFilenameEncode(`symbols${ext}`),
 			sources: osi => utilFilenameEncode(`sources${ext}`),
 			function: (osi, def, index) =>
-				dirOrFile(def.name.value, 'function', 'functions'),
+				dirOrFile(def.name.value, ['function'], 'functions'),
 			class: (osi, def, index) =>
-				dirOrFile(def.name.value, 'class', 'classes'),
+				dirOrFileClass(osi, def, ['classes'], 'classes'),
 			subroutine: (osi, def) => utilFilenameEncode(`subroutines${ext}`)
 		};
 	}
