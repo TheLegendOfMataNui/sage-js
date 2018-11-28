@@ -266,7 +266,7 @@ export default class ResOSIASMSDisassemble extends Command {
 			sources
 		};
 		const projectFile = pathJoin(dirpath, this.projectFilename);
-		outputJson(projectFile, projectInfo, {
+		await outputJson(projectFile, projectInfo, {
 			spaces: '\t',
 			encoding: 'utf8'
 		});
