@@ -4,6 +4,7 @@
 'use strict';
 
 const {spawnSync} = require('child_process');
+
 const pkg = require('../package.json');
 
 function banner(type, name) {
@@ -14,7 +15,7 @@ function banner(type, name) {
 }
 
 function pkgrun(pkg, cmd, args) {
-	const {error} = spawnSync(cmd, args, {
+	const {error, status} = spawnSync(cmd, args, {
 		cwd: pkg,
 		stdio: 'inherit'
 	});
@@ -22,16 +23,25 @@ function pkgrun(pkg, cmd, args) {
 	if (error) {
 		throw error;
 	}
+	return status;
 }
 
 function main() {
 	const pkgs = pkg.workspaces.packages;
 
+	const exitCodes = false;
 	for (const script of ['clean', 'prepack']) {
 		for (const pkg of pkgs) {
 			banner(script, pkg);
-			pkgrun(pkg, 'yarn', [script]);
+			const exitCode = pkgrun(pkg, 'yarn', [script]);
+			console.log(`Exit code: ${exitCode}`);
+			if (exitCode) {
+				exitCodes = true;
+			}
 		}
+	}
+	if (exitCodes) {
+		throw new Error('Build finished with errors');
 	}
 }
 main();
