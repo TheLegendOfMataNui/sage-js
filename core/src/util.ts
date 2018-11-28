@@ -185,3 +185,29 @@ export function utilNormalizeNewlines(str: string) {
 export function utilSplitLines(str: string) {
 	return utilNormalizeNewlines(str).split('\n');
 }
+
+/**
+ * Encode an arbitrary string into a safe filename, encoding reversable.
+ *
+ * @param str String to encode into a filename.
+ * @return Encoded filename.
+ */
+export function utilFilenameEncode(str: string) {
+	return str.replace(/[^a-z0-9_\-\.\x20]/ig, c => {
+		const code = c.charCodeAt(0);
+		return (code > 0xFF || c === '%') ?
+			encodeURIComponent(c) :
+			('%' + utilCharCodeToHex(code));
+	})
+		.replace(/(^\x20)|(\x20$)/g, encodeURIComponent);
+}
+
+/**
+ * Decode encoded safe filename.
+ *
+ * @param str Encoded filename.
+ * @return Decoded filename.
+ */
+export function utilFilenameDecode(str: string) {
+	return decodeURIComponent(str);
+}

@@ -7,7 +7,7 @@
  * @param filename Optinal filename.
  * @return Formatted string.
  */
-export function formatErrorAtFileLocation(
+export function utilFormatErrorAtFileLocation(
 	message: string,
 	line: number,
 	column: number,

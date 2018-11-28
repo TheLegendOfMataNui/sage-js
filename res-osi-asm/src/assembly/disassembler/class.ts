@@ -13,7 +13,6 @@ import {
 	FunctionDefinition,
 	IClassDefinitionTableEntry,
 	MapClassDefinitionTableEntryExtends,
-	ClassDefinition,
 	ClassDefinitionProperty,
 	ClassDefinitionMethod,
 	ISubroutineTableEntry,
@@ -42,25 +41,28 @@ import {
 	InstructionBCLPushConstantColor8888,
 	InstructionBCLPushConstantColor5551
 } from '@sage-js/res-osi';
-import {typed} from '../typed';
+import {typed} from '../../typed';
 import {
 	MapSubroutineOffsetToId,
 	MapFunctionOffsetToDefinitions,
 	MapClassMethodOffsetToDefinitions,
+	MapClassStructuresToNames,
 	MapSourceRange
-} from '../types';
-import {ExceptionInternal} from '../exception/internal';
-import {ExceptionInvalid} from '../exception/invalid';
-import {ASTNodeFile} from '../ast/node/file';
-import {ASTNodeComment} from '../ast/node/comment';
-import {ASTNodeArgument} from '../ast/node/argument/class';
-import {ASTNodeArgumentNumber} from '../ast/node/argument/number';
-import {ASTNodeArgumentString} from '../ast/node/argument/string';
-import {ASTNodeStatement} from '../ast/node/statement/class';
-import {ASTNodeStatementInstruction} from '../ast/node/statement/instruction';
-import {ASTNodeStatementBlock} from '../ast/node/statement/block';
-import {ASTNodeStatementLine} from '../ast/node/statement/line';
-import {Assembly} from './class';
+} from '../../types';
+import {ExceptionInternal} from '../../exception/internal';
+import {ExceptionInvalid} from '../../exception/invalid';
+import {ASTNodeFile} from '../../ast/node/file';
+import {ASTNodeComment} from '../../ast/node/comment';
+import {ASTNodeArgument} from '../../ast/node/argument/class';
+import {ASTNodeArgumentNumber} from '../../ast/node/argument/number';
+import {ASTNodeArgumentString} from '../../ast/node/argument/string';
+import {ASTNodeStatement} from '../../ast/node/statement/class';
+import {
+	ASTNodeStatementInstruction
+} from '../../ast/node/statement/instruction';
+import {ASTNodeStatementBlock} from '../../ast/node/statement/block';
+import {ASTNodeStatementLine} from '../../ast/node/statement/line';
+import {Assembly} from '../class';
 
 /**
  * AssemblyDisassembler constructor.
@@ -284,10 +286,13 @@ export class AssemblyDisassembler extends Assembly {
 		ast.begin.identifier.text = 'functions';
 
 		const entries = ast.statements.entries;
-		for (const func of osi.header.functionTable.entries) {
+		const functionEntries = osi.header.functionTable.entries;
+		for (let i = 0; i < functionEntries.length; i++) {
+			const func = functionEntries[i];
 			entries.push(...this.disassembleFunction(
 				osi,
 				func,
+				i,
 				subroutineOffsetToId
 			));
 		}
@@ -300,15 +305,18 @@ export class AssemblyDisassembler extends Assembly {
 	 *
 	 * @param osi OSI instance.
 	 * @param functionDefinition Function definition.
+	 * @param index Table index.
 	 * @param subroutineOffsetToId Map of subroutine offsets to IDs.
 	 * @return AST statements.
 	 */
 	public disassembleFunction(
 		osi: OSI,
 		functionDefinition: FunctionDefinition,
+		index: number,
 		subroutineOffsetToId: MapSubroutineOffsetToId
 	): ASTNodeStatement[] {
 		const ast = this._disassembleCreateStatementInstruction('function');
+		this._disassembleSetComment(ast.comment, `${index}`);
 
 		const offset = functionDefinition.offset.value;
 		const id = subroutineOffsetToId.get(offset);
@@ -352,7 +360,7 @@ export class AssemblyDisassembler extends Assembly {
 
 		const entries = ast.statements.entries;
 		const classEntries = osi.header.classTable.entries;
-		const nameByStructure = new Map<ClassDefinition, PrimitiveStringP8N>();
+		const nameByStructure = this._disassembleMapClassStructuresToNames(osi);
 		for (const {name, structure} of classEntries) {
 			nameByStructure.set(structure, name);
 		}
@@ -463,6 +471,7 @@ export class AssemblyDisassembler extends Assembly {
 	 *
 	 * @param osi OSI instance.
 	 * @param property Class property.
+	 * @param subroutineOffsetToId Map offsets to ID.
 	 * @return AST statements.
 	 */
 	public disassembleClassMethod(
@@ -520,9 +529,8 @@ export class AssemblyDisassembler extends Assembly {
 		const {offset, subroutine} = subroutineEntry;
 
 		const symbols = osi.header.symbolTable.entries;
-		const sources = osi.header.sourceTable.entries;
 
-		const sourceMapRange = new Map() as MapSourceRange;
+		const mapSourceRange = new Map() as MapSourceRange;
 
 		const off = offset.value;
 		const id = subroutineOffsetToId.get(off);
@@ -552,25 +560,13 @@ export class AssemblyDisassembler extends Assembly {
 			entries.push(...this.disassembleInstruction(
 				osi,
 				instruction,
-				subroutineOffsetToId,
-				functionsByOffset,
-				classMethodByOffset,
 				subroutineEntry,
-				sourceMapRange
+				mapSourceRange
 			));
 		}
 
-		// Add comment for source file range.
-		for (const [index, range] of sourceMapRange) {
-			const source = sources[index];
-			if (!source) {
-				addLine(`source: ${index} unknown ${range.join(':')}`);
-				continue;
-			}
-			addLine(
-				`source: ${index} ${source.stringEncode()} ${range.join(':')}`
-			);
-		}
+		// Add comments for source file range.
+		r.push(...this._disassembleMapSourceRangeComment(osi, mapSourceRange));
 
 		// Add comments for any function that references this.
 		for (const func of functionsByOffset.get(off) || []) {
@@ -608,21 +604,15 @@ export class AssemblyDisassembler extends Assembly {
 	 *
 	 * @param osi OSI instance.
 	 * @param instruction Subroutine instruction.
-	 * @param subroutineOffsetToId Map offsets to ID.
-	 * @param functionsByOffset Map function offset to function info.
-	 * @param classMethodByOffset Map class offset to method info.
 	 * @param subroutineEntry Subroutine entry.
-	 * @param sourceMapRange Map sources to ranges.
+	 * @param mapSourceRange Map sources to ranges.
 	 * @return AST statements.
 	 */
 	public disassembleInstruction(
 		osi: OSI,
 		instruction: Instruction,
-		subroutineOffsetToId: MapSubroutineOffsetToId,
-		functionsByOffset: MapFunctionOffsetToDefinitions,
-		classMethodByOffset: MapClassMethodOffsetToDefinitions,
 		subroutineEntry: ISubroutineTableEntry,
-		sourceMapRange: MapSourceRange
+		mapSourceRange: MapSourceRange
 	) {
 		const strings = osi.header.stringTable.entries;
 		const symbols = osi.header.symbolTable.entries;
@@ -651,13 +641,13 @@ export class AssemblyDisassembler extends Assembly {
 				if (cast) {
 					const line = cast.arg0.value;
 					const index = cast.arg1.value;
-					const range = sourceMapRange.get(index);
+					const range = mapSourceRange.get(index);
 					if (range) {
 						range[0] = Math.min(range[0], line);
 						range[1] = Math.max(range[1], line);
 					}
 					else {
-						sourceMapRange.set(index, [line, line]);
+						mapSourceRange.set(index, [line, line]);
 					}
 					break OUTER;
 				}
@@ -949,6 +939,35 @@ export class AssemblyDisassembler extends Assembly {
 	}
 
 	/**
+	 * Subroutine block from OSI.
+	 *
+	 * @param osi OSI instance.
+	 * @param mapSourceRange Map sources to ranges.
+	 * @return AST statements.
+	 */
+	protected _disassembleMapSourceRangeComment(
+		osi: OSI,
+		mapSourceRange: MapSourceRange
+	) {
+		const lines: ASTNodeStatementLine[] = [];
+		const sources = osi.header.sourceTable.entries;
+
+		// Add comments for source file range.
+		for (const [index, range] of mapSourceRange) {
+			const source = sources[index];
+			const line = this._disassembleCreateStatementLine();
+			const src = source ? source.stringEncode() : 'unknown';
+			this._disassembleSetComment(
+				line.comment,
+				`source: ${index} ${src} ${range.join(':')}`
+			);
+			lines.push(line);
+		}
+
+		return lines;
+	}
+
+	/**
 	 * Map subroutine offsets to incremental IDs.
 	 *
 	 * @param osi OSI instance.
@@ -987,6 +1006,33 @@ export class AssemblyDisassembler extends Assembly {
 			const list = r.get(off) || [];
 			list.push(func);
 			r.set(off, list);
+		}
+		return r;
+	}
+
+	/**
+	 * Map OSI class structures to names, with some sanity checking.
+	 *
+	 * @param osi OSI instance.
+	 * @return Map object.
+	 */
+	protected _disassembleMapClassStructuresToNames(osi: OSI) {
+		const names = new Set<string>();
+		const r = new Map() as MapClassStructuresToNames;
+		for (const {name, structure} of osi.header.classTable.entries) {
+			const nameV = name.value;
+			if (names.has(nameV)) {
+				const s = name.stringEncode();
+				throw new ExceptionInvalid(`Class name not unique: ${s}`);
+			}
+			names.add(nameV);
+
+			const existing = r.get(structure) || null;
+			if (existing) {
+				const s = name.stringEncode();
+				throw new ExceptionInvalid(`Class structure not unique: ${s}`);
+			}
+			r.set(structure, name);
 		}
 		return r;
 	}

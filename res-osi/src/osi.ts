@@ -305,7 +305,7 @@ export class OSI extends Structure {
 	 * @param base Base offset.
 	 */
 	public updateOffsets() {
-		// Assmeble mappings from functions and methods to subroutines.
+		// Assemble mappings from functions and methods to subroutines.
 		const functions =
 			new Map<FunctionDefinition, Subroutine>();
 		const methods =
@@ -417,11 +417,12 @@ export class OSI extends Structure {
 
 		for (const cInfo of classList) {
 			const cStruct = cInfo.structure;
+
 			const cProperties = new Set(
-				cStruct.classPropertyTable.entries.map(p => p.symbol.value)
+				[...cStruct.itterProperties()].map(p => p.symbol.value)
 			);
 			const cMethods = new Set(
-				cStruct.classMethodTable.entries.map(m => m.symbol.value)
+				[...cStruct.itterMethods()].map(p => p.symbol.value)
 			);
 			const candidates: IClassDefinitionTableEntry[] = [];
 
@@ -434,14 +435,14 @@ export class OSI extends Structure {
 				const pStruct = pInfo.structure;
 
 				// Reject if property not in child.
-				for (const property of pStruct.classPropertyTable.entries) {
+				for (const property of pStruct.itterProperties()) {
 					if (!cProperties.has(property.symbol.value)) {
 						continue LOOP_PARENTS;
 					}
 				}
 
 				// Reject if method not in child.
-				for (const method of pStruct.classMethodTable.entries) {
+				for (const method of pStruct.itterMethods()) {
 					if (!cMethods.has(method.symbol.value)) {
 						continue LOOP_PARENTS;
 					}
@@ -478,7 +479,7 @@ export class OSI extends Structure {
 		const constructors = new Set<number>();
 		for (const cInfo of classList) {
 			const cStruct = cInfo.structure;
-			for (const method of cStruct.classMethodTable.entries) {
+			for (const method of cStruct.itterMethods()) {
 				const symbol = symbolList[method.symbol.value];
 				if (!symbol) {
 					continue;
@@ -505,9 +506,9 @@ export class OSI extends Structure {
 				// Search methods added in the child for constructors.
 				let addedConstructors = 0;
 				const aMethods = new Set(
-					aStruct.classMethodTable.entries.map(m => m.symbol.value)
+					[...aStruct.itterMethods()].map(m => m.symbol.value)
 				);
-				for (const method of cStruct.classMethodTable.entries) {
+				for (const method of cStruct.itterMethods()) {
 					// Skip methods from ancestor.
 					if (aMethods.has(method.symbol.value)) {
 						continue;
@@ -574,12 +575,12 @@ export class OSI extends Structure {
 
 			// Prefer candidates with most methods using same subroutines.
 			const cMethods = new Map<number, number>();
-			for (const m of cStruct.classMethodTable.entries) {
+			for (const m of cStruct.itterMethods()) {
 				cMethods.set(m.symbol.value, m.offset.value);
 			}
 			for (const pInfo of candidates.slice()) {
 				let probably = 0;
-				for (const m of pInfo.structure.classMethodTable.entries) {
+				for (const m of pInfo.structure.itterMethods()) {
 					const cMethod = cMethods.get(m.symbol.value);
 					if (cMethod === undefined) {
 						// This should be impossible.
@@ -598,7 +599,7 @@ export class OSI extends Structure {
 			for (const pInfo of candidates.slice()) {
 				candidateProbability(
 					pInfo,
-					pInfo.structure.classMethodTable.entries.length
+					[...pInfo.structure.itterMethods()].length
 				);
 			}
 
@@ -607,7 +608,7 @@ export class OSI extends Structure {
 			for (const pInfo of candidates.slice()) {
 				candidateProbability(
 					pInfo,
-					pInfo.structure.classPropertyTable.entries.length
+					[...pInfo.structure.itterProperties()].length
 				);
 			}
 

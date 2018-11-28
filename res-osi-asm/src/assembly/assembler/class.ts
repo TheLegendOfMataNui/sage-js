@@ -21,28 +21,31 @@ import {
 	ClassDefinitionProperty,
 	ClassDefinitionMethod
 } from '@sage-js/res-osi';
-import {typed} from '../typed';
+import {typed} from '../../typed';
 import {
 	MapIdentifierToASTNodeStatementInstruction,
 	MapIdentifierToASTNodeStatementBlock,
 	MapIdToSubroutineOffset,
 	SymbolToIndex
-} from '../types';
-import {ExceptionASTNode} from '../exception/ast/node/class';
-import {ASTNode} from '../ast/node/class';
-import {ASTNodeArgument} from '../ast/node/argument/class';
-import {ASTNodeArgumentNumber} from '../ast/node/argument/number';
-import {ASTNodeArgumentString} from '../ast/node/argument/string';
-import {ASTNodeArguments} from '../ast/node/arguments';
-import {ASTNodeFile} from '../ast/node/file';
-import {ASTNodeStatements} from '../ast/node/statements';
-import {ASTNodeStatementLine} from '../ast/node/statement/line';
-import {ASTNodeStatementBlock} from '../ast/node/statement/block';
-import {ASTNodeStatementInstruction} from '../ast/node/statement/instruction';
-import {Assembly} from './class';
+} from '../../types';
+import {ExceptionAST} from '../../exception/ast/class';
+import {ExceptionASTNode} from '../../exception/ast/node/class';
+import {ASTNode} from '../../ast/node/class';
+import {ASTNodeArgument} from '../../ast/node/argument/class';
+import {ASTNodeArgumentNumber} from '../../ast/node/argument/number';
+import {ASTNodeArgumentString} from '../../ast/node/argument/string';
+import {ASTNodeArguments} from '../../ast/node/arguments';
+import {ASTNodeFile} from '../../ast/node/file';
+import {ASTNodeStatements} from '../../ast/node/statements';
+import {ASTNodeStatementLine} from '../../ast/node/statement/line';
+import {ASTNodeStatementBlock} from '../../ast/node/statement/block';
+import {
+	ASTNodeStatementInstruction
+} from '../../ast/node/statement/instruction';
+import {Assembly} from '../class';
 
 /**
- * AssemblyDisassembler constructor.
+ * AssemblyAssembler constructor.
  */
 export class AssemblyAssembler extends Assembly {
 	constructor() {
@@ -81,36 +84,38 @@ export class AssemblyAssembler extends Assembly {
 			'metadata',
 			ast
 		);
-		const blockStrings = this._assembleIdentifierMappedBlocksConsumeOne(
-			blocksByID,
-			'strings',
-			ast
-		);
-		const blockGlobals = this._assembleIdentifierMappedBlocksConsumeOne(
-			blocksByID,
-			'globals',
-			ast
-		);
-		const blockSymbols = this._assembleIdentifierMappedBlocksConsumeOne(
-			blocksByID,
-			'symbols',
-			ast
-		);
-		const blockSources = this._assembleIdentifierMappedBlocksConsumeOne(
-			blocksByID,
-			'sources',
-			ast
-		);
-		const blockFunctions = this._assembleIdentifierMappedBlocksConsumeOne(
-			blocksByID,
-			'functions',
-			ast
-		);
-		const blockClasses = this._assembleIdentifierMappedBlocksConsumeOne(
-			blocksByID,
-			'classes',
-			ast
-		);
+
+		// Read the optional ones.
+		const blockStrings =
+			this._assembleIdentifierMappedBlocksConsumeOneOptional(
+				blocksByID,
+				'strings'
+			);
+		const blockGlobals =
+			this._assembleIdentifierMappedBlocksConsumeOneOptional(
+				blocksByID,
+				'globals'
+			);
+		const blockSymbols =
+			this._assembleIdentifierMappedBlocksConsumeOneOptional(
+				blocksByID,
+				'symbols',
+			);
+		const blockSources =
+			this._assembleIdentifierMappedBlocksConsumeOneOptional(
+				blocksByID,
+				'sources'
+			);
+		const blockFunctions =
+			this._assembleIdentifierMappedBlocksConsumeOneOptional(
+				blocksByID,
+				'functions'
+			);
+		const blockClasses =
+			this._assembleIdentifierMappedBlocksConsumeOneOptional(
+				blocksByID,
+				'classes'
+			);
 		const blocksSubroutines = this._assembleIdentifierMappedBlocksConsume(
 			blocksByID,
 			'subroutine'
@@ -122,19 +127,31 @@ export class AssemblyAssembler extends Assembly {
 		// Read the metadata to init the OSI.
 		this.assembleMetadata(blockMetadata, osi);
 
-		// Assemble the strings tables.
-		this.assembleStrings(blockStrings, osi);
-		this.assembleGlobals(blockGlobals, osi);
-		this.assembleSymbols(blockSymbols, osi);
-		this.assembleSources(blockSources, osi);
+		// Assemble the strings tables if present.
+		if (blockStrings) {
+			this.assembleStrings(blockStrings, osi);
+		}
+		if (blockGlobals) {
+			this.assembleGlobals(blockGlobals, osi);
+		}
+		if (blockSymbols) {
+			this.assembleSymbols(blockSymbols, osi);
+		}
+		if (blockSources) {
+			this.assembleSources(blockSources, osi);
+		}
 
 		// Create subroutines with some dummy offsets.
 		const idToOffset = new Map() as MapIdToSubroutineOffset;
 		this.assembleSubroutines(blocksSubroutines, osi, idToOffset);
 
 		// Create functions and classes using those dummy offsets.
-		this.assembleFunctions(blockFunctions, osi, idToOffset);
-		this.assembleClasses(blockClasses, osi, idToOffset);
+		if (blockFunctions) {
+			this.assembleFunctions(blockFunctions, osi, idToOffset);
+		}
+		if (blockClasses) {
+			this.assembleClasses(blockClasses, osi, idToOffset);
+		}
 
 		// Update offsets to their real values.
 		osi.updateOffsets();
@@ -801,43 +818,54 @@ export class AssemblyAssembler extends Assembly {
 	}
 
 	/**
-	 * Groups statements by type, ignoring the empty lines.
+	 * Groups a list of statements by type, ignoring the empty lines.
 	 *
-	 * @param ast AST statements.
+	 * @param asts AST statements list.
 	 */
-	protected _assembleGroupStatements(ast: ASTNodeStatements) {
+	protected _assembleGroupStatementsList(asts: ASTNodeStatements[]) {
 		const blocks: ASTNodeStatementBlock[] = [];
 		const instructions: ASTNodeStatementInstruction[] = [];
 
-		for (const statement of ast.entries) {
-			const line = typed.cast(statement, ASTNodeStatementLine);
-			if (line) {
-				continue;
-			}
+		for (const ast of asts) {
+			for (const statement of ast.entries) {
+				const line = typed.cast(statement, ASTNodeStatementLine);
+				if (line) {
+					continue;
+				}
 
-			const block = typed.cast(statement, ASTNodeStatementBlock);
-			if (block) {
-				blocks.push(block);
-				continue;
-			}
+				const block = typed.cast(statement, ASTNodeStatementBlock);
+				if (block) {
+					blocks.push(block);
+					continue;
+				}
 
-			const instruction =
-				typed.cast(statement, ASTNodeStatementInstruction);
-			if (instruction) {
-				instructions.push(instruction);
-				continue;
-			}
+				const instruction =
+					typed.cast(statement, ASTNodeStatementInstruction);
+				if (instruction) {
+					instructions.push(instruction);
+					continue;
+				}
 
-			throw new ExceptionASTNode(
-				'Unknown statement type',
-				statement
-			);
+				throw new ExceptionASTNode(
+					'Unknown statement type',
+					statement
+				);
+			}
 		}
 
 		return {
 			blocks,
 			instructions
 		};
+	}
+
+	/**
+	 * Groups statements by type, ignoring the empty lines.
+	 *
+	 * @param ast AST statements.
+	 */
+	protected _assembleGroupStatements(ast: ASTNodeStatements) {
+		return this._assembleGroupStatementsList([ast]);
 	}
 
 	/**
@@ -907,23 +935,18 @@ export class AssemblyAssembler extends Assembly {
 	}
 
 	/**
-	 * Get and remove a block from map, throwing if more than one.
+	 * Get and remove an instruction from map, throwing if more than one.
 	 *
 	 * @param map Map object.
 	 * @param id Identifier string.
-	 * @param container Container element used for throwing exceptions.
 	 */
-	protected _assembleIdentifierMappedInstructionsConsumeOne(
+	protected _assembleIdentifierMappedInstructionsConsumeOneOptional(
 		map: MapIdentifierToASTNodeStatementInstruction,
-		id: string,
-		container: ASTNode
+		id: string
 	) {
 		const list = map.get(id);
 		if (!list) {
-			throw new ExceptionASTNode(
-				`No instruction with identifier ${id}`,
-				container
-			);
+			return null;
 		}
 		if (list.length !== 1) {
 			throw new ExceptionASTNode(
@@ -936,6 +959,58 @@ export class AssemblyAssembler extends Assembly {
 	}
 
 	/**
+	 * Get and remove a block from map, throwing if more than one.
+	 *
+	 * @param map Map object.
+	 * @param id Identifier string.
+	 */
+	protected _assembleIdentifierMappedBlocksConsumeOneOptional(
+		map: MapIdentifierToASTNodeStatementBlock,
+		id: string
+	) {
+		const list = map.get(id);
+		if (!list) {
+			return null;
+		}
+		if (list.length !== 1) {
+			throw new ExceptionASTNode(
+				`Duplicate block with identifier ${id}`,
+				list[1]
+			);
+		}
+		map.delete(id);
+		return list[0];
+	}
+
+	/**
+	 * Get and remove a block from map, throwing if more than one.
+	 *
+	 * @param map Map object.
+	 * @param id Identifier string.
+	 * @param container Container element used for throwing exceptions.
+	 */
+	protected _assembleIdentifierMappedInstructionsConsumeOne(
+		map: MapIdentifierToASTNodeStatementInstruction,
+		id: string,
+		container: ASTNode | null
+	) {
+		const r = this._assembleIdentifierMappedInstructionsConsumeOneOptional(
+			map,
+			id
+		);
+		if (!r) {
+			const msg = `No instruction with identifier ${id}`;
+			if (container) {
+				throw new ExceptionASTNode(msg, container);
+			}
+			else {
+				throw new ExceptionAST(msg);
+			}
+		}
+		return r;
+	}
+
+	/**
 	 * Get and remove an instruction from map, throwing if more than one.
 	 *
 	 * @param map Map object.
@@ -945,23 +1020,22 @@ export class AssemblyAssembler extends Assembly {
 	protected _assembleIdentifierMappedBlocksConsumeOne(
 		map: MapIdentifierToASTNodeStatementBlock,
 		id: string,
-		container: ASTNode
+		container: ASTNode | null
 	) {
-		const list = map.get(id);
-		if (!list) {
-			throw new ExceptionASTNode(
-				`No instruction with identifier ${id}`,
-				container
-			);
+		const r = this._assembleIdentifierMappedBlocksConsumeOneOptional(
+			map,
+			id
+		);
+		if (!r) {
+			const msg = `No block with identifier ${id}`;
+			if (container) {
+				throw new ExceptionASTNode(msg, container);
+			}
+			else {
+				throw new ExceptionAST(msg);
+			}
 		}
-		if (list.length !== 1) {
-			throw new ExceptionASTNode(
-				`Duplicate instruction with identifier ${id}`,
-				list[1]
-			);
-		}
-		map.delete(id);
-		return list[0];
+		return r;
 	}
 
 	/**

@@ -9,8 +9,9 @@ import {
 } from '@sage-js/res-osi-asm';
 import {
 	readFile,
-	writeFile
+	outputFile
 } from 'fs-extra';
+
 import {NAME, VERSION} from '../../../../meta';
 import {Command} from '../../../../command';
 
@@ -21,24 +22,24 @@ export default class ResOSIASMDisassemble extends Command {
 	/**
 	 * Aliases.
 	 */
-	public static aliases = [
+	public static readonly aliases = [
 		'res:osi:asm:d'
 	];
 
 	/**
 	 * Description.
 	 */
-	public static description = 'disassemble an osi file';
+	public static readonly description = 'disassemble an osi file';
 
 	/**
 	 * Examples.
 	 */
-	public static examples = [];
+	public static readonly examples = [];
 
 	/**
 	 * Flags.
 	 */
-	public static flags = {
+	public static readonly flags = {
 		help: flags.help({char: 'h'}),
 		'no-transform-class-symbols': flags.boolean({
 			description: 'no transform class symbols inline'
@@ -68,7 +69,7 @@ export default class ResOSIASMDisassemble extends Command {
 	/**
 	 * Arguments.
 	 */
-	public static args = [
+	public static readonly args = [
 		{
 			name: 'osi',
 			required: true,
@@ -129,6 +130,7 @@ export default class ResOSIASMDisassemble extends Command {
 
 		// Add banner comments to the AST.
 		const banner = [
+			'Format: Assembly',
 			`Generator: ${NAME}: ${VERSION}`,
 			`SHA256: ${sha256}`,
 			''
@@ -144,7 +146,7 @@ export default class ResOSIASMDisassemble extends Command {
 		const asm = encoder.encode(ast);
 
 		// Write ASM to file.
-		await writeFile(args.asm, asm, {
+		await outputFile(args.asm, asm, {
 			encoding: 'utf8'
 		});
 	}

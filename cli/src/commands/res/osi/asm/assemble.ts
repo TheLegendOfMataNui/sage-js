@@ -8,6 +8,7 @@ import {
 	readFile,
 	writeFile
 } from 'fs-extra';
+
 import {Command} from '../../../../command';
 
 /**
@@ -17,31 +18,31 @@ export default class ResOSIASMAssemble extends Command {
 	/**
 	 * Aliases.
 	 */
-	public static aliases = [
+	public static readonly aliases = [
 		'res:osi:asm:a'
 	];
 
 	/**
 	 * Description.
 	 */
-	public static description = 'assemble an osi file';
+	public static readonly description = 'assemble an osi file';
 
 	/**
 	 * Examples.
 	 */
-	public static examples = [];
+	public static readonly examples = [];
 
 	/**
 	 * Flags.
 	 */
-	public static flags = {
+	public static readonly flags = {
 		help: flags.help({char: 'h'})
 	};
 
 	/**
 	 * Arguments.
 	 */
-	public static args = [
+	public static readonly args = [
 		{
 			name: 'asm',
 			required: true,
@@ -61,7 +62,7 @@ export default class ResOSIASMAssemble extends Command {
 		// tslint:disable-next-line: no-unused
 		const {args, flags} = this.parse(ResOSIASMAssemble);
 
-		// Read file and compute a hash.
+		// Read file.
 		const asm = await readFile(args.asm, {
 			encoding: 'utf8'
 		});

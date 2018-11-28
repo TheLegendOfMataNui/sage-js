@@ -30,6 +30,8 @@ USAGE
 * [`sage-js info`](#sage-js-info)
 * [`sage-js res:osi:asm:assemble ASM OSI`](#sage-js-resosiasmassemble-asm-osi)
 * [`sage-js res:osi:asm:disassemble OSI ASM`](#sage-js-resosiasmdisassemble-osi-asm)
+* [`sage-js res:osi:asm:sassemble ASM OSI`](#sage-js-resosiasmsassemble-asm-osi)
+* [`sage-js res:osi:asm:sdisassemble OSI ASM`](#sage-js-resosiasmsdisassemble-osi-asm)
 
 ## `sage-js help [COMMAND]`
 
@@ -110,4 +112,56 @@ ALIASES
 ```
 
 _See code: [src/commands/res/osi/asm/disassemble.ts](https://github.com/TheLegendOfMataNui/sage-js/blob/v0.10.0/src/commands/res/osi/asm/disassemble.ts)_
+
+## `sage-js res:osi:asm:sassemble ASM OSI`
+
+assemble an osi file, structured assembly
+
+```
+USAGE
+  $ sage-js res:osi:asm:sassemble ASM OSI
+
+ARGUMENTS
+  ASM  assembly code to assemble
+  OSI  osi file to output
+
+OPTIONS
+  -h, --help  show CLI help
+
+ALIASES
+  $ sage-js res:osi:asm:sa
+```
+
+_See code: [src/commands/res/osi/asm/sassemble.ts](https://github.com/TheLegendOfMataNui/sage-js/blob/v0.10.0/src/commands/res/osi/asm/sassemble.ts)_
+
+## `sage-js res:osi:asm:sdisassemble OSI ASM`
+
+disassemble an osi file, structured assembly
+
+```
+USAGE
+  $ sage-js res:osi:asm:sdisassemble OSI ASM
+
+ARGUMENTS
+  OSI  osi file to disassemble
+  ASM  assembly output
+
+OPTIONS
+  -e, --ext=ext                 [default: .osas] project sources file extensions
+  -h, --help                    show CLI help
+  -p, --project                 generate a project folder at destination
+  --no-transform-branch         no transform branch targets (not position independent)
+  --no-transform-class          no transform class inline
+  --no-transform-class-extends  no transform class extends (duplicates code)
+  --no-transform-class-symbols  no transform class symbols inline
+  --no-transform-global         no transform global inline
+  --no-transform-jump           no transform jump targets (not position independent)
+  --no-transform-string         no transform string inline
+  --no-transform-symbol         no transform symbol inline
+
+ALIASES
+  $ sage-js res:osi:asm:sd
+```
+
+_See code: [src/commands/res/osi/asm/sdisassemble.ts](https://github.com/TheLegendOfMataNui/sage-js/blob/v0.10.0/src/commands/res/osi/asm/sdisassemble.ts)_
 <!-- commandsstop -->

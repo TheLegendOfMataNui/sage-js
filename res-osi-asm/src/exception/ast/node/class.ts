@@ -1,5 +1,5 @@
 import {typed} from '../../../typed';
-import {formatErrorAtFileLocation} from '../../../util';
+import {utilFormatErrorAtFileLocation} from '../../../util';
 import {ASTNode} from '../../../ast/node/class';
 import {ExceptionAST} from '../class';
 
@@ -17,7 +17,7 @@ export class ExceptionASTNode extends ExceptionAST {
 	public readonly node: ASTNode;
 
 	constructor(message: string, node: ASTNode) {
-		super(formatErrorAtFileLocation(
+		super(utilFormatErrorAtFileLocation(
 			message,
 			node.source.startLine,
 			node.source.startColumn + 1,
