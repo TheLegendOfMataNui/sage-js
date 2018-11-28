@@ -29,7 +29,7 @@ function pkgrun(pkg, cmd, args) {
 function main() {
 	const pkgs = pkg.workspaces.packages;
 
-	const exitCodes = false;
+	let exitCodes = false;
 	for (const script of ['clean', 'prepack']) {
 		for (const pkg of pkgs) {
 			banner(script, pkg);
