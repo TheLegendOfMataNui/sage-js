@@ -371,7 +371,7 @@ export default class ResOSIASMSDisassemble extends Command {
 			function: (osi, def, index) =>
 				dirOrFile(def.name.value, ['function'], 'functions'),
 			class: (osi, def, index) =>
-				dirOrFileClass(osi, def, ['classes'], 'classes'),
+				dirOrFileClass(osi, def, ['class'], 'classes'),
 			subroutine: (osi, def) => utilFilenameEncode(`subroutines${ext}`)
 		};
 	}
