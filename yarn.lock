@@ -758,10 +758,10 @@
     debug "^4.1.0"
     tslib "^1.9.3"
 
-"@oclif/dev-cli@^1.19.4":
-  version "1.19.4"
-  resolved "https://registry.yarnpkg.com/@oclif/dev-cli/-/dev-cli-1.19.4.tgz#df63be2c7020413f17aa19d05c08d426c7e3bfc0"
-  integrity sha512-GI3i5lTrTyNaxQWX19Wj3LT9B2GQv52A/adkyFzKFbBqWH/9oYsz+gUbrN+FjvcQQujNmDt4GqM+F+N6V3fzpg==
+"@oclif/dev-cli@^1.19.5":
+  version "1.19.5"
+  resolved "https://registry.yarnpkg.com/@oclif/dev-cli/-/dev-cli-1.19.5.tgz#36a22551d0c611d590d1bc74fb2a51805c1ca239"
+  integrity sha512-9G2DM/AXahoaZ1u7HZVYpDPjEurpilS3sTJRB5M4g8hiidNBIHQjZeZ51IZsUJ3Fl45idVvkiuHyI43bbU2uKw==
   dependencies:
     "@oclif/command" "^1.5.4"
     "@oclif/config" "^1.8.7"
@@ -3935,16 +3935,16 @@ node-require-function@^1.2.0:
   dependencies:
     "@types/node" "*"
 
-nodemon@^1.18.6:
-  version "1.18.6"
-  resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-1.18.6.tgz#89b1136634d6c0afc7de24cc932a760e999e2c76"
-  integrity sha512-4pHQNYEZun+IkIC2jCaXEhkZnfA7rQe73i8RkdRyDJls/K+WxR7IpI5uNUsAvQ0zWvYcCDNGD+XVtw2ZG86/uQ==
+nodemon@^1.18.7:
+  version "1.18.7"
+  resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-1.18.7.tgz#716b66bf3e89ac4fcfb38a9e61887a03fc82efbb"
+  integrity sha512-xuC1V0F5EcEyKQ1VhHYD13owznQbUw29JKvZ8bVH7TmuvVNHvvbp9pLgE4PjTMRJVe0pJ8fGRvwR2nMiosIsPQ==
   dependencies:
     chokidar "^2.0.4"
     debug "^3.1.0"
     ignore-by-default "^1.0.1"
     minimatch "^3.0.4"
-    pstree.remy "^1.1.0"
+    pstree.remy "^1.1.2"
     semver "^5.5.0"
     supports-color "^5.2.0"
     touch "^3.1.0"
@@ -4505,7 +4505,7 @@ pseudomap@^1.0.2:
   resolved "https://registry.yarnpkg.com/pseudomap/-/pseudomap-1.0.2.tgz#f052a28da70e618917ef0a8ac34c1ae5a68286b3"
   integrity sha1-8FKijacOYYkX7wqKw0wa5aaChrM=
 
-pstree.remy@^1.1.0:
+pstree.remy@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/pstree.remy/-/pstree.remy-1.1.2.tgz#4448bbeb4b2af1fed242afc8dc7416a6f504951a"
   integrity sha512-vL6NLxNHzkNTjGJUpMm5PLC+94/0tTlC1vkP9bdU0pOHih+EujMjgMTwfZopZvHWRFbqJ5Y73OMoau50PewDDA==
