@@ -14,20 +14,17 @@ import {
 	IDisassemblyStructuredFileMapper,
 	AssemblyDisassemblerStructured,
 	ParserEncoder,
+	ASTNodeFile,
 	ASTNodeStatementLine,
 	MapSubroutineReferenceCount
 } from '@sage-js/res-osi-asm';
 import {
 	readFile,
-	outputFile,
-	outputJson
+	outputFile
 } from 'fs-extra';
 
 import {NAME, VERSION} from '../../../../meta';
-import {
-	OSI_ASMS_PROJECT_FILE,
-	OSI_ASMS_PROJECT_SOURCE_EXT
-} from '../../../../constants';
+import {OSI_ASMS_PROJECT_SOURCE_EXT} from '../../../../constants';
 import {Command} from '../../../../command';
 
 /**
@@ -115,19 +112,6 @@ export default class ResOSIASMSDisassemble extends Command {
 			description: 'assembly output'
 		}
 	];
-
-	/**
-	 * Project filename.
-	 */
-	public static readonly projectFilename: string = OSI_ASMS_PROJECT_FILE;
-
-	/**
-	 * Project filename.
-	 */
-	public get projectFilename() {
-		const Constructor = (this.constructor as typeof ResOSIASMSDisassemble);
-		return Constructor.projectFilename;
-	}
 
 	/**
 	 * Handler.
@@ -222,13 +206,7 @@ export default class ResOSIASMSDisassemble extends Command {
 		this._reportMapSubroutineReferenceCount(osi, subRefs[0]);
 
 		// Add banner comments to the AST.
-		if (banner.length) {
-			file.statements.entries.unshift(...[...banner, ''].map(str => {
-				const line = new ASTNodeStatementLine();
-				line.comment.text = str.length ? `; ${str}` : '';
-				return line;
-			}));
-		}
+		this._addBannerComments(file, banner);
 
 		// Encode AST to ASM.
 		const encoder = new ParserEncoder();
@@ -259,19 +237,20 @@ export default class ResOSIASMSDisassemble extends Command {
 		nesting: boolean
 	) {
 		const subRefs: MapSubroutineReferenceCount[] = [];
-		const files = disassembler.disassembles(
-			osi,
-			this._createFileMapper(osi, ext, nesting),
-			subRefs
-		);
+		const fileMapper = this._createFileMapper(osi, ext, nesting);
+		const metadataFilename = fileMapper.metadata(osi);
+		const files = disassembler.disassembles(osi, fileMapper, subRefs);
 		this._reportMapSubroutineReferenceCount(osi, subRefs[0]);
 
 		// Encode all the files and assemble a list of all the sources.
-		const sources: string[] = [];
 		const encoder = new ParserEncoder();
 		for (const file of files) {
 			const filename = file.source.file.name;
-			sources.push(filename);
+
+			// Add banner comment to metadata file.
+			if (filename === metadataFilename) {
+				this._addBannerComments(file, banner);
+			}
 
 			const asm = encoder.encode(file);
 			encoder.reset();
@@ -281,20 +260,6 @@ export default class ResOSIASMSDisassemble extends Command {
 				encoding: 'utf8'
 			});
 		}
-		sources.sort();
-
-		// Create project info file.
-		const projectInfo = {
-			metadata: {
-				banner
-			},
-			sources
-		};
-		const projectFile = pathJoin(dirpath, this.projectFilename);
-		await outputJson(projectFile, projectInfo, {
-			spaces: '\t',
-			encoding: 'utf8'
-		});
 	}
 
 	/**
@@ -400,5 +365,23 @@ export default class ResOSIASMSDisassemble extends Command {
 				`Subroutine at ${offset} has ${refc} references: ${info}`;
 			this.warn(warning);
 		}
+	}
+
+	/**
+	 * Add banner comment to file AST.
+	 *
+	 * @param file AST file.
+	 * @param banner Banner comments.
+	 */
+	protected _addBannerComments(file: ASTNodeFile, banner: string[]) {
+		// Add banner comments to the AST.
+		if (!banner.length) {
+			return;
+		}
+		file.statements.entries.unshift(...[...banner, ''].map(str => {
+			const line = new ASTNodeStatementLine();
+			line.comment.text = str.length ? `; ${str}` : '';
+			return line;
+		}));
 	}
 }
