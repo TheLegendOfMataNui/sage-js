@@ -15,7 +15,7 @@ $ npm install -g @sage-js/cli
 $ sage-js COMMAND
 running command...
 $ sage-js (-v|--version|version)
-@sage-js/cli/0.10.0 darwin-x64 node-v11.1.0
+@sage-js/cli/0.11.0 darwin-x64 node-v11.1.0
 $ sage-js --help [COMMAND]
 USAGE
   $ sage-js COMMAND
@@ -62,7 +62,7 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/info.ts](https://github.com/TheLegendOfMataNui/sage-js/blob/v0.10.0/src/commands/info.ts)_
+_See code: [src/commands/info.ts](https://github.com/TheLegendOfMataNui/sage-js/blob/v0.11.0/src/commands/info.ts)_
 
 ## `sage-js res:osi:asm:assemble ASM OSI`
 
@@ -83,7 +83,7 @@ ALIASES
   $ sage-js res:osi:asm:a
 ```
 
-_See code: [src/commands/res/osi/asm/assemble.ts](https://github.com/TheLegendOfMataNui/sage-js/blob/v0.10.0/src/commands/res/osi/asm/assemble.ts)_
+_See code: [src/commands/res/osi/asm/assemble.ts](https://github.com/TheLegendOfMataNui/sage-js/blob/v0.11.0/src/commands/res/osi/asm/assemble.ts)_
 
 ## `sage-js res:osi:asm:disassemble OSI ASM`
 
@@ -112,7 +112,7 @@ ALIASES
   $ sage-js res:osi:asm:d
 ```
 
-_See code: [src/commands/res/osi/asm/disassemble.ts](https://github.com/TheLegendOfMataNui/sage-js/blob/v0.10.0/src/commands/res/osi/asm/disassemble.ts)_
+_See code: [src/commands/res/osi/asm/disassemble.ts](https://github.com/TheLegendOfMataNui/sage-js/blob/v0.11.0/src/commands/res/osi/asm/disassemble.ts)_
 
 ## `sage-js res:osi:asm:sassemble OSI ASMS`
 
@@ -134,7 +134,7 @@ ALIASES
   $ sage-js res:osi:asm:sa
 ```
 
-_See code: [src/commands/res/osi/asm/sassemble.ts](https://github.com/TheLegendOfMataNui/sage-js/blob/v0.10.0/src/commands/res/osi/asm/sassemble.ts)_
+_See code: [src/commands/res/osi/asm/sassemble.ts](https://github.com/TheLegendOfMataNui/sage-js/blob/v0.11.0/src/commands/res/osi/asm/sassemble.ts)_
 
 ## `sage-js res:osi:asm:sdisassemble OSI ASM`
 
@@ -167,5 +167,5 @@ ALIASES
   $ sage-js res:osi:asm:sd
 ```
 
-_See code: [src/commands/res/osi/asm/sdisassemble.ts](https://github.com/TheLegendOfMataNui/sage-js/blob/v0.10.0/src/commands/res/osi/asm/sdisassemble.ts)_
+_See code: [src/commands/res/osi/asm/sdisassemble.ts](https://github.com/TheLegendOfMataNui/sage-js/blob/v0.11.0/src/commands/res/osi/asm/sdisassemble.ts)_
 <!-- commandsstop -->
