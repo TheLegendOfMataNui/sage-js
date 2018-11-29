@@ -437,24 +437,8 @@ export class AssemblyAssembler extends Assembly {
 		);
 		this._assembleAssertBlockByIdentifierEmpty(blocksByID);
 
-		// Map existing symbol strings to indexes.
-		const symbolMap = new Map<string, PrimitiveInt16U>();
-		const symbolList = osi.header.symbolTable.entries;
-		for (let i = 0; i < symbolList.length; i++) {
-			const symbol = symbolList[i];
-			symbolMap.set(symbol.value, new PrimitiveInt16U(i));
-		}
-
 		// Function to get or add an existing symbol.
-		const symbolGetOrAdd = (s: PrimitiveStringP8N): PrimitiveInt16U => {
-			let index = symbolMap.get(s.value);
-			if (!index) {
-				index = new PrimitiveInt16U(symbolList.length);
-				symbolMap.set(s.value, index);
-				symbolList.push(s);
-			}
-			return index;
-		};
+		const symbolToIndex = this._assembleSymbolToIndex(osi);
 
 		osi.header.classTable.entries = [];
 		for (const block of blockClasses) {
@@ -462,7 +446,7 @@ export class AssemblyAssembler extends Assembly {
 				block,
 				osi.header.classTable,
 				idToOffset,
-				symbolGetOrAdd
+				symbolToIndex
 			);
 		}
 	}
@@ -473,13 +457,13 @@ export class AssemblyAssembler extends Assembly {
 	 * @param ast AST block.
 	 * @param classDefinitionTable ClassDefinitionTable instance.
 	 * @param idToOffset Maps ID to offset.
-	 * @param symbolGetOrAdd Get symbol or add.
+	 * @param symbolToIndex Get symbol or add.
 	 */
 	public assembleClass(
 		ast: ASTNodeStatementBlock,
 		classDefinitionTable: ClassDefinitionTable,
 		idToOffset: MapIdToSubroutineOffset,
-		symbolGetOrAdd: SymbolToIndex
+		symbolToIndex: SymbolToIndex
 	) {
 		this._assembleAssertArgumentCount(ast.begin.arguments, 1);
 		const {
@@ -513,7 +497,7 @@ export class AssemblyAssembler extends Assembly {
 			this.assembleClassProperty(
 				instruction,
 				structure,
-				symbolGetOrAdd
+				symbolToIndex
 			);
 		}
 		for (const instruction of instructionMethods) {
@@ -521,7 +505,7 @@ export class AssemblyAssembler extends Assembly {
 				instruction,
 				structure,
 				idToOffset,
-				symbolGetOrAdd
+				symbolToIndex
 			);
 		}
 
@@ -536,12 +520,12 @@ export class AssemblyAssembler extends Assembly {
 	 *
 	 * @param ast AST instruction.
 	 * @param classDefinition Definition instance.
-	 * @param symbolGetOrAdd Get symbol or add.
+	 * @param symbolToIndex Get symbol or add.
 	 */
 	public assembleClassProperty(
 		ast: ASTNodeStatementInstruction,
 		classDefinition: ClassDefinition,
-		symbolGetOrAdd: SymbolToIndex
+		symbolToIndex: SymbolToIndex
 	) {
 		this._assembleAssertArgumentCount(ast.arguments, 1);
 		const property = new ClassDefinitionProperty();
@@ -549,7 +533,7 @@ export class AssemblyAssembler extends Assembly {
 		const argName = ast.arguments.entries[0];
 		property.symbol = this._assembleConvertArgumentToSymbol(
 			argName,
-			symbolGetOrAdd
+			symbolToIndex
 		);
 
 		classDefinition.classPropertyTable.entries.push(property);
@@ -561,13 +545,13 @@ export class AssemblyAssembler extends Assembly {
 	 * @param ast AST instruction.
 	 * @param classDefinition Definition instance.
 	 * @param idToOffset Maps ID to offset.
-	 * @param symbolGetOrAdd Get symbol or add.
+	 * @param symbolToIndex Get symbol or add.
 	 */
 	public assembleClassMethod(
 		ast: ASTNodeStatementInstruction,
 		classDefinition: ClassDefinition,
 		idToOffset: MapIdToSubroutineOffset,
-		symbolGetOrAdd: SymbolToIndex
+		symbolToIndex: SymbolToIndex
 	) {
 		this._assembleAssertArgumentCount(ast.arguments, 2);
 
@@ -586,7 +570,7 @@ export class AssemblyAssembler extends Assembly {
 		const argName = ast.arguments.entries[0];
 		method.symbol = this._assembleConvertArgumentToSymbol(
 			argName,
-			symbolGetOrAdd
+			symbolToIndex
 		);
 
 		method.offset = offset;
@@ -630,14 +614,39 @@ export class AssemblyAssembler extends Assembly {
 		const argIdNode = ast.begin.arguments.entries[0];
 		const id = this._assembleDecodeArgumentNumber(argIdNode);
 
+		if (idToOffset.has(id)) {
+			throw new ExceptionASTNode(
+				`Duplicate subroutine identifier: ${id}`,
+				argIdNode
+			);
+		}
+
+		// Assemble body.
+		const offset = this.assembleSubroutineBody(ast, osi);
+
+		idToOffset.set(id, offset);
+	}
+
+	/**
+	 * Assemble subroutine AST statements into OSI.
+	 *
+	 * @param ast AST block.
+	 * @param osi OSI instance.
+	 * @param idToOffset Maps ID to offset.
+	 */
+	public assembleSubroutineBody(
+		ast: ASTNodeStatementBlock,
+		osi: OSI
+	) {
 		const {
 			blocks,
 			instructions
 		} = this._assembleGroupStatements(ast.statements);
 		this._assembleAssertNoBlocks(blocks);
+
 		if (!instructions.length) {
 			throw new ExceptionASTNode(
-				'Subroutine has no instructions',
+				'Block has no instructions',
 				ast
 			);
 		}
@@ -650,13 +659,7 @@ export class AssemblyAssembler extends Assembly {
 			this.assembleInstruction(instruction, subroutine);
 		}
 
-		if (idToOffset.has(id)) {
-			throw new ExceptionASTNode(
-				`Duplicate subroutine identifier: ${id}`,
-				argIdNode
-			);
-		}
-		idToOffset.set(id, offset);
+		return offset;
 	}
 
 	/**
@@ -1098,6 +1101,33 @@ export class AssemblyAssembler extends Assembly {
 	}
 
 	/**
+	 * Assert arguments entry count range.
+	 *
+	 * @param args Arguments node.
+	 * @param min Expected min.
+	 * @param max Expected max.
+	 */
+	protected _assembleAssertArgumentCountRange(
+		args: ASTNodeArguments,
+		min: number,
+		max: number
+	) {
+		const l = args.entries.length;
+		if (l < min) {
+			throw new ExceptionASTNode(
+				`Too few arguments, expected ${min}-${max} found ${l}`,
+				args
+			);
+		}
+		else if (l > max) {
+			throw new ExceptionASTNode(
+				`Unexpected argument, expected ${min}-${max} found ${l}`,
+				args.entries[max]
+			);
+		}
+	}
+
+	/**
 	 * Assert an empty list of instructions.
 	 *
 	 * @param asts Instructions list.
@@ -1135,12 +1165,12 @@ export class AssemblyAssembler extends Assembly {
 	 * Convert argument to symbol, adding new if needed.
 	 *
 	 * @param ast Arg node.
-	 * @param symbolGetOrAdd Get symbol or add.
+	 * @param symbolToIndex Get symbol or add.
 	 * @return Decoded symbol.
 	 */
 	protected _assembleConvertArgumentToSymbol(
 		ast: ASTNodeArgument,
-		symbolGetOrAdd: SymbolToIndex
+		symbolToIndex: SymbolToIndex
 	) {
 		const argString = typed.cast(ast, ASTNodeArgumentString);
 		if (argString) {
@@ -1148,8 +1178,35 @@ export class AssemblyAssembler extends Assembly {
 				new PrimitiveStringP8N(),
 				argString
 			);
-			return symbolGetOrAdd(str);
+			return symbolToIndex(str);
 		}
 		return this._assembleDecodeArgument(new PrimitiveInt16U(), ast);
+	}
+
+	/**
+	 * Symbol index getter, adding if necessary.
+	 *
+	 * @param osi OSI instance.
+	 * @return Getter function.
+	 */
+	protected _assembleSymbolToIndex(osi: OSI): SymbolToIndex {
+		// Map existing symbol strings to indexes.
+		const symbolMap = new Map<string, PrimitiveInt16U>();
+		const symbolList = osi.header.symbolTable.entries;
+		for (let i = 0; i < symbolList.length; i++) {
+			const symbol = symbolList[i];
+			symbolMap.set(symbol.value, new PrimitiveInt16U(i));
+		}
+
+		// Function to get or add an existing symbol.
+		return s => {
+			let index = symbolMap.get(s.value);
+			if (!index) {
+				index = new PrimitiveInt16U(symbolList.length);
+				symbolMap.set(s.value, index);
+				symbolList.push(s);
+			}
+			return index;
+		};
 	}
 }
