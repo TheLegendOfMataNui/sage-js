@@ -30,7 +30,7 @@ USAGE
 * [`sage-js info`](#sage-js-info)
 * [`sage-js res:osi:asm:assemble ASM OSI`](#sage-js-resosiasmassemble-asm-osi)
 * [`sage-js res:osi:asm:disassemble OSI ASM`](#sage-js-resosiasmdisassemble-osi-asm)
-* [`sage-js res:osi:asm:sassemble ASM OSI`](#sage-js-resosiasmsassemble-asm-osi)
+* [`sage-js res:osi:asm:sassemble OSI ASMS`](#sage-js-resosiasmsassemble-osi-asms)
 * [`sage-js res:osi:asm:sdisassemble OSI ASM`](#sage-js-resosiasmsdisassemble-osi-asm)
 
 ## `sage-js help [COMMAND]`
@@ -114,20 +114,21 @@ ALIASES
 
 _See code: [src/commands/res/osi/asm/disassemble.ts](https://github.com/TheLegendOfMataNui/sage-js/blob/v0.10.0/src/commands/res/osi/asm/disassemble.ts)_
 
-## `sage-js res:osi:asm:sassemble ASM OSI`
+## `sage-js res:osi:asm:sassemble OSI ASMS`
 
 assemble an osi file, structured assembly
 
 ```
 USAGE
-  $ sage-js res:osi:asm:sassemble ASM OSI
+  $ sage-js res:osi:asm:sassemble OSI ASMS
 
 ARGUMENTS
-  ASM  assembly code to assemble
-  OSI  osi file to output
+  OSI   osi file to output
+  ASMS  list of assembly files or directories to assemble
 
 OPTIONS
-  -h, --help  show CLI help
+  -e, --ext=ext  [default: .osas] project sources file extensions
+  -h, --help     show CLI help
 
 ALIASES
   $ sage-js res:osi:asm:sa

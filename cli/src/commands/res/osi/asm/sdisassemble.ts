@@ -180,7 +180,7 @@ export default class ResOSIASMSDisassemble extends Command {
 			return;
 		}
 
-		const ext = flags.ext || '';
+		const ext = flags.ext || OSI_ASMS_PROJECT_SOURCE_EXT;
 		const nesting = !flags['no-class-nesting'];
 		await this._generateProject(
 			osi, disassembler, banner, out, ext, nesting
@@ -225,7 +225,7 @@ export default class ResOSIASMSDisassemble extends Command {
 	 * @param disassembler Disassembler instance.
 	 * @param banner Banner comment.
 	 * @param dirpath Output directory.
-	 * @param ext File extension.
+	 * @param ext File extension, must not be empty.
 	 * @param nesting Nest classes in directories.
 	 */
 	protected async _generateProject(
@@ -266,16 +266,12 @@ export default class ResOSIASMSDisassemble extends Command {
 	 * Create file mapper instance.
 	 *
 	 * @param osi OSI instance.
-	 * @param ext File extension.
+	 * @param ext File extension, must not be empty.
 	 * @param nesting Nest classes in directories.
 	 * @return Mapper instance.
 	 */
 	protected _createFileMapper(osi: OSI, ext: string, nesting: boolean):
 	IDisassemblyStructuredFileMapper {
-		if (nesting && !ext) {
-			throw new Error('Nesting classes requires a file extension');
-		}
-
 		const classNameByStructure = new Map<ClassDefinition, string>();
 		if (nesting) {
 			for (const {name, structure} of osi.header.classTable.entries) {
@@ -295,11 +291,17 @@ export default class ResOSIASMSDisassemble extends Command {
 
 		const dirOrFile = (name: string, dirs: string[], file: string) => {
 			if (!name) {
-				return utilFilenameEncode(`${file}${ext}`);
+				return `${utilFilenameEncode(file)}${ext}`;
 			}
-			const fn = utilFilenameEncode(`${name}${ext}`);
-			const dir = dirs.map(utilFilenameEncode).join('/');
-			return `${dir}/${fn}`;
+			const fn = `${utilFilenameEncode(name)}${ext}`;
+			const dirp: string[] = [];
+			for (const d of dirs) {
+				if (!d || d[0] === '.') {
+					return `${utilFilenameEncode(file)}${ext}`;
+				}
+				dirp.push(utilFilenameEncode(d));
+			}
+			return `${dirp.join('/')}/${fn}`;
 		};
 
 		const dirOrFileClass = (
@@ -317,27 +319,21 @@ export default class ResOSIASMSDisassemble extends Command {
 				return dirOrFile(name, dirs, file);
 			}
 
-			const dirsNested = [...dirs];
-			for (const parent of parents) {
-				if (!parent) {
-					return dirOrFile(name, dirs, file);
-				}
-				dirsNested.push(parent);
-			}
+			const dirsNested = [...dirs, ...parents];
 			return dirOrFile(name, dirsNested, file);
 		};
 
 		return {
-			metadata: osi => utilFilenameEncode(`metadata${ext}`),
-			strings: osi => utilFilenameEncode(`strings${ext}`),
-			globals: osi => utilFilenameEncode(`globals${ext}`),
-			symbols: osi => utilFilenameEncode(`symbols${ext}`),
-			sources: osi => utilFilenameEncode(`sources${ext}`),
+			metadata: osi => `metadata${ext}`,
+			strings: osi => `strings${ext}`,
+			globals: osi => `globals${ext}`,
+			symbols: osi => `symbols${ext}`,
+			sources: osi => `sources${ext}`,
 			function: (osi, def, index) =>
 				dirOrFile(def.name.value, ['function'], 'functions'),
 			class: (osi, def, index) =>
 				dirOrFileClass(osi, def, ['class'], 'classes'),
-			subroutine: (osi, def) => utilFilenameEncode(`subroutines${ext}`)
+			subroutine: (osi, def) => `subroutines${ext}`
 		};
 	}
 

@@ -9,9 +9,12 @@ import {
 import {
 	readFile,
 	writeFile,
-	stat
+	stat,
+	readdir,
+	realpath
 } from 'fs-extra';
 
+import {OSI_ASMS_PROJECT_SOURCE_EXT} from '../../../../constants';
 import {Command} from '../../../../command';
 
 /**
@@ -40,7 +43,12 @@ export default class ResOSIASMSAssemble extends Command {
 	 * Flags.
 	 */
 	public static readonly flags = {
-		help: flags.help({char: 'h'})
+		help: flags.help({char: 'h'}),
+		ext: flags.string({
+			char: 'e',
+			default: OSI_ASMS_PROJECT_SOURCE_EXT,
+			description: 'project sources file extensions'
+		})
 	};
 
 	/**
@@ -48,42 +56,42 @@ export default class ResOSIASMSAssemble extends Command {
 	 */
 	public static readonly args = [
 		{
-			name: 'asm',
-			required: true,
-			description: 'assembly code to assemble'
-		},
-		{
 			name: 'osi',
 			required: true,
 			description: 'osi file to output'
+		},
+		{
+			name: 'asms',
+			required: true,
+			description: 'list of assembly files or directories to assemble'
 		}
 	];
+
+	/**
+	 * Allow variable length arguments.
+	 */
+	public static readonly strict = false;
 
 	/**
 	 * Handler.
 	 */
 	public async run() {
 		// tslint:disable-next-line: no-unused
-		const {args, flags} = this.parse(ResOSIASMSAssemble);
+		const {args, flags, argv} = this.parse(ResOSIASMSAssemble);
+		const outpath = args.osi;
+		const inpaths = argv.slice(1);
+		const ext = flags.ext || OSI_ASMS_PROJECT_SOURCE_EXT;
 
-		const inpath = args.asm;
+		// List sources.
+		const sources = await this._findSources(inpaths, ext);
 
-		const inpathStat = await stat(inpath);
-
-		let sources: ASTNodeFile[] | null = null;
-		if (inpathStat.isDirectory()) {
-			// TODO: Project.
-			sources = [];
-		}
-		else {
-			const source = await this._readSourceFile(inpath);
-			sources = [source];
-		}
+		// Read sources into AST files list.
+		const asms = await this._readSources(sources);
 
 		// Assemble AST to OSI.
 		const assembler = new AssemblyAssemblerStructured();
 		// TODO: Better error messages:
-		const osi = assembler.assembles(sources);
+		const osi = assembler.assembles(asms);
 
 		// Transform abstract instructions to BCL instructions.
 		osi.transformAbstractClassRemove();
@@ -94,27 +102,85 @@ export default class ResOSIASMSAssemble extends Command {
 		osi.transformAbstractBranchRemove();
 		osi.transformAbstractJumpRemove();
 
+		// Not strictly necessary, but better to fail here if wrong.
+		osi.transformClassExtendsRemove();
+
 		// Write OSI to buffer.
 		const buffer = Buffer.alloc(osi.size);
 		const view = new BufferView(buffer, true);
 		view.writeWritable(osi);
 
 		// Write buffer to file.
-		await writeFile(args.osi, buffer);
+		await writeFile(outpath, buffer);
 	}
 
 	/**
-	 * Read file.
+	 * Find source files from path list.
+	 *
+	 * @param filepaths Paths to find sources.
+	 * @param ext File extension, should not be empty.
+	 */
+	protected async _findSources(filepaths: string[], ext: string) {
+		const r: string[] = [];
+		const visited = new Set<string>();
+		const queue = [...filepaths];
+		while (queue.length) {
+			const entry = queue.shift();
+			if (!entry) {
+				continue;
+			}
+
+			// Skip if this path has already been visited.
+			const real = await realpath(entry);
+			if (visited.has(real)) {
+				continue;
+			}
+			visited.add(real);
+
+			// Stat path, check check file, descend if directory..
+			const statInfo = await stat(entry);
+			const isDir = statInfo.isDirectory();
+			if (!isDir) {
+				// If correct file extension, add to the list.
+				if (entry.endsWith(ext)) {
+					r.push(entry);
+				}
+				continue;
+			}
+
+			// List directory, skipping any dot files.
+			const dirList = await readdir(real);
+			for (const p of dirList) {
+				if (!p || p[0] === '.') {
+					continue;
+				}
+				queue.push(pathJoin(entry, p));
+			}
+		}
+		return r;
+	}
+
+	/**
+	 * Read sources.
+	 *
+	 * @param filepaths Paths of source file.
+	 */
+	protected async _readSources(filepaths: string[]) {
+		const r: ASTNodeFile[] = [];
+		for (const filepath of filepaths) {
+			r.push(await this._readSource(filepath));
+		}
+		return r;
+	}
+
+	/**
+	 * Read source.
 	 *
 	 * @param filepath Path of source file.
-	 * @param basedir Base directory.
 	 */
-	protected async _readSourceFile(filepath: string, basedir: string = '') {
-		// Create the full path.
-		const fp = basedir ? pathJoin(basedir, filepath) : filepath;
-
+	protected async _readSource(filepath: string) {
 		// Read file.
-		const asm = await readFile(fp, {
+		const asm = await readFile(filepath, {
 			encoding: 'utf8'
 		});
 
