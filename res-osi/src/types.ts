@@ -11,12 +11,26 @@ import {InstructionBCL} from './instruction/bcl/class';
 import {InstructionAbstract} from './instruction/abstract/class';
 
 export interface IClassDefinitionTableEntry {
+	/**
+	 * Class structure.
+	 */
 	structure: ClassDefinition;
+
+	/**
+	 * Class name.
+	 */
 	name: PrimitiveStringP8N;
 }
 
 export interface ISubroutineTableEntry {
+	/**
+	 * Subroutine offset.
+	 */
 	offset: PrimitiveInt32U;
+
+	/**
+	 * Subroutine structure.
+	 */
 	subroutine: Subroutine;
 }
 
@@ -51,14 +65,36 @@ export type MapInstructionByName =
 	Map<string, new() => Instruction>;
 
 export interface ITransformString {
+	/**
+	 * BCL constructor.
+	 */
 	BCL: new() => InstructionBCL;
+
+	/**
+	 * ABS constructor.
+	 */
 	ABS: new() => InstructionAbstract;
+
+	/**
+	 * Arguments.
+	 */
 	args: Set<number>;
 }
 
 export interface IClassDefinitionPropertyFound {
+	/**
+	 * Class structure.
+	 */
 	definition: ClassDefinition;
+
+	/**
+	 * Property index.
+	 */
 	index: number;
+
+	/**
+	 * Property structure.
+	 */
 	entry: ClassDefinitionProperty;
 }
 
@@ -66,8 +102,19 @@ export type IClassDefinitionPropertyFind =
 	IClassDefinitionPropertyFound | null;
 
 export interface IClassDefinitionMethodFound {
+	/**
+	 * Class structure.
+	 */
 	definition: ClassDefinition;
+
+	/**
+	 * Method index.
+	 */
 	index: number;
+
+	/**
+	 * Method structure.
+	 */
 	entry: ClassDefinitionMethod;
 }
 

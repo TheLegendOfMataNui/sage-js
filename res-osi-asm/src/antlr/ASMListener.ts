@@ -1,22 +1,22 @@
 // Generated from antlr/ASM.g4 by ANTLR 4.6-SNAPSHOT
 
 
-import { ParseTreeListener } from 'antlr4ts/tree/ParseTreeListener';
+import { ParseTreeListener } from "antlr4ts/tree/ParseTreeListener";
 
-import { FileContext } from './ASMParser';
-import { StatementsContext } from './ASMParser';
-import { StatementContext } from './ASMParser';
-import { LineContext } from './ASMParser';
-import { InstructionContext } from './ASMParser';
-import { BlockContext } from './ASMParser';
-import { BeginContext } from './ASMParser';
-import { EndContext } from './ASMParser';
-import { ArgumentsContext } from './ASMParser';
-import { ArgumentContext } from './ASMParser';
-import { ArgumentNumberContext } from './ASMParser';
-import { ArgumentStringContext } from './ASMParser';
-import { CommentContext } from './ASMParser';
-import { IdentifierContext } from './ASMParser';
+import { FileContext } from "./ASMParser";
+import { StatementsContext } from "./ASMParser";
+import { StatementContext } from "./ASMParser";
+import { LineContext } from "./ASMParser";
+import { InstructionContext } from "./ASMParser";
+import { BlockContext } from "./ASMParser";
+import { BeginContext } from "./ASMParser";
+import { EndContext } from "./ASMParser";
+import { ArgumentsContext } from "./ASMParser";
+import { ArgumentContext } from "./ASMParser";
+import { ArgumentNumberContext } from "./ASMParser";
+import { ArgumentStringContext } from "./ASMParser";
+import { CommentContext } from "./ASMParser";
+import { IdentifierContext } from "./ASMParser";
 
 
 /**

@@ -47,29 +47,30 @@ async function babelTarget(src, srcOpts, dest, modules) {
 		["'@NAME@'", JSON.stringify(pkg.name)]
 	].map(v => gulpReplace(...v));
 
-	// XXX:
+	// Updated antlr4ts does not generate the problematic comments so disabled.
+	//
 	// Work around Babel bug by removing empty annotations.
 	// The annotations causes self-referencing class properties to fail.
 	// Remove this code once the bug is fixed.
 	// Fortunately they can all be removed without issue in this ugly hack.
-	const filterAntlr = gulpFilter([
-		'*/antlr/*Lexer.ts',
-		'*/antlr/*Parser.ts'
-	], {restore: true});
-	const filterAntlrReplaces = [
-		['@Override', '/*@Override*/'],
-		['@NotNull', '/*@NotNull*/'],
-		['@RuleVersion(0)', '/*@RuleVersion(0)*/']
-	].map(v => gulpReplace(...v));
+	// const filterAntlr = gulpFilter([
+	// 	'*/antlr/*Lexer.ts',
+	// 	'*/antlr/*Parser.ts'
+	// ], {restore: true});
+	// const filterAntlrReplaces = [
+	// 	['@Override', '/*@Override*/'],
+	// 	['@NotNull', '/*@NotNull*/'],
+	// 	['@RuleVersion(0)', '/*@RuleVersion(0)*/']
+	// ].map(v => gulpReplace(...v));
 
 	await pumpP(...[
 		gulp.src(src, srcOpts),
 		filterMeta,
 		...filterMetaReplaces,
 		filterMeta.restore,
-		filterAntlr,
-		...filterAntlrReplaces,
-		filterAntlr.restore,
+		// filterAntlr,
+		// ...filterAntlrReplaces,
+		// filterAntlr.restore,
 		gulpSourcemaps.init(),
 		gulpBabel(babelOptions),
 		gulpRename(path => {

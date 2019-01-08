@@ -47,7 +47,14 @@ import {Parser} from './class';
  * @param ctx Antlr context.
  */
 function copySourceData(file: SourceFile, ast: ASTNode, ctx: {
+	/**
+	 * Start token.
+	 */
 	start: Token;
+
+	/**
+	 * Stop token.
+	 */
 	stop?: Token;
 }) {
 	const src = ast.source;

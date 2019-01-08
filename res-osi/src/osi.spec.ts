@@ -85,15 +85,41 @@ import {
 import {OSI} from './osi';
 
 interface IClass {
+	/**
+	 * Unit name.
+	 */
 	name: string;
+
+	/**
+	 * Unit properties.
+	 */
 	properties: string[];
+
+	/**
+	 * Unit methods.
+	 */
 	methods: string[];
+
+	/**
+	 * Unit children.
+	 */
 	children: IClass[];
 }
 
 interface IClassExpect {
+	/**
+	 * Unit name.
+	 */
 	name: string;
+
+	/**
+	 * Unit properties.
+	 */
 	properties: {[key: number]: null};
+
+	/**
+	 * Unit methods.
+	 */
 	methods: {[key: number]: number};
 }
 

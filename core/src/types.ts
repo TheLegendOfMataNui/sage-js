@@ -14,32 +14,53 @@ export type TypedArray =
 export type ArrayBuffers = ArrayBuffer | SharedArrayBuffer;
 
 export interface IArrayBufferView {
+	/**
+	 * The expected buffer property.
+	 */
 	buffer: ArrayBuffers;
+
+	/**
+	 * The expected byteLength property.
+	 */
 	byteLength: number;
+
+	/**
+	 * The expected byteOffset property.
+	 */
 	byteOffset: number;
 }
 
 export interface IBufferReadable {
+	/**
+	 * Read method.
+	 */
 	bufferRead(data: BufferView): void;
 }
 
 export interface IBufferWriteable {
+	/**
+	 * Write method.
+	 */
 	bufferWrite(data: BufferView): void;
 }
 
 export interface IBufferReadableNew {
+	/**
+	 * Read method.
+	 */
 	bufferReadNew(data: BufferView): this;
 }
 
 export interface ICreateNew {
+	/**
+	 * Method to create a new instance of the referenced object.
+	 */
 	createNew(): this;
 }
 
 export interface ICopyable {
+	/**
+	 * Method to copy an object instance.
+	 */
 	copy(): this;
 }
-
-// Similar to InstanceType, but works with abstract classes.
-// export type InstanceofType<T> =
-// 	// tslint:disable-next-line: no-unused
-// 	T extends new (...args: any[]) => infer R ? R : any;

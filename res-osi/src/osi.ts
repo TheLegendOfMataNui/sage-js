@@ -656,7 +656,14 @@ export class OSI extends Structure {
 		const targeters = new Map() as Map<
 			InstructionBCLPushConstanti32,
 			{
+				/**
+				 * Instructions.
+				 */
 				instructions: Instruction[];
+
+				/**
+				 * Index.
+				 */
 				index: number;
 			}
 		>;
@@ -820,14 +827,36 @@ export class OSI extends Structure {
 		const removed = new Set<Instruction>();
 
 		const targeters: {
+			/**
+			 * Instruction.
+			 */
 			instruction: InstructionAbstractPushConstanti32JumpTarget;
+
+			/**
+			 * Instructions.
+			 */
 			instructions: Instruction[];
+
+			/**
+			 * Index.
+			 */
 			index: number;
+
+			/**
+			 * Amount.
+			 */
 			amount: PrimitiveInt32S;
 		}[] = [];
 		const targets = new Map<number, number>();
 		const targetsRemove: {
+			/**
+			 * Instructions.
+			 */
 			instructions: Instruction[];
+
+			/**
+			 * Index.
+			 */
 			index: number;
 		}[] = [];
 

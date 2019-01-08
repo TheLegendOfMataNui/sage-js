@@ -199,7 +199,14 @@ export class Subroutine extends Structure {
 		const branchers = new Map() as Map<
 			InstructionBCLBranchers,
 			{
+				/**
+				 * Index.
+				 */
 				index: number;
+
+				/**
+				 * Offset.
+				 */
 				offset: number;
 			}
 		>;
@@ -416,9 +423,24 @@ export class Subroutine extends Structure {
 		const removed = new Set<Instruction>();
 
 		const branchers: {
+			/**
+			 * Instruction.
+			 */
 			instruction: InstructionAbstractBranchers;
+
+			/**
+			 * Offset.
+			 */
 			offset: number;
+
+			/**
+			 * Index.
+			 */
 			index: number;
+
+			/**
+			 * Amount.
+			 */
 			amount: PrimitiveInt16S;
 		}[] = [];
 		const targets = new Map<number, number>();
