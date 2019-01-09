@@ -404,7 +404,7 @@ export class ParserDecoder extends Parser {
 	 * @return The AST instance and any errors.
 	 */
 	public decode(code: string, name = '') {
-		const sourceFile = new SourceFile(code);
+		const sourceFile = new SourceFile(code, name);
 
 		const inputStream = new ANTLRInputStream(code);
 
