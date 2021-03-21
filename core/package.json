@@ -34,7 +34,7 @@
 		"@babel/preset-typescript": "^7.13.0",
 		"@babel/register": "^7.13.8",
 		"@types/jasmine": "^3.6.7",
-		"@types/node": "^10.12.18",
+		"@types/node": "^14.14.35",
 		"@types/source-map-support": "^0.5.3",
 		"eslint": "^7.22.0",
 		"gulp": "^4.0.2",
@@ -56,6 +56,6 @@
 		"tslint": "^5.12.0",
 		"tslint-consistent-codestyle": "^1.15.0",
 		"tslint-eslint-rules": "^5.4.0",
-		"typescript": "^3.2.2"
+		"typescript": "^3.9.4"
 	}
 }
