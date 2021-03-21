@@ -31,7 +31,7 @@
 		"@sage-js/res-osi-asm": "^0.11.1",
 		"@types/fs-extra": "^5.0.4",
 		"fs-extra": "^7.0.1",
-		"source-map-support": "^0.5.9"
+		"source-map-support": "^0.5.19"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.13.10",
@@ -46,7 +46,7 @@
 		"@types/chai": "^4.1.7",
 		"@types/jasmine": "^3.6.7",
 		"@types/node": "^10.12.18",
-		"@types/source-map-support": "^0.4.1",
+		"@types/source-map-support": "^0.5.3",
 		"chai": "^4.2.0",
 		"eslint": "^5.12.0",
 		"globby": "^8.0.1",
