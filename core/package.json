@@ -16,7 +16,7 @@
 	"repository": "https://github.com/TheLegendOfMataNui/sage-js.git",
 	"bugs": "https://github.com/TheLegendOfMataNui/sage-js/issues",
 	"author": "JrMasterModelBuilder",
-	"copyright": "Copyright (c) 2018 JrMasterModelBuilder",
+	"copyright": "Copyright (c) 2018-2021 JrMasterModelBuilder",
 	"license": "MPL-2.0",
 	"dependencies": {
 		"@babel/runtime": "^7.2.0",
