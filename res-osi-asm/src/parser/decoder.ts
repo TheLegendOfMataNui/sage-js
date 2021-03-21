@@ -22,7 +22,6 @@ import {
 } from '../antlr/ASMParser';
 import {ASMListener} from '../antlr/ASMListener';
 
-import {SourceFile} from '../sourcefile';
 import {ASTNode} from '../ast/node/class';
 import {ASTNodeFile} from '../ast/node/file';
 import {ASTNodeStatements} from '../ast/node/statements';
@@ -37,6 +36,7 @@ import {ASTNodeArguments} from '../ast/node/arguments';
 
 import {ExceptionInternal} from '../exception/internal';
 import {ExceptionSyntax} from '../exception/syntax';
+import {SourceFile} from '../sourcefile';
 import {Parser} from './class';
 
 /**
