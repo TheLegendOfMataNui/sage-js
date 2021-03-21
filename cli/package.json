@@ -32,8 +32,8 @@
 		"@sage-js/core": "^0.11.1",
 		"@sage-js/res-osi": "^0.11.1",
 		"@sage-js/res-osi-asm": "^0.11.1",
-		"@types/fs-extra": "^5.0.4",
-		"fs-extra": "^7.0.1",
+		"@types/fs-extra": "^9.0.8",
+		"fs-extra": "^9.1.0",
 		"source-map-support": "^0.5.19"
 	},
 	"devDependencies": {
