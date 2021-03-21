@@ -25,7 +25,7 @@
 		"@babel/runtime": "^7.13.10",
 		"@sage-js/core": "^0.11.1",
 		"@sage-js/res-osi": "^0.11.1",
-		"antlr4ts": "^0.5.0-alpha.1"
+		"antlr4ts": "^0.5.0-alpha.4"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.13.10",
@@ -38,7 +38,7 @@
 		"@types/jasmine": "^3.6.7",
 		"@types/node": "^14.14.35",
 		"@types/source-map-support": "^0.5.3",
-		"antlr4ts-cli": "^0.5.0-alpha.1",
+		"antlr4ts-cli": "^0.5.0-alpha.4",
 		"eslint": "^7.22.0",
 		"gulp": "^4.0.2",
 		"gulp-babel": "^8.0.0",
