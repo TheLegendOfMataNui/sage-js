@@ -15,7 +15,7 @@ $ npm install -g @sage-js/cli
 $ sage-js COMMAND
 running command...
 $ sage-js (-v|--version|version)
-@sage-js/cli/0.11.1 darwin-x64 node-v11.6.0
+@sage-js/cli/0.11.1 darwin-x64 node-v12.21.0
 $ sage-js --help [COMMAND]
 USAGE
   $ sage-js COMMAND
