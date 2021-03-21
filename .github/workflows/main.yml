@@ -21,4 +21,8 @@ jobs:
         node-version: ${{ matrix.config.node-version }}
 
     - run: yarn install --frozen-lockfile
-    - run: node scripts/buildall.js ${{ matrix.config.NO_LINT }}
+    - run: yarn workspaces run clean
+    - run: yarn workspaces run build
+    - run: yarn workspaces run lint
+      if: matrix.config.NO_LINT != 1
+    - run: yarn workspaces run test
