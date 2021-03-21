@@ -27,10 +27,18 @@ function pkgrun(pkg, cmd, args) {
 }
 
 function main() {
+	const args = process.argv.slice(2);
+	const lint = !(args.length && args[0] === '0');
+
 	const pkgs = pkg.workspaces.packages;
 
 	let exitCodes = false;
-	for (const script of ['clean', 'prepack']) {
+	for (const script of [
+		'clean',
+		'build',
+		...(lint ? ['lint'] : []),
+		'test'
+	]) {
 		for (const pkg of pkgs) {
 			banner(script, pkg);
 			const exitCode = pkgrun(pkg, 'yarn', [script]);
