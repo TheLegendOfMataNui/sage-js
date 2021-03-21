@@ -3,7 +3,7 @@
 		["@babel/preset-env", {
 			"modules": "commonjs",
 			"targets": {
-				"node": "10"
+				"node": "10.13.0"
 			}
 		}],
 		["@babel/preset-typescript"]

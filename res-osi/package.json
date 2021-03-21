@@ -18,6 +18,9 @@
 	"author": "JrMasterModelBuilder",
 	"copyright": "Copyright (c) 2018-2021 JrMasterModelBuilder",
 	"license": "MPL-2.0",
+	"engines": {
+		"node": ">=10.13.0"
+	},
 	"dependencies": {
 		"@babel/runtime": "^7.13.10",
 		"@sage-js/core": "^0.11.1"
