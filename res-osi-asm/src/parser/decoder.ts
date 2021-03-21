@@ -1,7 +1,6 @@
 // tslint:disable: max-classes-per-file
 
 import {
-	// ANTLRInputStream,
 	CharStreams,
 	CommonTokenStream,
 	Token
@@ -407,7 +406,6 @@ export class ParserDecoder extends Parser {
 	public decode(code: string, name = '') {
 		const sourceFile = new SourceFile(code, name);
 
-		// const inputStream = new ANTLRInputStream(code);
 		const inputStream = CharStreams.fromString(code, name);
 
 		const lexer = new ASMLexer(inputStream);
