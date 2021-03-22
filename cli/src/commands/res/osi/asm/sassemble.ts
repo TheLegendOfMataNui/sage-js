@@ -141,7 +141,7 @@ export default class ResOSIASMSAssemble extends Command {
 			}
 			visited.add(real);
 
-			// Stat path, check check file, descend if directory..
+			// Stat path, check check file, descend if directory.
 			// eslint-disable-next-line no-await-in-loop
 			const statInfo = await stat(entry);
 			const isDir = statInfo.isDirectory();
