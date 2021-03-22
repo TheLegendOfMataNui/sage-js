@@ -26,12 +26,12 @@ export class Header extends Structure {
 	/**
 	 * Major version.
 	 */
-	public versionMajor = new PrimitiveInt16U();
+	public version = new PrimitiveInt16U();
 
 	/**
 	 * Minor version.
 	 */
-	public versionMinor = new PrimitiveInt16U();
+	public flags = new PrimitiveInt16U();
 
 	/**
 	 * String table.
@@ -74,8 +74,8 @@ export class Header extends Structure {
 	 */
 	public copy() {
 		const r = this.createNew();
-		r.versionMajor = this.versionMajor;
-		r.versionMinor = this.versionMinor;
+		r.version = this.version;
+		r.flags = this.flags;
 		r.stringTable = this.stringTable.copy();
 		r.globalTable = this.globalTable.copy();
 		r.functionTable = this.functionTable.copy();
@@ -88,18 +88,18 @@ export class Header extends Structure {
 	/**
 	 * Init for specified version, or currently set version.
 	 *
-	 * @param versionMajor Major version.
-	 * @param versionMinor Minor version.
+	 * @param version Major version.
+	 * @param flags Minor version.
 	 */
 	public initVersion(
-		versionMajor: PrimitiveInt16U | null = null,
-		versionMinor: PrimitiveInt16U | null = null
+		version: PrimitiveInt16U | null = null,
+		flags: PrimitiveInt16U | null = null
 	) {
-		if (versionMajor) {
-			this.versionMajor = versionMajor;
+		if (version) {
+			this.version = version;
 		}
-		if (versionMinor) {
-			this.versionMinor = versionMinor;
+		if (flags) {
+			this.flags = flags;
 		}
 		this.validateVersion();
 		this.stringTable = this.stringTable.createNew();
@@ -119,8 +119,8 @@ export class Header extends Structure {
 	 */
 	public get size() {
 		let r = this.magic.size;
-		r += this.versionMajor.size;
-		r += this.versionMinor.size;
+		r += this.version.size;
+		r += this.flags.size;
 		r += this.stringTable.size;
 		r += this.globalTable.size;
 		r += this.symbolTable.size;
@@ -147,7 +147,8 @@ export class Header extends Structure {
 	 * @returns Has a source table.
 	 */
 	public get hasSourceTable() {
-		return this.versionMajor.value === 4;
+		// eslint-disable-next-line no-bitwise
+		return this.flags.value & 1;
 	}
 
 	/**
@@ -156,14 +157,14 @@ export class Header extends Structure {
 	 * @returns Size of member count.
 	 */
 	public get classMemberCountSize() {
-		return this.versionMajor.value === 4 ? 1 : 2;
+		return this.version.value === 4 ? 1 : 2;
 	}
 
 	/**
 	 * Check if version is known or throw if not known.
 	 */
 	public validateVersion() {
-		this._validateVersion(this.versionMajor, this.versionMinor);
+		this._validateVersion(this.version);
 	}
 
 	/**
@@ -203,11 +204,11 @@ export class Header extends Structure {
 		}
 
 		// Read the version info.
-		const versionMajor = view.readReadableNew(this.versionMajor);
-		const versionMinor = view.readReadableNew(this.versionMinor);
+		const version = view.readReadableNew(this.version);
+		const flags = view.readReadableNew(this.flags);
 
 		// Init new for version.
-		this.initVersion(versionMajor, versionMinor);
+		this.initVersion(version, flags);
 
 		// Read tables.
 		view.readReadable(this.stringTable);
@@ -233,8 +234,8 @@ export class Header extends Structure {
 		magic.writeWritable(this.magic);
 
 		// Read the version info.
-		view.writeWritable(this.versionMajor);
-		view.writeWritable(this.versionMinor);
+		view.writeWritable(this.version);
+		view.writeWritable(this.flags);
 
 		// Write tables.
 		view.writeWritable(this.stringTable);
@@ -264,38 +265,19 @@ export class Header extends Structure {
 	}
 
 	/**
-	 * Valide version number pair.
+	 * Validate format version number.
 	 *
-	 * @param versionMajor Major version.
-	 * @param versionMinor Minor version.
+	 * @param version Format version.
 	 */
-	protected _validateVersion(
-		versionMajor: PrimitiveInt16U,
-		versionMinor: PrimitiveInt16U
-	) {
-		const major = versionMajor.value;
-		const minor = versionMinor.value;
-		switch (major) {
-			case 4: {
-				if (minor === 1) {
-					break;
-				}
-				throw new ExceptionValue(
-					`Invalid minor version: ${major}.${minor}`
-				);
-			}
+	protected _validateVersion(version: PrimitiveInt16U) {
+		const {value} = version;
+		switch (value) {
+			case 4:
 			case 6: {
-				if (minor === 0) {
-					break;
-				}
-				throw new ExceptionValue(
-					`Invalid minor version: ${major}.${minor}`
-				);
+				break;
 			}
 			default: {
-				throw new ExceptionValue(
-					`Invalid major version: ${major}.${minor}`
-				);
+				throw new ExceptionValue(`Invalid format version: ${value}`);
 			}
 		}
 	}

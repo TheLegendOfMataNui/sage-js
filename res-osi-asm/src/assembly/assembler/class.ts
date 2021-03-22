@@ -190,12 +190,12 @@ export class AssemblyAssembler extends Assembly {
 		this._assembleAssertInstructionByIdentifierEmpty(instructionsById);
 
 		this._assembleAssertArgumentCount(version.arguments, 2);
-		osi.header.versionMajor = this._assembleDecodeArgument(
-			osi.header.versionMajor,
+		osi.header.version = this._assembleDecodeArgument(
+			osi.header.version,
 			version.arguments.entries[0]
 		);
-		osi.header.versionMinor = this._assembleDecodeArgument(
-			osi.header.versionMinor,
+		osi.header.flags = this._assembleDecodeArgument(
+			osi.header.flags,
 			version.arguments.entries[1]
 		);
 

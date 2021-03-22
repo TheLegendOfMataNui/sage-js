@@ -175,10 +175,8 @@ export class AssemblyDisassembler extends Assembly {
 		const version = this._disassembleCreateStatementInstruction('version');
 
 		version.arguments.entries.push(
-			this._disassembleCreateArgumentFromInt(osi.header.versionMajor)
-		);
-		version.arguments.entries.push(
-			this._disassembleCreateArgumentFromInt(osi.header.versionMinor)
+			this._disassembleCreateArgumentFromInt(osi.header.version),
+			this._disassembleCreateArgumentFromInt(osi.header.flags)
 		);
 
 		ast.statements.entries.push(version);

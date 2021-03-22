@@ -336,8 +336,8 @@ describe('OSI', () => {
 	describe('transformAbstractStrings*', () => {
 		it('PushConstantString', () => {
 			const osi = new OSI();
-			osi.header.versionMajor = new PrimitiveInt16S(4);
-			osi.header.versionMinor = new PrimitiveInt16S(1);
+			osi.header.version = new PrimitiveInt16S(4);
+			osi.header.flags = new PrimitiveInt16S(1);
 			osi.header.initVersion();
 
 			const strp = new PrimitiveStringP8N('hello world');
@@ -403,8 +403,8 @@ describe('OSI', () => {
 
 			it(InstructionBCL.NAME, () => {
 				const osi = new OSI();
-				osi.header.versionMajor = new PrimitiveInt16S(4);
-				osi.header.versionMinor = new PrimitiveInt16S(1);
+				osi.header.version = new PrimitiveInt16S(4);
+				osi.header.flags = new PrimitiveInt16S(1);
 				osi.header.initVersion();
 
 				const strp = new PrimitiveStringP8N('some_symbol');
@@ -451,8 +451,8 @@ describe('OSI', () => {
 	describe('transformAbstractGlobals*', () => {
 		it('GetVariableValue (global)', () => {
 			const osi = new OSI();
-			osi.header.versionMajor = new PrimitiveInt16S(4);
-			osi.header.versionMinor = new PrimitiveInt16S(1);
+			osi.header.version = new PrimitiveInt16S(4);
+			osi.header.flags = new PrimitiveInt16S(1);
 			osi.header.initVersion();
 
 			const strp = new PrimitiveStringP8N('globalvar');
@@ -498,8 +498,8 @@ describe('OSI', () => {
 
 		it('GetVariableValue (local)', () => {
 			const osi = new OSI();
-			osi.header.versionMajor = new PrimitiveInt16S(4);
-			osi.header.versionMinor = new PrimitiveInt16S(1);
+			osi.header.version = new PrimitiveInt16S(4);
+			osi.header.flags = new PrimitiveInt16S(1);
 			osi.header.initVersion();
 
 			const index = new PrimitiveInt16U(0);
@@ -529,8 +529,8 @@ describe('OSI', () => {
 
 		it('SetVariableValue (global)', () => {
 			const osi = new OSI();
-			osi.header.versionMajor = new PrimitiveInt16S(4);
-			osi.header.versionMinor = new PrimitiveInt16S(1);
+			osi.header.version = new PrimitiveInt16S(4);
+			osi.header.flags = new PrimitiveInt16S(1);
 			osi.header.initVersion();
 
 			const strp = new PrimitiveStringP8N('globalvar');
@@ -576,8 +576,8 @@ describe('OSI', () => {
 
 		it('SetVariableValue (local)', () => {
 			const osi = new OSI();
-			osi.header.versionMajor = new PrimitiveInt16S(4);
-			osi.header.versionMinor = new PrimitiveInt16S(1);
+			osi.header.version = new PrimitiveInt16S(4);
+			osi.header.flags = new PrimitiveInt16S(1);
 			osi.header.initVersion();
 
 			const index = new PrimitiveInt16U(0);
@@ -609,8 +609,8 @@ describe('OSI', () => {
 	describe('transformAbstractClass*', () => {
 		it('CreateObject', () => {
 			const osi = new OSI();
-			osi.header.versionMajor = new PrimitiveInt16S(4);
-			osi.header.versionMinor = new PrimitiveInt16S(1);
+			osi.header.version = new PrimitiveInt16S(4);
+			osi.header.flags = new PrimitiveInt16S(1);
 			osi.header.initVersion();
 
 			const cstruct = new osi.header.classTable.ClassDefinition();
@@ -647,8 +647,8 @@ describe('OSI', () => {
 	describe('transformClassExtends*', () => {
 		it('Hierarchy', () => {
 			const osi = new OSI();
-			osi.header.versionMajor = new PrimitiveInt16S(4);
-			osi.header.versionMinor = new PrimitiveInt16S(1);
+			osi.header.version = new PrimitiveInt16S(4);
+			osi.header.flags = new PrimitiveInt16S(1);
 			osi.header.initVersion();
 
 			const parents = createClasses(osi, dummyClasses);
@@ -690,8 +690,8 @@ describe('OSI', () => {
 
 		it('Size', () => {
 			const osi = new OSI();
-			osi.header.versionMajor = new PrimitiveInt16S(4);
-			osi.header.versionMinor = new PrimitiveInt16S(1);
+			osi.header.version = new PrimitiveInt16S(4);
+			osi.header.flags = new PrimitiveInt16S(1);
 			osi.header.initVersion();
 
 			createClasses(osi, dummyClasses);
@@ -710,8 +710,8 @@ describe('OSI', () => {
 
 		it('Read/Write', () => {
 			const osi = new OSI();
-			osi.header.versionMajor = new PrimitiveInt16S(4);
-			osi.header.versionMinor = new PrimitiveInt16S(1);
+			osi.header.version = new PrimitiveInt16S(4);
+			osi.header.flags = new PrimitiveInt16S(1);
 			osi.header.initVersion();
 
 			createClasses(osi, dummyClasses);
