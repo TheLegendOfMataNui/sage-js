@@ -56,7 +56,6 @@
 		"eslint": "^7.22.0",
 		"eslint-plugin-import": "^2.22.1",
 		"eslint-plugin-jsdoc": "^32.3.0",
-		"globby": "^11.0.2",
 		"gulp": "^4.0.2",
 		"gulp-babel": "^8.0.0",
 		"gulp-filter": "^6.0.0",
