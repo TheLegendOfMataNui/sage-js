@@ -163,7 +163,7 @@ export default class ResOSIASMSAssemble extends Command {
 				queue.push(pathJoin(entry, p));
 			}
 		}
-		return r;
+		return r.sort();
 	}
 
 	/**
