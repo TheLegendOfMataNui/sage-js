@@ -1,18 +1,20 @@
 import {
 	PrimitiveStringP8N
 } from '@sage-js/core';
+
+import {typed} from '../../typed';
 import {
 	InstructionBCLPushConstantString
 } from '../bcl/pushconstantstring';
-import {typed} from '../../typed';
+
 import {InstructionAbstract} from './class';
 
 /**
  * InstructionAbstractPushConstantStringString constructor.
  */
 @typed.decorate('InstructionAbstractPushConstantStringString')
-export class InstructionAbstractPushConstantStringString
-extends InstructionAbstract {
+export class InstructionAbstractPushConstantStringString extends
+	InstructionAbstract {
 	/**
 	 * Instruction size.
 	 */
@@ -48,7 +50,7 @@ extends InstructionAbstract {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();

@@ -21,13 +21,10 @@ yarn.lock
 /.gitignore
 /.babelrc
 /.editorconfig
-/.eslintignore
-/.eslintrc.yaml
+/.eslint*
 /.tern-project
 /package-scripts.yml
-/tsconfig.json
-/tsconfig-bin.json
-/tslint.yaml
+/tsconfig*
 /gulpfile.babel.js
 /nodemon.json
 /spec

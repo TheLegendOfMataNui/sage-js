@@ -1,5 +1,6 @@
 import {typed} from '../../../typed';
 import {BufferView} from '../../../bufferview';
+
 import {PrimitiveStringP} from './class';
 
 /**
@@ -39,7 +40,7 @@ export class PrimitiveStringP8N extends PrimitiveStringP {
 	 * @param view The BufferView.
 	 * @param offset Offset to get from.
 	 * @param size Size read.
-	 * @return New instance.
+	 * @returns New instance.
 	 */
 	public static getBuffer(view: BufferView, offset = -1, size = [0]) {
 		return view.getReadableNew(new PrimitiveStringP8N(), offset, size);
@@ -50,7 +51,7 @@ export class PrimitiveStringP8N extends PrimitiveStringP {
 	 *
 	 * @param view The BufferView.
 	 * @param size Size read.
-	 * @return New instance.
+	 * @returns New instance.
 	 */
 	public static readBuffer(view: BufferView, size = [0]) {
 		return view.readReadableNew(new PrimitiveStringP8N(), size);

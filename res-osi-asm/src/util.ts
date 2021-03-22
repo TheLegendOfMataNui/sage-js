@@ -5,7 +5,7 @@
  * @param line Line number, 1 indexed.
  * @param column Column number, 1 indexed.
  * @param filename Optinal filename.
- * @return Formatted string.
+ * @returns Formatted string.
  */
 export function utilFormatErrorAtFileLocation(
 	message: string,

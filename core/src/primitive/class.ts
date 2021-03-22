@@ -8,8 +8,8 @@ import {BufferView} from '../bufferview';
 /**
  * The base class for primitive types.
  */
-export abstract class Primitive extends Object
-implements IBufferReadableNew, IBufferWriteable {
+export abstract class Primitive extends Object implements
+IBufferReadableNew, IBufferWriteable {
 	constructor() {
 		super();
 	}
@@ -37,14 +37,14 @@ implements IBufferReadableNew, IBufferWriteable {
 	 * Decode new from string.
 	 *
 	 * @param str String encoded.
-	 * @return New instancce.
+	 * @returns New instancce.
 	 */
 	public abstract stringDecodeNew(str: string): this;
 
 	/**
 	 * Convert to encoded string.
 	 *
-	 * @return Encoded string.
+	 * @returns Encoded string.
 	 */
 	public abstract stringEncode(): string;
 }

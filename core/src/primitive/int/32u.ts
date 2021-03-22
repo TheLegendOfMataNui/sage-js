@@ -1,6 +1,7 @@
 import {INT32U_MAX, INT32U_MIN} from '../../constants';
 import {BufferView} from '../../bufferview';
 import {typed} from '../../typed';
+
 import {PrimitiveInt} from './class';
 
 /**
@@ -43,7 +44,7 @@ export class PrimitiveInt32U extends PrimitiveInt {
 	 * Compare equality.
 	 *
 	 * @param other Other instance.
-	 * @return Comparison result.
+	 * @returns Comparison result.
 	 */
 	public eq(other: PrimitiveInt32U) {
 		return this.value === other.value;
@@ -53,7 +54,7 @@ export class PrimitiveInt32U extends PrimitiveInt {
 	 * Compare non-equality.
 	 *
 	 * @param other Other instance.
-	 * @return Comparison result.
+	 * @returns Comparison result.
 	 */
 	public neq(other: PrimitiveInt32U) {
 		return this.value !== other.value;
@@ -63,7 +64,7 @@ export class PrimitiveInt32U extends PrimitiveInt {
 	 * Compare greater-than.
 	 *
 	 * @param other Other instance.
-	 * @return Comparison result.
+	 * @returns Comparison result.
 	 */
 	public gt(other: PrimitiveInt32U) {
 		return this.value > other.value;
@@ -73,7 +74,7 @@ export class PrimitiveInt32U extends PrimitiveInt {
 	 * Compare greater-than or equal.
 	 *
 	 * @param other Other instance.
-	 * @return Comparison result.
+	 * @returns Comparison result.
 	 */
 	public gte(other: PrimitiveInt32U) {
 		return this.value >= other.value;
@@ -83,6 +84,7 @@ export class PrimitiveInt32U extends PrimitiveInt {
 	 * ReadableNew implementation.
 	 *
 	 * @param view View to read from.
+	 * @returns New value.
 	 */
 	public bufferReadNew(view: BufferView) {
 		const Constructor = this.constructor as typeof PrimitiveInt32U;
@@ -104,7 +106,7 @@ export class PrimitiveInt32U extends PrimitiveInt {
 	 * @param view The BufferView.
 	 * @param offset Offset to get from.
 	 * @param size Size read.
-	 * @return New instance.
+	 * @returns New instance.
 	 */
 	public static getBuffer(view: BufferView, offset = -1, size = [0]) {
 		return view.getReadableNew(new PrimitiveInt32U(), offset, size);
@@ -115,7 +117,7 @@ export class PrimitiveInt32U extends PrimitiveInt {
 	 *
 	 * @param view The BufferView.
 	 * @param size Size read.
-	 * @return New instance.
+	 * @returns New instance.
 	 */
 	public static readBuffer(view: BufferView, size = [0]) {
 		return view.readReadableNew(new PrimitiveInt32U(), size);

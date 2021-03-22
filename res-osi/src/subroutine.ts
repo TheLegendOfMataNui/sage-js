@@ -5,6 +5,7 @@ import {
 	PrimitiveInt32U,
 	utilNumberToHex
 } from '@sage-js/core';
+
 import {typed} from './typed';
 import {ExceptionInternal} from './exception/internal';
 import {ExceptionInstruction} from './exception/instruction';
@@ -48,7 +49,7 @@ type InstructionBCLBranchers =
  * @param brancher Brancher instruction.
  * @param target Branch target.
  * @param adjust Adjusment amount.
- * @return Abstract instruction.
+ * @returns Abstract instruction.
  */
 function brancherToAbstract(
 	brancher: InstructionBCLBranchers,
@@ -96,6 +97,8 @@ export class Subroutine extends Structure {
 
 	/**
 	 * Size of the subroutine.
+	 *
+	 * @returns Soze of the subroutine.
 	 */
 	public get size() {
 		let r = 0;
@@ -108,7 +111,7 @@ export class Subroutine extends Structure {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();
@@ -142,7 +145,7 @@ export class Subroutine extends Structure {
 				typed.cast(bc, InstructionBCLCompareAndBranchIfFalse);
 			if (brancher) {
 				// Keep track of branchs.
-				const offset = view.offset;
+				const {offset} = view;
 				const branch = brancher.arg0.value;
 				const branchTo = offset + branch;
 
@@ -185,31 +188,30 @@ export class Subroutine extends Structure {
 
 	/**
 	 * Transform branch instructions to abstract ones.
+	 *
+	 * @returns Update report.
 	 */
 	public transformAbstractBranchAdd() {
 		const replaced = new Map<Instruction, Instruction>();
 		const added = new Set<Instruction>();
 
 		const targetsNeeded = new Set<number>();
-		const targets = new Map() as Map<
-			number,
-			InstructionAbstractBranchTarget
-		>;
+		const targets = new Map() as (
+			Map<number, InstructionAbstractBranchTarget>
+		);
 		const offsets = new Set([0]);
-		const branchers = new Map() as Map<
-			InstructionBCLBranchers,
-			{
-				/**
-				 * Index.
-				 */
-				index: number;
+		const branchers = new Map() as Map<InstructionBCLBranchers, {
 
-				/**
-				 * Offset.
-				 */
-				offset: number;
-			}
-		>;
+			/**
+			 * Index.
+			 */
+			index: number;
+
+			/**
+			 * Offset.
+			 */
+			offset: number;
+		}>;
 		let branchMInstruction: Instruction | null = null;
 		let branchMOffset = -1;
 		let branchMBranch = -1;
@@ -394,6 +396,7 @@ export class Subroutine extends Structure {
 			const adjusted = targetsAdjusted.get(branchTo);
 			let adjust = 0;
 			let target = targets.get(branchTo);
+			// eslint-disable-next-line no-undefined
 			if (adjusted !== undefined) {
 				adjust = branchTo - adjusted;
 				target = targets.get(adjusted);
@@ -417,12 +420,15 @@ export class Subroutine extends Structure {
 
 	/**
 	 * Transform abstract branch instructions into bytecode.
+	 *
+	 * @returns Update report.
 	 */
 	public transformAbstractBranchRemove() {
 		const replaced = new Map<Instruction, Instruction>();
 		const removed = new Set<Instruction>();
 
 		const branchers: {
+
 			/**
 			 * Instruction.
 			 */
@@ -479,7 +485,6 @@ export class Subroutine extends Structure {
 				ab,
 				InstructionAbstractBranchTarget
 			);
-			// tslint:disable-next-line: early-exit
 			if (target) {
 				targets.set(target.arg0.value, offset);
 				targetsRemove.push(i);
@@ -490,22 +495,22 @@ export class Subroutine extends Structure {
 		// Calculate all the jumps before making any changes.
 		// If any are broken, throws error before changing.
 		for (const brancher of branchers) {
-			const instruction = brancher.instruction;
+			const {instruction} = brancher;
 			const branch = instruction.arg0.value;
 			const branchTo = targets.get(branch);
+			// eslint-disable-next-line no-undefined
 			if (branchTo === undefined) {
 				throw new ExceptionInvalid(`Invalid branch ID: ${branch}`);
 			}
-			const offset = brancher.offset;
+			const {offset} = brancher;
 			const amount = (branchTo - offset) + instruction.arg1.value;
 			brancher.amount = new PrimitiveInt16S(amount);
 		}
 
 		// Replace the abstract instructions.
 		for (const brancher of branchers) {
-			const instruction = brancher.instruction;
-			const index = brancher.index;
-			const amount = brancher.amount;
+			const {instruction} = brancher;
+			const {index, amount} = brancher;
 
 			const branchAlways = typed.cast(
 				instruction,

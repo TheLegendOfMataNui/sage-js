@@ -14,6 +14,7 @@ export type TypedArray =
 export type ArrayBuffers = ArrayBuffer | SharedArrayBuffer;
 
 export interface IArrayBufferView {
+
 	/**
 	 * The expected buffer property.
 	 */
@@ -31,6 +32,7 @@ export interface IArrayBufferView {
 }
 
 export interface IBufferReadable {
+
 	/**
 	 * Read method.
 	 */
@@ -38,6 +40,7 @@ export interface IBufferReadable {
 }
 
 export interface IBufferWriteable {
+
 	/**
 	 * Write method.
 	 */
@@ -45,6 +48,7 @@ export interface IBufferWriteable {
 }
 
 export interface IBufferReadableNew {
+
 	/**
 	 * Read method.
 	 */
@@ -52,6 +56,7 @@ export interface IBufferReadableNew {
 }
 
 export interface ICreateNew {
+
 	/**
 	 * Method to create a new instance of the referenced object.
 	 */
@@ -59,6 +64,7 @@ export interface ICreateNew {
 }
 
 export interface ICopyable {
+
 	/**
 	 * Method to copy an object instance.
 	 */

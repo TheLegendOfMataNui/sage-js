@@ -3,6 +3,7 @@ import {
 	BufferView,
 	PrimitiveStringP8N
 } from '@sage-js/core';
+
 import {ClassDefinition} from '../classdefinition/class';
 import {
 	IClassDefinitionTableEntry,
@@ -26,7 +27,7 @@ export abstract class ClassDefinitionTable extends Structure {
 	/**
 	 * Constructor for class definition.
 	 *
-	 * @return Constructor function.
+	 * @returns Constructor function.
 	 */
 	public abstract ClassDefinition: new() => ClassDefinition;
 
@@ -36,6 +37,8 @@ export abstract class ClassDefinitionTable extends Structure {
 
 	/**
 	 * Get entry count size.
+	 *
+	 * @returns Size of entry count.
 	 */
 	public get entryCountSize() {
 		const Constructor = this.constructor as typeof ClassDefinitionTable;
@@ -45,13 +48,13 @@ export abstract class ClassDefinitionTable extends Structure {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();
 		r.entries = this.entries.map(entry => {
 			const structure = entry.structure.copy();
-			const name = entry.name;
+			const {name} = entry;
 			return {
 				structure,
 				name
@@ -62,6 +65,8 @@ export abstract class ClassDefinitionTable extends Structure {
 
 	/**
 	 * Byte size.
+	 *
+	 * @returns Byte size.
 	 */
 	public get size() {
 		// Size of length marker, plus the size of each entry.

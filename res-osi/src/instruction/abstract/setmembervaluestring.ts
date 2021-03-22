@@ -1,18 +1,20 @@
 import {
 	PrimitiveStringP8N
 } from '@sage-js/core';
+
+import {typed} from '../../typed';
 import {
 	InstructionBCLSetMemberValue
 } from '../bcl/setmembervalue';
-import {typed} from '../../typed';
+
 import {InstructionAbstract} from './class';
 
 /**
  * InstructionAbstractSetMemberValueString constructor.
  */
 @typed.decorate('InstructionAbstractSetMemberValueString')
-export class InstructionAbstractSetMemberValueString
-extends InstructionAbstract {
+export class InstructionAbstractSetMemberValueString extends
+	InstructionAbstract {
 	/**
 	 * Instruction size.
 	 */
@@ -48,7 +50,7 @@ extends InstructionAbstract {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();

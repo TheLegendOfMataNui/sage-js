@@ -1,15 +1,17 @@
 import {
 	PrimitiveInt32U
 } from '@sage-js/core';
+
 import {typed} from '../../typed';
+
 import {InstructionAbstract} from './class';
 
 /**
  * InstructionBranchTarget constructor.
  */
 @typed.decorate('InstructionAbstractBranchTarget')
-export class InstructionAbstractBranchTarget
-extends InstructionAbstract {
+export class InstructionAbstractBranchTarget extends
+	InstructionAbstract {
 	/**
 	 * Instruction size.
 	 */
@@ -45,7 +47,7 @@ extends InstructionAbstract {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();

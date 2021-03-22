@@ -41,6 +41,8 @@ export abstract class PrimitiveStringP extends PrimitiveString {
 
 	/**
 	 * Byte size.
+	 *
+	 * @returns Byte size.
 	 */
 	public get size() {
 		return (
@@ -52,6 +54,8 @@ export abstract class PrimitiveStringP extends PrimitiveString {
 
 	/**
 	 * Length of the value size.
+	 *
+	 * @returns Value length.
 	 */
 	public get length() {
 		return this.value.length;
@@ -59,13 +63,17 @@ export abstract class PrimitiveStringP extends PrimitiveString {
 
 	/**
 	 * Length bit size.
+	 *
+	 * @returns Length bit size.
 	 */
 	public get lengthBits() {
 		return (this.constructor as typeof PrimitiveStringP).LENGTH_BITS;
 	}
 
 	/**
-	 * Length bit size.
+	 * Length byte size.
+	 *
+	 * @returns Length byte size.
 	 */
 	public get lengthBytes() {
 		return (this.constructor as typeof PrimitiveStringP).LENGTH_SIZE;
@@ -73,6 +81,8 @@ export abstract class PrimitiveStringP extends PrimitiveString {
 
 	/**
 	 * The max string length.
+	 *
+	 * @returns Max length.
 	 */
 	public get lengthMax() {
 		return (this.constructor as typeof PrimitiveStringP).LENGTH_MAX;
@@ -80,6 +90,8 @@ export abstract class PrimitiveStringP extends PrimitiveString {
 
 	/**
 	 * Is it null terminated.
+	 *
+	 * @returns True if null terminated.
 	 */
 	public get nullTerminated() {
 		return (this.constructor as typeof PrimitiveStringP).NULL_TERMINATED;
@@ -89,6 +101,7 @@ export abstract class PrimitiveStringP extends PrimitiveString {
 	 * ReadableNew implementation.
 	 *
 	 * @param view View to read from.
+	 * @returns New value.
 	 */
 	public bufferReadNew(view: BufferView) {
 		let l = -1;

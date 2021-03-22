@@ -7,6 +7,7 @@ import {
 	PrimitiveStringP8N,
 	utilNumberToHex
 } from '@sage-js/core';
+
 import {
 	StringP8NTable
 } from './stringp8ntable';
@@ -29,7 +30,7 @@ import {SubroutineTable} from './subroutinetable';
 import {Instruction} from './instruction/class';
 import {InstructionBCL} from './instruction/bcl/class';
 import {InstructionAbstract} from './instruction/abstract/class';
-
+//
 // Branching and jumping instructions.
 import {InstructionBCLJumpRelative} from './instruction/bcl/jumprelative';
 import {InstructionBCLPushConstanti32} from './instruction/bcl/pushconstanti32';
@@ -37,7 +38,7 @@ import {InstructionAbstractJumpTarget} from './instruction/abstract/jumptarget';
 import {
 	InstructionAbstractPushConstanti32JumpTarget
 } from './instruction/abstract/pushconstanti32jumptarget';
-
+//
 // PushConstantString
 import {
 	InstructionBCLPushConstantString
@@ -45,7 +46,7 @@ import {
 import {
 	InstructionAbstractPushConstantStringString
 } from './instruction/abstract/pushconstantstringstring';
-
+//
 // GetGameVariable
 import {
 	InstructionBCLGetGameVariable
@@ -53,7 +54,7 @@ import {
 import {
 	InstructionAbstractGetGameVariableString
 } from './instruction/abstract/getgamevariablestring';
-
+//
 // SetGameVariable
 import {
 	InstructionBCLSetGameVariable
@@ -61,7 +62,7 @@ import {
 import {
 	InstructionAbstractSetGameVariableString
 } from './instruction/abstract/setgamevariablestring';
-
+//
 // CallGameFunction
 import {
 	InstructionBCLCallGameFunction
@@ -69,7 +70,7 @@ import {
 import {
 	InstructionAbstractCallGameFunctionString
 } from './instruction/abstract/callgamefunctionstring';
-
+//
 // CallGameFunctionFromString
 import {
 	InstructionBCLCallGameFunctionFromString
@@ -77,7 +78,7 @@ import {
 import {
 	InstructionAbstractCallGameFunctionFromStringString
 } from './instruction/abstract/callgamefunctionfromstringstring';
-
+//
 // GetThisMemberFunction
 import {
 	InstructionBCLGetThisMemberFunction
@@ -85,7 +86,7 @@ import {
 import {
 	InstructionAbstractGetThisMemberFunctionString
 } from './instruction/abstract/getthismemberfunctionstring';
-
+//
 // GetThisMemberValue
 import {
 	InstructionBCLGetThisMemberValue
@@ -93,7 +94,7 @@ import {
 import {
 	InstructionAbstractGetThisMemberValueString
 } from './instruction/abstract/getthismembervaluestring';
-
+//
 // SetThisMemberValue
 import {
 	InstructionBCLSetThisMemberValue
@@ -101,7 +102,7 @@ import {
 import {
 	InstructionAbstractSetThisMemberValueString
 } from './instruction/abstract/setthismembervaluestring';
-
+//
 // GetMemberFunction
 import {
 	InstructionBCLGetMemberFunction
@@ -109,7 +110,7 @@ import {
 import {
 	InstructionAbstractGetMemberFunctionString
 } from './instruction/abstract/getmemberfunctionstring';
-
+//
 // GetMemberValue
 import {
 	InstructionBCLGetMemberValue
@@ -117,7 +118,7 @@ import {
 import {
 	InstructionAbstractGetMemberValueString
 } from './instruction/abstract/getmembervaluestring';
-
+//
 // SetMemberValue
 import {
 	InstructionBCLSetMemberValue
@@ -125,7 +126,7 @@ import {
 import {
 	InstructionAbstractSetMemberValueString
 } from './instruction/abstract/setmembervaluestring';
-
+//
 // GetVariableValue
 import {
 	InstructionBCLGetVariableValue
@@ -133,7 +134,7 @@ import {
 import {
 	InstructionAbstractGetVariableValueGlobalString
 } from './instruction/abstract/getvariablevalueglobalstring';
-
+//
 // SetVariableValue
 import {
 	InstructionBCLSetVariableValue
@@ -141,7 +142,7 @@ import {
 import {
 	InstructionAbstractSetVariableValueGlobalString
 } from './instruction/abstract/setvariablevalueglobalstring';
-
+//
 // CreateObject
 import {
 	InstructionBCLCreateObject
@@ -169,7 +170,7 @@ const InstructionStrings: ITransformString[] = [
 	{
 		BCL: InstructionBCLCallGameFunction,
 		ABS: InstructionAbstractCallGameFunctionString,
-		args: new Set([0, 1]),
+		args: new Set([0, 1])
 	},
 	{
 		BCL: InstructionBCLCallGameFunctionFromString,
@@ -229,7 +230,7 @@ const InstructionGlobals: ITransformString[] = [
  *
  * @param instructions Instruction list.
  * @param index Starting index.
- * @return Instruction, null, or throw.
+ * @returns Instruction, null, or throw.
  */
 function findJumpOffsetBCL(
 	instructions: Instruction[],
@@ -281,7 +282,7 @@ export class OSI extends Structure {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();
@@ -292,6 +293,8 @@ export class OSI extends Structure {
 
 	/**
 	 * Byte size.
+	 *
+	 * @returns Byte size.
 	 */
 	public get size() {
 		return this.header.size + this.subroutines.size;
@@ -301,8 +304,6 @@ export class OSI extends Structure {
 	 * Update the offsets in the subroutines, and their mappings in the header.
 	 * If any subroutines are empty, this will throw without changes.
 	 * This does not update jump relatives, which should be abstracted.
-	 *
-	 * @param base Base offset.
 	 */
 	public updateOffsets() {
 		// Assemble mappings from functions and methods to subroutines.
@@ -405,15 +406,14 @@ export class OSI extends Structure {
 	 * A child class has the same properties and methods as a parent class.
 	 * Some false positives are fairly likely.
 	 *
-	 * @return Mapped classes to some possible ancestors.
+	 * @returns Mapped classes to some possible ancestors.
 	 */
 	public mapClassPossibleAncestors() {
 		const classList = this.header.classTable.entries;
 
-		const r = new Map() as Map<
-			IClassDefinitionTableEntry,
-			IClassDefinitionTableEntry[]
-		>;
+		const r = new Map() as (
+			Map<IClassDefinitionTableEntry, IClassDefinitionTableEntry[]>
+		);
 
 		for (const cInfo of classList) {
 			const cStruct = cInfo.structure;
@@ -466,7 +466,7 @@ export class OSI extends Structure {
 	 * A direct child class should only add one new constructor.
 	 * Some false positives are possible but highly unlikely.
 	 *
-	 * @return Mapped classes to some possible parents.
+	 * @returns Mapped classes to some possible parents.
 	 */
 	public mapClassPossibleParents() {
 		const classList = this.header.classTable.entries;
@@ -539,7 +539,7 @@ export class OSI extends Structure {
 	/**
 	 * Attempts to map classes to parents.
 	 *
-	 * @return Mapped classes to parents.
+	 * @returns Mapped classes to parents.
 	 */
 	public mapClassParents() {
 		const r = new Map() as MapClassDefinitionTableEntryExtends;
@@ -582,6 +582,7 @@ export class OSI extends Structure {
 				let probably = 0;
 				for (const m of pInfo.structure.itterMethods()) {
 					const cMethod = cMethods.get(m.symbol.value);
+					// eslint-disable-next-line no-undefined
 					if (cMethod === undefined) {
 						// This should be impossible.
 						throw new ExceptionInternal('Invalid internal state');
@@ -642,31 +643,28 @@ export class OSI extends Structure {
 
 	/**
 	 * Transform jump instructions to abstract ones.
+	 *
+	 * @returns Update report.
 	 */
 	public transformAbstractJumpAdd() {
 		const replaced = new Map<Instruction, Instruction>();
 		const added = new Set<Instruction>();
 
 		const targetsNeeded = new Set<number>();
-		const targets = new Map() as Map<
-			number,
-			InstructionAbstractJumpTarget
-		>;
+		const targets = new Map() as Map<number, InstructionAbstractJumpTarget>;
 		const offsets = new Set([this.subroutines.baseOffset.value]);
-		const targeters = new Map() as Map<
-			InstructionBCLPushConstanti32,
-			{
-				/**
-				 * Instructions.
-				 */
-				instructions: Instruction[];
+		const targeters = new Map() as Map<InstructionBCLPushConstanti32, {
 
-				/**
-				 * Index.
-				 */
-				index: number;
-			}
-		>;
+			/**
+			 * Instructions.
+			 */
+			instructions: Instruction[];
+
+			/**
+			 * Index.
+			 */
+			index: number;
+		}>;
 		const claimedIds = new Set<number>();
 		let targetId = 0;
 
@@ -680,7 +678,7 @@ export class OSI extends Structure {
 
 		// Find the existing targets, and add find where new ones are needed.
 		for (const {offset, subroutine} of this.subroutines.itter()) {
-			const instructions = subroutine.instructions;
+			const {instructions} = subroutine;
 			let offsetI = offset.value;
 			for (let i = 0; i < instructions.length; i++) {
 				const instruction = instructions[i];
@@ -724,7 +722,10 @@ export class OSI extends Structure {
 
 		// If none are needed, return now.
 		if (!targeters.size) {
-			return;
+			return {
+				replaced,
+				added
+			};
 		}
 
 		// Adjust any label offsets that start inside instructions.
@@ -790,6 +791,7 @@ export class OSI extends Structure {
 			const adjusted = targetsAdjusted.get(jumpTo);
 			let adjust = 0;
 			let target = targets.get(jumpTo);
+			// eslint-disable-next-line no-undefined
 			if (adjusted !== undefined) {
 				adjust = jumpTo - adjusted;
 				target = targets.get(adjusted);
@@ -821,12 +823,15 @@ export class OSI extends Structure {
 
 	/**
 	 * Transform abstract jump instructions into bytecode.
+	 *
+	 * @returns Update report.
 	 */
 	public transformAbstractJumpRemove() {
 		const replaced = new Map<Instruction, Instruction>();
 		const removed = new Set<Instruction>();
 
 		const targeters: {
+
 			/**
 			 * Instruction.
 			 */
@@ -849,6 +854,7 @@ export class OSI extends Structure {
 		}[] = [];
 		const targets = new Map<number, number>();
 		const targetsRemove: {
+
 			/**
 			 * Instructions.
 			 */
@@ -862,7 +868,7 @@ export class OSI extends Structure {
 
 		// Find the existing targets and targeters.
 		for (const {offset, subroutine} of this.subroutines.itter()) {
-			const instructions = subroutine.instructions;
+			const {instructions} = subroutine;
 			let offsetI = offset.value;
 			for (let i = 0; i < instructions.length; i++) {
 				const instruction = instructions[i];
@@ -905,9 +911,10 @@ export class OSI extends Structure {
 		// Calculate all the jumps before making any changes.
 		// If any are broken, throws error before changing.
 		for (const targeter of targeters) {
-			const instruction = targeter.instruction;
+			const {instruction} = targeter;
 			const jump = instruction.arg0.value;
 			const jumpTo = targets.get(instruction.arg0.value);
+			// eslint-disable-next-line no-undefined
 			if (jumpTo === undefined) {
 				throw new ExceptionInvalid(`Invalid jump ID: ${jump}`);
 			}
@@ -917,8 +924,7 @@ export class OSI extends Structure {
 
 		// Replace the abstract instructions.
 		for (const targeter of targeters) {
-			const index = targeter.index;
-			const amount = targeter.amount;
+			const {index, amount} = targeter;
 
 			const bc = new InstructionBCLPushConstanti32();
 			bc.arg0 = amount;
@@ -942,6 +948,8 @@ export class OSI extends Structure {
 	/**
 	 * Transform branch instructions to abstract ones.
 	 * Calls the method on every subroutine.
+	 *
+	 * @returns Update report.
 	 */
 	public transformAbstractBranchAdd() {
 		const replaced = new Map<Instruction, Instruction>();
@@ -966,6 +974,8 @@ export class OSI extends Structure {
 	/**
 	 * Transform abstract branch instructions into bytecode.
 	 * Calls the method on every subroutine.
+	 *
+	 * @returns Update report.
 	 */
 	public transformAbstractBranchRemove() {
 		const replaced = new Map<Instruction, Instruction>();
@@ -989,6 +999,8 @@ export class OSI extends Structure {
 
 	/**
 	 * Transform bytecode string references to abstract.
+	 *
+	 * @returns Update report.
 	 */
 	public transformAbstractStringAdd() {
 		return this._transformAbstractStringTableAdd(
@@ -1000,6 +1012,8 @@ export class OSI extends Structure {
 	/**
 	 * Transform abstract string references to bytecode.
 	 * Remember to update offsets after this.
+	 *
+	 * @returns Update report.
 	 */
 	public transformAbstractStringRemove() {
 		return this._transformAbstractStringTableRemove(
@@ -1010,6 +1024,8 @@ export class OSI extends Structure {
 
 	/**
 	 * Transform bytecode symbol references to abstract.
+	 *
+	 * @returns Update report.
 	 */
 	public transformAbstractSymbolAdd() {
 		return this._transformAbstractStringTableAdd(
@@ -1021,6 +1037,8 @@ export class OSI extends Structure {
 	/**
 	 * Transform abstract symbol references to bytecode.
 	 * Remember to update offsets after this.
+	 *
+	 * @returns Update report.
 	 */
 	public transformAbstractSymbolRemove() {
 		return this._transformAbstractStringTableRemove(
@@ -1031,17 +1049,19 @@ export class OSI extends Structure {
 
 	/**
 	 * Transform bytecode symbol references to abstract.
+	 *
+	 * @returns Update report.
 	 */
 	public transformAbstractGlobalAdd() {
 		return this._transformAbstractStringTableAdd(
 			this.header.globalTable,
 			InstructionGlobals,
 			index => {
-				// tslint:disable-next-line: no-bitwise
+				// eslint-disable-next-line no-bitwise
 				if (!(index.value & 0x8000)) {
 					return null;
 				}
-				// tslint:disable-next-line: no-bitwise
+				// eslint-disable-next-line no-bitwise
 				return new PrimitiveInt16U(index.value ^ 0x8000);
 			}
 		);
@@ -1050,18 +1070,22 @@ export class OSI extends Structure {
 	/**
 	 * Transform abstract symbol references to bytecode.
 	 * Remember to update offsets after this.
+	 *
+	 * @returns Update report.
 	 */
 	public transformAbstractGlobalRemove() {
 		return this._transformAbstractStringTableRemove(
 			this.header.globalTable,
 			InstructionGlobals,
-			// tslint:disable-next-line: no-bitwise
+			// eslint-disable-next-line no-bitwise
 			index => new PrimitiveInt16U(index.value | 0x8000)
 		);
 	}
 
 	/**
 	 * Transform bytecode class references to abstract.
+	 *
+	 * @returns Update report.
 	 */
 	public transformAbstractClassAdd() {
 		const replaced = new Map<Instruction, Instruction>();
@@ -1069,7 +1093,7 @@ export class OSI extends Structure {
 
 		// Check that there are no duplicate class names.
 		const classes = new Set<string>();
-		const entries = this.header.classTable.entries;
+		const {entries} = this.header.classTable;
 		for (const classInfo of entries) {
 			const name = classInfo.name.value;
 			if (classes.has(name)) {
@@ -1080,7 +1104,7 @@ export class OSI extends Structure {
 		classes.clear();
 
 		for (const {subroutine} of this.subroutines.itter()) {
-			const instructions = subroutine.instructions;
+			const {instructions} = subroutine;
 			for (let i = 0; i < instructions.length; i++) {
 				const instruction = instructions[i];
 
@@ -1114,6 +1138,8 @@ export class OSI extends Structure {
 
 	/**
 	 * Transform abstract class references to bytecode.
+	 *
+	 * @returns Update report.
 	 */
 	public transformAbstractClassRemove() {
 		const replaced = new Map<Instruction, Instruction>();
@@ -1121,7 +1147,7 @@ export class OSI extends Structure {
 
 		// Map class names to indexes, checking there are no duplicates.
 		const classes = new Map<string, number>();
-		const entries = this.header.classTable.entries;
+		const {entries} = this.header.classTable;
 		for (let i = 0; i < entries.length; i++) {
 			const classInfo = entries[i];
 			const name = classInfo.name.value;
@@ -1132,7 +1158,7 @@ export class OSI extends Structure {
 		}
 
 		for (const {subroutine} of this.subroutines.itter()) {
-			const instructions = subroutine.instructions;
+			const {instructions} = subroutine;
 			for (let i = 0; i < instructions.length; i++) {
 				const instruction = instructions[i];
 
@@ -1145,6 +1171,7 @@ export class OSI extends Structure {
 
 				const name = cast.arg0.value;
 				const index = classes.get(name);
+				// eslint-disable-next-line no-undefined
 				if (index === undefined) {
 					skipped.add(instruction);
 					continue;
@@ -1169,6 +1196,8 @@ export class OSI extends Structure {
 	 *
 	 * @param table Table instance.
 	 * @param transforms Transforms list.
+	 * @param convertIndex Index value.
+	 * @returns Update report.
 	 */
 	protected _transformAbstractStringTableAdd(
 		table: StringP8NTable,
@@ -1182,7 +1211,7 @@ export class OSI extends Structure {
 
 		const tableEntries = table.entries;
 		for (const {subroutine} of this.subroutines.itter()) {
-			const instructions = subroutine.instructions;
+			const {instructions} = subroutine;
 			for (let i = 0; i < instructions.length; i++) {
 				const instruction = instructions[i];
 
@@ -1236,6 +1265,8 @@ export class OSI extends Structure {
 	 *
 	 * @param table Table instance.
 	 * @param transforms Transforms list.
+	 * @param convertIndex Index value.
+	 * @returns Update report.
 	 */
 	protected _transformAbstractStringTableRemove(
 		table: StringP8NTable,
@@ -1262,7 +1293,7 @@ export class OSI extends Structure {
 		};
 
 		for (const {subroutine} of this.subroutines.itter()) {
-			const instructions = subroutine.instructions;
+			const {instructions} = subroutine;
 			for (let i = 0; i < instructions.length; i++) {
 				const instruction = instructions[i];
 
@@ -1283,6 +1314,7 @@ export class OSI extends Structure {
 
 						const str = typed.tryCast(a, PrimitiveStringP8N);
 						let indexNumber = stringToIndex.get(str.value);
+						// eslint-disable-next-line no-undefined
 						if (indexNumber === undefined) {
 							indexNumber = addEntry(str);
 						}

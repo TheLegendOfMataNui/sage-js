@@ -38,6 +38,8 @@ export abstract class PrimitiveFloat extends Primitive {
 
 	/**
 	 * Bit size.
+	 *
+	 * @returns Bit count.
 	 */
 	public get bits() {
 		return (this.constructor as typeof PrimitiveFloat).BITS;
@@ -45,6 +47,8 @@ export abstract class PrimitiveFloat extends Primitive {
 
 	/**
 	 * Byte size.
+	 *
+	 * @returns Byte size.
 	 */
 	public get size() {
 		return (this.constructor as typeof PrimitiveFloat).SIZE;
@@ -53,7 +57,7 @@ export abstract class PrimitiveFloat extends Primitive {
 	/**
 	 * Convert to encoded string.
 	 *
-	 * @return Encoded string.
+	 * @returns Encoded string.
 	 */
 	public stringEncode() {
 		return `${this.value}`;
@@ -63,7 +67,7 @@ export abstract class PrimitiveFloat extends Primitive {
 	 * Decode new from string.
 	 *
 	 * @param str String encoded.
-	 * @return New instancce.
+	 * @returns New instancce.
 	 */
 	public stringDecodeNew(str: string) {
 		const Constructor = this.constructor as
@@ -74,7 +78,7 @@ export abstract class PrimitiveFloat extends Primitive {
 	/**
 	 * Get the float value.
 	 *
-	 * @return Float value.
+	 * @returns Float value.
 	 */
 	public valueOf() {
 		return this.value;
@@ -83,7 +87,7 @@ export abstract class PrimitiveFloat extends Primitive {
 	/**
 	 * Get the float value as string.
 	 *
-	 * @return Float string.
+	 * @returns Float string.
 	 */
 	public toString() {
 		return `${this.value}`;
@@ -94,9 +98,9 @@ export abstract class PrimitiveFloat extends Primitive {
 	 *
 	 * @param depth Inspect depth.
 	 * @param opts Inspect options.
-	 * @return Formatted string.
+	 * @returns Formatted string.
 	 */
-	public inspect(depth: number, opts: NodeJS.InspectOptions) {
+	public inspect(depth: number, opts: any) {
 		// Avoids default of: { [Number: 42] value: 42 }
 		return `${this.constructor.name} { value: ${this.value} }`;
 	}

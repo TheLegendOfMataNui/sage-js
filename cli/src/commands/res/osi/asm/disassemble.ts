@@ -1,4 +1,6 @@
+/* eslint-disable import/no-default-export */
 import {createHash} from 'crypto';
+
 import {flags} from '@oclif/command';
 import {BufferView} from '@sage-js/core';
 import {OSI} from '@sage-js/res-osi';
@@ -89,7 +91,6 @@ export default class ResOSIASMDisassemble extends Command {
 	 * Handler.
 	 */
 	public async run() {
-		// tslint:disable-next-line: no-unused
 		const {args, flags} = this.parse(ResOSIASMDisassemble);
 
 		// Read file and compute a hash.
@@ -145,7 +146,7 @@ export default class ResOSIASMDisassemble extends Command {
 		];
 		ast.statements.entries.unshift(...banner.map(str => {
 			const line = new ASTNodeStatementLine();
-			line.comment.text = str ? '; ' + str : '';
+			line.comment.text = str ? `; ${str}` : '';
 			return line;
 		}));
 

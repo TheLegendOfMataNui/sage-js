@@ -1,17 +1,21 @@
+// Generated code.
+
 import {
 	BufferView,
 	PrimitiveInt16S,
 	PrimitiveInt8U
 } from '@sage-js/core';
+
 import {typed} from '../../typed';
+
 import {InstructionBCL} from './class';
 
 /**
  * InstructionBCLCompareAndBranchIfFalse constructor.
  */
 @typed.decorate('InstructionBCLCompareAndBranchIfFalse')
-export class InstructionBCLCompareAndBranchIfFalse
-extends InstructionBCL {
+export class InstructionBCLCompareAndBranchIfFalse extends
+	InstructionBCL {
 	/**
 	 * Instruction size.
 	 */
@@ -52,7 +56,7 @@ extends InstructionBCL {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();

@@ -58,6 +58,8 @@ export abstract class PrimitiveInt extends Primitive {
 
 	/**
 	 * The maximum allowed value.
+	 *
+	 * @returns Max value.
 	 */
 	public get max() {
 		return (this.constructor as typeof PrimitiveInt).MAX;
@@ -65,6 +67,8 @@ export abstract class PrimitiveInt extends Primitive {
 
 	/**
 	 * The minimum allowed value.
+	 *
+	 * @returns Min value.
 	 */
 	public get min() {
 		return (this.constructor as typeof PrimitiveInt).MIN;
@@ -72,6 +76,8 @@ export abstract class PrimitiveInt extends Primitive {
 
 	/**
 	 * Bit size.
+	 *
+	 * @returns Bit count.
 	 */
 	public get bits() {
 		return (this.constructor as typeof PrimitiveInt).BITS;
@@ -79,6 +85,8 @@ export abstract class PrimitiveInt extends Primitive {
 
 	/**
 	 * Byte size.
+	 *
+	 * @returns Byte size.
 	 */
 	public get size() {
 		return (this.constructor as typeof PrimitiveInt).SIZE;
@@ -86,6 +94,8 @@ export abstract class PrimitiveInt extends Primitive {
 
 	/**
 	 * Integer signed.
+	 *
+	 * @returns Is signed.
 	 */
 	public get signed() {
 		return (this.constructor as typeof PrimitiveInt).SIGNED;
@@ -95,7 +105,7 @@ export abstract class PrimitiveInt extends Primitive {
 	 * Convert to encoded string.
 	 *
 	 * @param base Encode base.
-	 * @return Encoded string.
+	 * @returns Encoded string.
 	 */
 	public stringEncode(base = 10) {
 		return utilNumberToString(this.value, base);
@@ -105,7 +115,7 @@ export abstract class PrimitiveInt extends Primitive {
 	 * Decode new from string.
 	 *
 	 * @param str String encoded.
-	 * @return New instancce.
+	 * @returns New instancce.
 	 */
 	public stringDecodeNew(str: string) {
 		const Constructor = this.constructor as
@@ -116,7 +126,7 @@ export abstract class PrimitiveInt extends Primitive {
 	/**
 	 * Get the integer value.
 	 *
-	 * @return Integer value.
+	 * @returns Integer value.
 	 */
 	public valueOf() {
 		return this.value;
@@ -125,7 +135,7 @@ export abstract class PrimitiveInt extends Primitive {
 	/**
 	 * Get the integer value as string.
 	 *
-	 * @return Integer string.
+	 * @returns Integer string.
 	 */
 	public toString() {
 		return `${this.value}`;
@@ -136,9 +146,9 @@ export abstract class PrimitiveInt extends Primitive {
 	 *
 	 * @param depth Inspect depth.
 	 * @param opts Inspect options.
-	 * @return Formatted string.
+	 * @returns Formatted string.
 	 */
-	public inspect(depth: number, opts: NodeJS.InspectOptions) {
+	public inspect(depth: number, opts: any) {
 		// Avoids default of: { [Number: 42] value: 42 }
 		return `${this.constructor.name} { value: ${this.value} }`;
 	}

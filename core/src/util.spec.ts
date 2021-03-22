@@ -71,7 +71,7 @@ describe('util', () => {
 		]) {
 			it(`${JSON.stringify(value)}`, () => {
 				const encoded = utilFilenameEncode(value);
-				expect(encoded).toMatch(/^[a-z0-9\-_\.\x20%]*$/i);
+				expect(encoded).toMatch(/^[a-z0-9\-_.\x20%]*$/i);
 				if (encoded) {
 					expect(encoded).toMatch(/^[^\x20]/);
 					expect(encoded).toMatch(/[^\x20]$/);

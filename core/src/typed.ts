@@ -1,4 +1,4 @@
-// tslint:disable: max-classes-per-file
+/* eslint-disable max-classes-per-file */
 
 import {decoratorProperty} from './decorators';
 import {NAME} from './meta';
@@ -49,7 +49,7 @@ export class Typed extends Object {
 
 		this._prefix = prefix;
 		this._namespace = namespace;
-		this._property = '__#TYPED#' + prefix;
+		this._property = `__#TYPED#${prefix}`;
 		this._namespaceEncoded = this._encode(namespace);
 
 		let Exception = parent ? parent.Exception : null;
@@ -74,7 +74,7 @@ export class Typed extends Object {
 	 * Create a new namespace.
 	 *
 	 * @param namespace Namespace string.
-	 * @return Namespaced instance.
+	 * @returns Namespaced instance.
 	 */
 	public namespace(namespace: string) {
 		return new Typed(this._prefix, namespace, this);
@@ -84,10 +84,9 @@ export class Typed extends Object {
 	 * Decorate a class constructor.
 	 *
 	 * @param type A type string unique to each namespaced instance.
-	 * @return Decorator function.
+	 * @returns Decorator function.
 	 */
 	public decorate(type: string) {
-		// tslint:disable-next-line: ban-types
 		return (Class: Function) => {
 			this._addClassType(type, Class);
 		};
@@ -97,10 +96,9 @@ export class Typed extends Object {
 	 * Decorate exception class constructor.
 	 *
 	 * @param type A type string unique to each namespaced instance.
-	 * @return Decorator function.
+	 * @returns Decorator function.
 	 */
 	public decorateException(type: string) {
-		// tslint:disable-next-line: ban-types
 		return (Class: Function) => {
 			Object.defineProperty(Class.prototype, 'name', {
 				value: type,
@@ -117,13 +115,9 @@ export class Typed extends Object {
 	 *
 	 * @param instance Object instance.
 	 * @param Class Class constructor.
-	 * @return Class instance or null.
+	 * @returns Class instance or null.
 	 */
-	public cast<
-		// tslint:disable-next-line: ban-types
-		C extends Function
-	>(
-		// tslint:disable-next-line: ban-types
+	public cast<C extends Function>(
 		instance: Object,
 		Class: C
 	): C['prototype'] | null {
@@ -152,13 +146,9 @@ export class Typed extends Object {
 	 *
 	 * @param instance Object instance.
 	 * @param Class Class constructor.
-	 * @return Class instance or null.
+	 * @returns Class instance or null.
 	 */
-	public tryCast<
-		// tslint:disable-next-line: ban-types
-		C extends Function
-	>(
-		// tslint:disable-next-line: ban-types
+	public tryCast<C extends Function>(
 		instance: Object,
 		Class: C
 	): C['prototype'] {
@@ -175,17 +165,13 @@ export class Typed extends Object {
 	 * @param type Type string.
 	 * @param Class Class constructor.
 	 */
-	protected _addClassType(
-		type: string,
-		// tslint:disable-next-line: ban-types
-		Class: Function
-	) {
+	protected _addClassType(type: string, Class: Function) {
 		const parentTypeID = this._getClassParentTypeID(Class) || '';
 		const ns = `#${this._namespaceEncoded}`;
 
 		// Construct the type ID, adding namespace if not already added.
 		let typeID = parentTypeID;
-		if (parentTypeID.indexOf(`${ns}?`) < 0) {
+		if (!parentTypeID.includes(`${ns}?`)) {
 			typeID += ns;
 		}
 		typeID += `?${this._encode(type)}`;
@@ -202,12 +188,9 @@ export class Typed extends Object {
 	 * Get namespaced type ID from a type string.
 	 *
 	 * @param instance Object instance.
-	 * @return Type ID.
+	 * @returns Type ID.
 	 */
-	protected _getTypeID(
-		// tslint:disable-next-line: ban-types
-		instance: Object
-	) {
+	protected _getTypeID(instance: Object) {
 		const Class = instance.constructor;
 		return Class ? this._getClassTypeID(Class) : null;
 	}
@@ -215,26 +198,20 @@ export class Typed extends Object {
 	/**
 	 * Get type ID from class constructor.
 	 *
-	 * @param instance Class constructor.
-	 * @return Type ID or null.
+	 * @param Class Class constructor.
+	 * @returns Type ID or null.
 	 */
-	protected _getClassTypeID(
-		// tslint:disable-next-line: ban-types
-		Class: Function
-	) {
+	protected _getClassTypeID(Class: Function) {
 		return (Class as any)[this._property] as string || null;
 	}
 
 	/**
 	 * Get type ID from parent of class constructor.
 	 *
-	 * @param instance Class constructor.
-	 * @return Type ID or null.
+	 * @param Class Class constructor.
+	 * @returns Type ID or null.
 	 */
-	protected _getClassParentTypeID(
-		// tslint:disable-next-line: ban-types
-		Class: Function
-	) {
+	protected _getClassParentTypeID(Class: Function) {
 		const parent = Object.getPrototypeOf(Class);
 		return parent ? this._getClassTypeID(parent) : null;
 	}
@@ -243,7 +220,7 @@ export class Typed extends Object {
 	 * Encode string.
 	 *
 	 * @param str String to be encoded.
-	 * @return Encoded string.
+	 * @returns Encoded string.
 	 */
 	protected _encode(str: string) {
 		return str.replace(/([\\#?])/g, '\\$1');

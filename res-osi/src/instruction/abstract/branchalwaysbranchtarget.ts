@@ -2,18 +2,20 @@ import {
 	PrimitiveInt16S,
 	PrimitiveInt32U
 } from '@sage-js/core';
+
 import {
 	InstructionBCLBranchAlways
 } from '../bcl/branchalways';
 import {typed} from '../../typed';
+
 import {InstructionAbstract} from './class';
 
 /**
  * InstructionAbstractBranchAlwaysBranchTarget constructor.
  */
 @typed.decorate('InstructionAbstractBranchAlwaysBranchTarget')
-export class InstructionAbstractBranchAlwaysBranchTarget
-extends InstructionAbstract {
+export class InstructionAbstractBranchAlwaysBranchTarget extends
+	InstructionAbstract {
 	/**
 	 * Instruction size.
 	 */
@@ -59,7 +61,7 @@ extends InstructionAbstract {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();

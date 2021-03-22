@@ -1,4 +1,3 @@
-import {typed} from './typed';
 import {
 	PrimitiveInt16S,
 	PrimitiveInt16U,
@@ -7,20 +6,21 @@ import {
 	BufferView
 } from '@sage-js/core';
 
+import {typed} from './typed';
 import {ClassDefinitionProperty} from './classdefinitionproperty';
 import {ClassDefinitionMethod} from './classdefinitionmethod';
-
+//
 import {
 	InstructionBCLReturn
 } from './instruction/bcl/return';
-
+//
 import {
 	InstructionBCLPushConstantString
 } from './instruction/bcl/pushconstantstring';
 import {
 	InstructionAbstractPushConstantStringString
 } from './instruction/abstract/pushconstantstringstring';
-
+//
 import {
 	InstructionBCLGetThisMemberFunction
 } from './instruction/bcl/getthismemberfunction';
@@ -57,7 +57,7 @@ import {
 import {
 	InstructionAbstractSetMemberValueString
 } from './instruction/abstract/setmembervaluestring';
-
+//
 // GetVariableValue
 import {
 	InstructionBCLGetVariableValue
@@ -65,7 +65,7 @@ import {
 import {
 	InstructionAbstractGetVariableValueGlobalString
 } from './instruction/abstract/getvariablevalueglobalstring';
-
+//
 // SetVariableValue
 import {
 	InstructionBCLSetVariableValue
@@ -73,7 +73,7 @@ import {
 import {
 	InstructionAbstractSetVariableValueGlobalString
 } from './instruction/abstract/setvariablevalueglobalstring';
-
+//
 // CreateObject
 import {
 	InstructionBCLCreateObject
@@ -81,10 +81,11 @@ import {
 import {
 	InstructionAbstractCreateObjectString
 } from './instruction/abstract/createobjectstring';
-
+//
 import {OSI} from './osi';
 
 interface IClass {
+
 	/**
 	 * Unit name.
 	 */
@@ -107,6 +108,7 @@ interface IClass {
 }
 
 interface IClassExpect {
+
 	/**
 	 * Unit name.
 	 */
@@ -176,10 +178,10 @@ const dummyClasses = [
  *
  * @param osi OSI object.
  * @param name Symbol string.
- * @return Symbol index.
+ * @returns Symbol index.
  */
 function createOrGetSymbol(osi: OSI, name: string) {
-	const entries = osi.header.symbolTable.entries;
+	const {entries} = osi.header.symbolTable;
 	for (let i = 0; i < entries.length; i++) {
 		if (name === entries[i].value) {
 			return i;
@@ -195,9 +197,11 @@ function createOrGetSymbol(osi: OSI, name: string) {
  *
  * @param osi OSI object.
  * @param classes Classes list.
+ * @returns The parents.
  */
 function createClasses(osi: OSI, classes: IClass[]) {
 	const parents = new Map<IClass, IClass | null>();
+	const methods = new Map<IClass, Map<string, PrimitiveInt32U>>();
 
 	const lineage = (c: IClass) => {
 		const r = [c];
@@ -249,7 +253,6 @@ function createClasses(osi: OSI, classes: IClass[]) {
 		}
 	}
 
-	const methods = new Map<IClass, Map<string, PrimitiveInt32U>>();
 	for (const cl of list) {
 		const ms = new Map<string, PrimitiveInt32U>();
 
@@ -299,7 +302,7 @@ function createClasses(osi: OSI, classes: IClass[]) {
  * List classes in a simple format suitable to check equality.
  *
  * @param osi OSI object.
- * @return Resulting list.
+ * @returns Resulting list.
  */
 function listClassesExpect(osi: OSI) {
 	const r: IClassExpect[] = [];
@@ -367,7 +370,7 @@ describe('OSI', () => {
 			osi.header.stringTable.entries = [];
 			osi.transformAbstractStringRemove();
 
-			const addedStr = osi.header.stringTable.entries[0];
+			const [addedStr] = osi.header.stringTable.entries;
 			if (addedStr) {
 				expect(addedStr.value).toBe(strp.value);
 			}
@@ -434,7 +437,7 @@ describe('OSI', () => {
 				osi.header.symbolTable.entries = [];
 				osi.transformAbstractSymbolRemove();
 
-				const addedStr = osi.header.symbolTable.entries[0];
+				const [addedStr] = osi.header.symbolTable.entries;
 				if (addedStr) {
 					expect(addedStr.value).toBe(strp.value);
 				}
@@ -484,7 +487,7 @@ describe('OSI', () => {
 			osi.header.globalTable.entries = [];
 			osi.transformAbstractGlobalRemove();
 
-			const addedStr = osi.header.globalTable.entries[0];
+			const [addedStr] = osi.header.globalTable.entries;
 			if (addedStr) {
 				expect(addedStr.value).toBe(strp.value);
 			}
@@ -562,7 +565,7 @@ describe('OSI', () => {
 			osi.header.globalTable.entries = [];
 			osi.transformAbstractGlobalRemove();
 
-			const addedStr = osi.header.globalTable.entries[0];
+			const [addedStr] = osi.header.globalTable.entries;
 			if (addedStr) {
 				expect(addedStr.value).toBe(strp.value);
 			}
@@ -662,6 +665,7 @@ describe('OSI', () => {
 
 			for (const {name, structure} of osi.header.classTable.entries) {
 				const parent = parentsByName.get(name.value);
+				// eslint-disable-next-line no-undefined
 				if (parent === undefined) {
 					throw new Error('Unexpected undefined');
 				}
@@ -715,7 +719,7 @@ describe('OSI', () => {
 			osi.transformClassExtendsAdd();
 			osi.transformClassExtendsRemove();
 
-			const size = osi.size;
+			const {size} = osi;
 			const bvExpected = BufferView.fromSize(size, true);
 
 			osi.transformClassExtendsAdd();

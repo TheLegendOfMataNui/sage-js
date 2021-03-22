@@ -1,18 +1,20 @@
 import {
 	PrimitiveStringP8N
 } from '@sage-js/core';
+
+import {typed} from '../../typed';
 import {
 	InstructionBCLGetMemberFunction
 } from '../bcl/getmemberfunction';
-import {typed} from '../../typed';
+
 import {InstructionAbstract} from './class';
 
 /**
  * InstructionAbstractGetMemberFunctionString constructor.
  */
 @typed.decorate('InstructionAbstractGetMemberFunctionString')
-export class InstructionAbstractGetMemberFunctionString
-extends InstructionAbstract {
+export class InstructionAbstractGetMemberFunctionString extends
+	InstructionAbstract {
 	/**
 	 * Instruction size.
 	 */
@@ -48,7 +50,7 @@ extends InstructionAbstract {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();

@@ -1,5 +1,6 @@
 import {typed} from '../typed';
 import {Instruction} from '../instruction/class';
+
 import {Exception} from './class';
 
 /**

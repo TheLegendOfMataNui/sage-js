@@ -1,5 +1,6 @@
 import {BufferView} from '../../bufferview';
 import {typed} from '../../typed';
+
 import {PrimitiveFloat} from './class';
 
 /**
@@ -27,7 +28,7 @@ export class PrimitiveFloat64 extends PrimitiveFloat {
 	 * Compare equality.
 	 *
 	 * @param other Other instance.
-	 * @return Comparison result.
+	 * @returns Comparison result.
 	 */
 	public eq(other: PrimitiveFloat64) {
 		return this.value === other.value;
@@ -37,7 +38,7 @@ export class PrimitiveFloat64 extends PrimitiveFloat {
 	 * Compare non-equality.
 	 *
 	 * @param other Other instance.
-	 * @return Comparison result.
+	 * @returns Comparison result.
 	 */
 	public neq(other: PrimitiveFloat64) {
 		return this.value !== other.value;
@@ -47,7 +48,7 @@ export class PrimitiveFloat64 extends PrimitiveFloat {
 	 * Compare greater-than.
 	 *
 	 * @param other Other instance.
-	 * @return Comparison result.
+	 * @returns Comparison result.
 	 */
 	public gt(other: PrimitiveFloat64) {
 		return this.value > other.value;
@@ -57,7 +58,7 @@ export class PrimitiveFloat64 extends PrimitiveFloat {
 	 * Compare greater-than or equal.
 	 *
 	 * @param other Other instance.
-	 * @return Comparison result.
+	 * @returns Comparison result.
 	 */
 	public gte(other: PrimitiveFloat64) {
 		return this.value >= other.value;
@@ -67,6 +68,7 @@ export class PrimitiveFloat64 extends PrimitiveFloat {
 	 * ReadableNew implementation.
 	 *
 	 * @param view View to read from.
+	 * @returns New value.
 	 */
 	public bufferReadNew(view: BufferView) {
 		const Constructor = this.constructor as typeof PrimitiveFloat64;
@@ -88,7 +90,7 @@ export class PrimitiveFloat64 extends PrimitiveFloat {
 	 * @param view The BufferView.
 	 * @param offset Offset to get from.
 	 * @param size Size read.
-	 * @return New instance.
+	 * @returns New instance.
 	 */
 	public static getBuffer(view: BufferView, offset = -1, size = [0]) {
 		return view.getReadableNew(new PrimitiveFloat64(), offset, size);
@@ -99,7 +101,7 @@ export class PrimitiveFloat64 extends PrimitiveFloat {
 	 *
 	 * @param view The BufferView.
 	 * @param size Size read.
-	 * @return New instance.
+	 * @returns New instance.
 	 */
 	public static readBuffer(view: BufferView, size = [0]) {
 		return view.readReadableNew(new PrimitiveFloat64(), size);

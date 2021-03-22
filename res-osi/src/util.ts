@@ -7,7 +7,7 @@ import {
  * Converts the map from OSI mapClassParents for transformClassExtendsAdd.
  *
  * @param from Map to convert from.
- * @return Converted map.
+ * @returns Converted map.
  */
 export function utilMapClassDefinitionEntriesToExtends(
 	from: MapClassDefinitionTableEntryExtends

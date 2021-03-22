@@ -1,5 +1,3 @@
-// tslint:disable: max-classes-per-file
-
 import {MAX_SAFE_INTEGER, MIN_SAFE_INTEGER} from './constants';
 import {utilNumberIsNaN} from './util';
 import {ExceptionRange} from './exception/range';
@@ -36,7 +34,7 @@ const unitsHexBad = ['100', 'NaN', '', 'bad'];
 /**
  * Get all byte values.
  *
- * @return The array of values.
+ * @returns The array of values.
  */
 function allBytes() {
 	const r: number[] = [];
@@ -49,7 +47,7 @@ function allBytes() {
 /**
  * All byte values encoded in hex.
  *
- * @return The array of values.
+ * @returns The array of values.
  */
 function allHex() {
 	const r: string[] = [];
@@ -62,7 +60,8 @@ function allHex() {
 /**
  * Creates bad bits exception.
  *
- * @param bits Bits value
+ * @param bits Bits value.
+ * @returns Error object.
  */
 function badBits(bits: number) {
 	return new Error(`Unexpected bits value: ${bits}`);
@@ -76,7 +75,7 @@ function badBits(bits: number) {
  * @param size Bytes to be read.
  * @param offset Offset to read at.
  * @param readonly Optionally mark it readonly.
- * @return The buffer view subview.
+ * @returns The buffer view subview.
  */
 function viewGR(
 	b: BufferView,
@@ -132,9 +131,10 @@ function viewSW(
  *
  * @param b Buffer view.
  * @param read Use read or get.
+ * @param offset Buffer offset.
  * @param bits Integer bits.
  * @param signed Signed integer or not.
- * @return Integer value.
+ * @returns Integer value.
  */
 function intGR(
 	b: BufferView,
@@ -194,7 +194,7 @@ function intGR(
  * @param b Buffer view.
  * @param write Use write or set.
  * @param value Integer value.
- * @param offset Buffer offset
+ * @param offset Buffer offset.
  * @param bits Integer bits.
  * @param signed Signed integer or not.
  */
@@ -278,8 +278,9 @@ function intSW(
  *
  * @param b Buffer view.
  * @param read Use read or get.
+ * @param offset Buffer offset.
  * @param bits Integer bits.
- * @return Float value.
+ * @returns Float value.
  */
 function floatGR(
 	b: BufferView,
@@ -317,7 +318,10 @@ function floatGR(
  * Wrapper for .setFloat and .writeFloat methods.
  *
  * @param b Buffer view.
- * @param read Use read or get.
+ * @param write Use write or set.
+ * @param value The value.
+ * @param endianL Little endian.
+ * @param offset Buffer offset.
  * @param bits Integer bits.
  */
 function floatSW(
@@ -366,33 +370,33 @@ function floatSW(
  * Create int test units.
  *
  * @param bits Bits in the integer.
- * @return Units object.
+ * @returns Units object.
  */
 function createIntUnits(bits: number) {
-	// tslint:disable-next-line: no-bitwise
+	// eslint-disable-next-line no-bitwise
 	const uMax = 0xFFFFFFFF >>> (32 - bits);
 	const uMin = 0;
 
-	// tslint:disable-next-line: no-bitwise
+	// eslint-disable-next-line no-bitwise
 	const sMax = uMax >>> 1;
-	// tslint:disable-next-line: no-bitwise
+	// eslint-disable-next-line no-bitwise
 	const sMin = ~sMax;
 
 	const ints = new Set([uMin, uMax, sMin, sMax]);
 
 	// Generate a bunch of integers that may be edge cases.
 	for (let i = bits; i; i--) {
-		// tslint:disable-next-line: no-bitwise
+		// eslint-disable-next-line no-bitwise
 		const u = uMax >>> (i - 1);
-		// tslint:disable-next-line: no-bitwise
+		// eslint-disable-next-line no-bitwise
 		const s = ~(u >> 1);
 		ints.add(u);
 		ints.add(s);
 	}
 	for (let i = 0; i < bits; i++) {
-		// tslint:disable-next-line: no-bitwise
+		// eslint-disable-next-line no-bitwise
 		const u = 1 << i;
-		// tslint:disable-next-line: no-bitwise
+		// eslint-disable-next-line no-bitwise
 		const s = ~(u >> 1);
 		ints.add(u);
 		ints.add(s);
@@ -502,7 +506,7 @@ function createIntUnits(bits: number) {
  * Create float test units.
  *
  * @param bits Bits in the float.
- * @return Units object.
+ * @returns Units object.
  */
 function createFloatUnits(bits: number) {
 	const values = [

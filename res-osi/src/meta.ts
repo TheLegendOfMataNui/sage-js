@@ -3,5 +3,4 @@ const vars = {
 	NAME: '@NAME@'
 };
 
-export const NAME = vars.NAME;
-export const VERSION = vars.VERSION;
+export const {NAME, VERSION} = vars;

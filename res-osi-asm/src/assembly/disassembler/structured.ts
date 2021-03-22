@@ -6,6 +6,7 @@ import {
 	ISubroutineTableEntry,
 	Subroutine
 } from '@sage-js/res-osi';
+
 import {
 	IDisassemblyStructuredFileMapper,
 	MapClassStructuresToNames,
@@ -17,6 +18,7 @@ import {ASTNodeStatement} from '../../ast/node/statement/class';
 import {ASTNodeStatementLine} from '../../ast/node/statement/line';
 import {ASTNodeFile} from '../../ast/node/file';
 import {SourceFile} from '../../sourcefile';
+
 import {AssemblyDisassembler} from './class';
 
 /**
@@ -32,7 +34,7 @@ export class AssemblyDisassemblerStructured extends AssemblyDisassembler {
 	 *
 	 * @param osi OSI instance.
 	 * @param subroutineReferenceCount Map subroutine references count.
-	 * @return AST file.
+	 * @returns AST file.
 	 */
 	public disassemble(
 		osi: OSI,
@@ -49,7 +51,7 @@ export class AssemblyDisassemblerStructured extends AssemblyDisassembler {
 	 * @param osi OSI instance.
 	 * @param mapper Mapper object or null.
 	 * @param subroutineReferenceCount Map subroutine references count.
-	 * @return AST file.
+	 * @returns AST file.
 	 */
 	public disassembles(
 		osi: OSI,
@@ -64,7 +66,7 @@ export class AssemblyDisassemblerStructured extends AssemblyDisassembler {
 
 		// Add section to file.
 		const add = (file: ASTNodeFile, args: ASTNodeStatement[]) => {
-			const entries = file.statements.entries;
+			const {entries} = file.statements;
 			if (entries.length) {
 				entries.push(new ASTNodeStatementLine());
 			}
@@ -120,7 +122,7 @@ export class AssemblyDisassemblerStructured extends AssemblyDisassembler {
 					subroutinePtr
 				)
 			);
-			const subroutine = subroutinePtr[0];
+			const [subroutine] = subroutinePtr;
 			subRefsAdd(subroutine);
 		}
 
@@ -181,7 +183,7 @@ export class AssemblyDisassemblerStructured extends AssemblyDisassembler {
 	 * @param functionDefinition Function definition.
 	 * @param index Table index.
 	 * @param subroutine Consumed subroutine pointer out.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleStructuredFunction(
 		osi: OSI,
@@ -189,7 +191,7 @@ export class AssemblyDisassemblerStructured extends AssemblyDisassembler {
 		index: number,
 		subroutine: Subroutine[] | null = null
 	): ASTNodeStatement[] {
-		const offset = functionDefinition.offset;
+		const {offset} = functionDefinition;
 		const ast = this._disassembleCreateStatementBlock('function');
 		if (this.enableIndexComments) {
 			this._disassembleSetComment(ast.begin.comment, `${index}`);
@@ -230,7 +232,7 @@ export class AssemblyDisassemblerStructured extends AssemblyDisassembler {
 	 * @param mapClassStructuresToNames Class structures to names.
 	 * @param parent Parent definition or null.
 	 * @param subroutines Consumed subroutines pointer out.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleStructuredClass(
 		osi: OSI,
@@ -267,7 +269,7 @@ export class AssemblyDisassemblerStructured extends AssemblyDisassembler {
 			);
 		}
 
-		const entries = ast.statements.entries;
+		const {entries} = ast.statements;
 
 		for (const property of structure.classPropertyTable.entries) {
 			entries.push(...this.disassembleClassProperty(
@@ -304,9 +306,9 @@ export class AssemblyDisassemblerStructured extends AssemblyDisassembler {
 	 * Encode OSI AST class property.
 	 *
 	 * @param osi OSI instance.
-	 * @param property Class property.
+	 * @param method Class method.
 	 * @param subroutine Consumed subroutine pointer out.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleStructuredClassMethod(
 		osi: OSI,
@@ -314,7 +316,7 @@ export class AssemblyDisassemblerStructured extends AssemblyDisassembler {
 		subroutine: Subroutine[] | null = null
 	): ASTNodeStatement[] {
 		const symbols = osi.header.symbolTable.entries;
-		const offset = method.offset;
+		const {offset} = method;
 		const comments = [];
 
 		const ast = this._disassembleCreateStatementBlock('method');
@@ -352,7 +354,7 @@ export class AssemblyDisassemblerStructured extends AssemblyDisassembler {
 	 *
 	 * @param osi OSI instance.
 	 * @param subroutineEntry Subroutine entry.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleStructuredSubroutine(
 		osi: OSI,
@@ -372,7 +374,7 @@ export class AssemblyDisassemblerStructured extends AssemblyDisassembler {
 	 *
 	 * @param osi OSI instance.
 	 * @param subroutineEntry Subroutine entry.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleStructuredSubroutineBody(
 		osi: OSI,
@@ -419,8 +421,7 @@ export class AssemblyDisassemblerStructured extends AssemblyDisassembler {
 	/**
 	 * Takes a mapper object and returns AST file generators.
 	 *
-	 * @param mapper Mapper object or null.
-	 * @return Generator methods.
+	 * @returns Generator methods.
 	 */
 	protected _disassemblesStructuredFileMapperGenerator() {
 		const map = new Map<string, ASTNodeFile>();
@@ -441,7 +442,7 @@ export class AssemblyDisassemblerStructured extends AssemblyDisassembler {
 	/**
 	 * Default file mapper instance.
 	 *
-	 * @return Mapper instance.
+	 * @returns Mapper instance.
 	 */
 	protected _disassemblesStructuredFileMapperDefault():
 	IDisassemblyStructuredFileMapper {

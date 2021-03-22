@@ -1,18 +1,20 @@
 import {
 	PrimitiveStringP8N
 } from '@sage-js/core';
+
+import {typed} from '../../typed';
 import {
 	InstructionBCLGetGameVariable
 } from '../bcl/getgamevariable';
-import {typed} from '../../typed';
+
 import {InstructionAbstract} from './class';
 
 /**
  * InstructionAbstractGetGameVariableString constructor.
  */
 @typed.decorate('InstructionAbstractGetGameVariableString')
-export class InstructionAbstractGetGameVariableString
-extends InstructionAbstract {
+export class InstructionAbstractGetGameVariableString extends
+	InstructionAbstract {
 	/**
 	 * Instruction size.
 	 */
@@ -58,7 +60,7 @@ extends InstructionAbstract {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();

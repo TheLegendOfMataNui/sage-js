@@ -1,4 +1,4 @@
-// tslint:disable: max-classes-per-file
+/* eslint-disable max-classes-per-file */
 
 import {
 	CharStreams,
@@ -21,7 +21,7 @@ import {
 	ArgumentStringContext
 } from '../antlr/ASMParser';
 import {ASMListener} from '../antlr/ASMListener';
-
+//
 import {ASTNode} from '../ast/node/class';
 import {ASTNodeFile} from '../ast/node/file';
 import {ASTNodeStatements} from '../ast/node/statements';
@@ -33,10 +33,11 @@ import {ASTNodeArgument} from '../ast/node/argument/class';
 import {ASTNodeArgumentString} from '../ast/node/argument/string';
 import {ASTNodeArgumentNumber} from '../ast/node/argument/number';
 import {ASTNodeArguments} from '../ast/node/arguments';
-
+//
 import {ExceptionInternal} from '../exception/internal';
 import {ExceptionSyntax} from '../exception/syntax';
 import {SourceFile} from '../sourcefile';
+
 import {Parser} from './class';
 
 /**
@@ -45,8 +46,11 @@ import {Parser} from './class';
  * @param file Source file.
  * @param ast AST node.
  * @param ctx Antlr context.
+ * @param ctx.start Start token.
+ * @param ctx.stop Stop token.
  */
 function copySourceData(file: SourceFile, ast: ASTNode, ctx: {
+
 	/**
 	 * Start token.
 	 */
@@ -58,8 +62,7 @@ function copySourceData(file: SourceFile, ast: ASTNode, ctx: {
 	stop?: Token;
 }) {
 	const src = ast.source;
-	const start = ctx.start;
-	const stop = ctx.stop;
+	const {start, stop} = ctx;
 
 	src.startLine = start.line;
 	src.startColumn = start.charPositionInLine;
@@ -75,8 +78,7 @@ function copySourceData(file: SourceFile, ast: ASTNode, ctx: {
 /**
  * File listener.
  */
-class ASMListenerFile extends Object
-implements ASMListener {
+class ASMListenerFile extends Object implements ASMListener {
 	/**
 	 * Source file.
 	 */
@@ -99,6 +101,7 @@ implements ASMListener {
 	public enterFile(ctx: FileContext) {
 		copySourceData(this.sourceFile, this.file, ctx);
 
+		// eslint-disable-next-line @typescript-eslint/no-use-before-define
 		const statementsListener = new ASMListenerStatements();
 		statementsListener.sourceFile = this.sourceFile;
 		ctx.statements().enterRule(statementsListener);
@@ -109,8 +112,7 @@ implements ASMListener {
 /**
  * Statements listener.
  */
-class ASMListenerStatements extends Object
-implements ASMListener {
+class ASMListenerStatements extends Object implements ASMListener {
 	/**
 	 * Source file.
 	 */
@@ -133,6 +135,7 @@ implements ASMListener {
 	public enterStatements(ctx: StatementsContext) {
 		copySourceData(this.sourceFile, this.statements, ctx);
 
+		// eslint-disable-next-line @typescript-eslint/no-use-before-define
 		const statementListener = new ASMListenerStatement();
 		statementListener.sourceFile = this.sourceFile;
 		for (const statement of ctx.statement()) {
@@ -145,8 +148,7 @@ implements ASMListener {
 /**
  * Statement listener.
  */
-class ASMListenerStatement extends Object
-implements ASMListener {
+class ASMListenerStatement extends Object implements ASMListener {
 	/**
 	 * Source file.
 	 */
@@ -196,6 +198,7 @@ implements ASMListener {
 	 */
 	public orInstruction(ctx: InstructionContext) {
 		const ctxIdentifier = ctx.identifier();
+		// eslint-disable-next-line @typescript-eslint/no-use-before-define
 		const argumentsListener = new ASMListenerArguments();
 		argumentsListener.sourceFile = this.sourceFile;
 		ctx.arguments().enterRule(argumentsListener);
@@ -223,6 +226,7 @@ implements ASMListener {
 	public orBlock(ctx: BlockContext) {
 		const ctxBegin = ctx.begin();
 		const ctxBeginId = ctxBegin.identifier();
+		// eslint-disable-next-line @typescript-eslint/no-use-before-define
 		const argumentsListener = new ASMListenerArguments();
 		argumentsListener.sourceFile = this.sourceFile;
 		ctxBegin.arguments().enterRule(argumentsListener);
@@ -278,8 +282,7 @@ implements ASMListener {
 /**
  * Arguments listener.
  */
-class ASMListenerArguments extends Object
-implements ASMListener {
+class ASMListenerArguments extends Object implements ASMListener {
 	/**
 	 * Source file.
 	 */
@@ -301,6 +304,7 @@ implements ASMListener {
 	 */
 	public enterArguments(ctx: ArgumentsContext) {
 		copySourceData(this.sourceFile, this.arguments, ctx);
+		// eslint-disable-next-line @typescript-eslint/no-use-before-define
 		const argumentListener = new ASMListenerArgument();
 		argumentListener.sourceFile = this.sourceFile;
 		for (const arg of ctx.argument()) {
@@ -313,8 +317,7 @@ implements ASMListener {
 /**
  * Argument listener.
  */
-class ASMListenerArgument extends Object
-implements ASMListener {
+class ASMListenerArgument extends Object implements ASMListener {
 	/**
 	 * Source file.
 	 */
@@ -401,7 +404,7 @@ export class ParserDecoder extends Parser {
 	 *
 	 * @param code Assembly code.
 	 * @param name Optional source file name used in the AST.
-	 * @return The AST instance and any errors.
+	 * @returns The AST instance and any errors.
 	 */
 	public decode(code: string, name = '') {
 		const sourceFile = new SourceFile(code, name);

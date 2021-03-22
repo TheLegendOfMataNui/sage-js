@@ -1,18 +1,22 @@
+// Generated code.
+
 import {
 	BufferView,
 	PrimitiveInt16U,
 	PrimitiveInt8S,
 	PrimitiveInt8U
 } from '@sage-js/core';
+
 import {typed} from '../../typed';
+
 import {InstructionBCL} from './class';
 
 /**
  * InstructionBCLCallGameFunctionFromString constructor.
  */
 @typed.decorate('InstructionBCLCallGameFunctionFromString')
-export class InstructionBCLCallGameFunctionFromString
-extends InstructionBCL {
+export class InstructionBCLCallGameFunctionFromString extends
+	InstructionBCL {
 	/**
 	 * Instruction size.
 	 */
@@ -63,7 +67,7 @@ extends InstructionBCL {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();

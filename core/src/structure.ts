@@ -9,8 +9,8 @@ import {BufferView} from './bufferview';
 /**
  * The base class for structure types.
  */
-export abstract class Structure extends Object
-implements ICreateNew, ICopyable, IBufferReadable, IBufferWriteable {
+export abstract class Structure extends Object implements
+ICreateNew, ICopyable, IBufferReadable, IBufferWriteable {
 	constructor() {
 		super();
 	}
@@ -23,7 +23,7 @@ implements ICreateNew, ICopyable, IBufferReadable, IBufferWriteable {
 	/**
 	 * Create new instance of same type.
 	 *
-	 * @return New instance.
+	 * @returns New instance.
 	 */
 	public createNew() {
 		const Constructor = this.constructor as new() => Structure;
@@ -33,7 +33,7 @@ implements ICreateNew, ICopyable, IBufferReadable, IBufferWriteable {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public abstract copy(): this;
 

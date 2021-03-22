@@ -1,6 +1,7 @@
 import {typed} from '../typed';
 import {utilFormatErrorAtFileLocation} from '../util';
 import {SourceFile} from '../sourcefile';
+
 import {Exception} from './class';
 
 /**
@@ -34,6 +35,7 @@ export class ExceptionSyntax extends Exception {
 		column: number
 	) {
 		super(utilFormatErrorAtFileLocation(message, line, column, file.name));
+
 		this.file = file;
 		this.line = line;
 		this.column = column;

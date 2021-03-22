@@ -1,4 +1,5 @@
 import {ClassDefinition2} from '../classdefinition/2';
+
 import {ClassDefinitionTable} from './class';
 
 /**
@@ -13,7 +14,7 @@ export class ClassDefinitionTable2 extends ClassDefinitionTable {
 	/**
 	 * Constructor for class definition.
 	 *
-	 * @return Constructor function.
+	 * @returns Constructor function.
 	 */
 	public ClassDefinition = ClassDefinition2;
 

@@ -6,11 +6,11 @@ import {assertIntegerRange} from './assert';
  * Like isNaN and Number.isNaN but with strict typing.
  *
  * @param value The number to test.
- * @return True if the value is NaN.
+ * @returns True if the value is NaN.
  */
 export function utilNumberIsNaN(value: number) {
 	// NaN is the only thing that is not strictly equal to itself.
-	// tslint:disable-next-line: ter-no-self-compare
+	// eslint-disable-next-line no-self-compare
 	return value !== value;
 }
 
@@ -19,7 +19,7 @@ export function utilNumberIsNaN(value: number) {
  *
  * @param value Number to cast to a string.
  * @param base Base to case to.
- * @return Number as a string.
+ * @returns Number as a string.
  */
 export function utilNumberToString(value: number, base = 10) {
 	let prefix = '';
@@ -52,13 +52,13 @@ export function utilNumberToString(value: number, base = 10) {
  * Cast a string to a number, prefix and sign aware.
  *
  * @param value String to cast to a number.
- * @return Number as a string.
+ * @returns Number as a string.
  */
 export function utilStringToNumber(value: string) {
 	let v = 0;
 	if (/^[-+]0\D/.test(value)) {
 		v = +value.substr(1);
-		v = value.charAt(0) === '-' ? -v : v;
+		v = value.startsWith('-') ? -v : v;
 	}
 	else {
 		v = +value;
@@ -74,7 +74,7 @@ export function utilStringToNumber(value: string) {
  *
  * @param value The string to repeat.
  * @param count Repeat count.
- * @return Repeated string.
+ * @returns Repeated string.
  */
 export function utilStringRepeat(value: string, count: number) {
 	return value.repeat ?
@@ -89,7 +89,7 @@ export function utilStringRepeat(value: string, count: number) {
  * @param width Target width.
  * @param char Padding character.
  * @param left Pad on the left if true, defaults to the right.
- * @return Padded string.
+ * @returns Padded string.
  */
 export function utilStringPad(
 	value: string,
@@ -115,7 +115,7 @@ export function utilStringPad(
  * @param value The string to repeat.
  * @param width Target width.
  * @param char Padding character.
- * @return Padded string.
+ * @returns Padded string.
  */
 export function utilStringPadLeft(value: string, width: number, char: string) {
 	return utilStringPad(value, width, char, true);
@@ -127,7 +127,7 @@ export function utilStringPadLeft(value: string, width: number, char: string) {
  * @param value The string to repeat.
  * @param width Target width.
  * @param char Padding character.
- * @return Padded string.
+ * @returns Padded string.
  */
 export function utilStringPadRight(value: string, width: number, char: string) {
 	return utilStringPad(value, width, char, false);
@@ -137,7 +137,7 @@ export function utilStringPadRight(value: string, width: number, char: string) {
  * Convert a number to hex string.
  *
  * @param value Number value.
- * @return Hex string.
+ * @returns Hex string.
  */
 export function utilNumberToHex(value: number) {
 	return value.toString(16).toUpperCase();
@@ -147,7 +147,7 @@ export function utilNumberToHex(value: number) {
  * Convert a character code to hex.
  *
  * @param code Character code.
- * @return Hex string.
+ * @returns Hex string.
  */
 export function utilCharCodeToHex(code: number) {
 	assertIntegerRange(code, 'code', 0, 0xFF);
@@ -158,7 +158,8 @@ export function utilCharCodeToHex(code: number) {
  * Convert string to hex.
  *
  * @param str String to be encoded.
- * @return Hex string.
+ * @param delimiter Delimiter string.
+ * @returns Hex string.
  */
 export function utilAsciiToHex(str: string, delimiter = '') {
 	return str.split('')
@@ -170,7 +171,7 @@ export function utilAsciiToHex(str: string, delimiter = '') {
  * Normalize the newline characters.
  *
  * @param str String to be normalized.
- * @return Normalized string.
+ * @returns Normalized string.
  */
 export function utilNormalizeNewlines(str: string) {
 	return str.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
@@ -180,7 +181,7 @@ export function utilNormalizeNewlines(str: string) {
  * Split string into lines.
  *
  * @param str String to be split.
- * @return String array.
+ * @returns String array.
  */
 export function utilSplitLines(str: string) {
 	return utilNormalizeNewlines(str).split('\n');
@@ -190,14 +191,14 @@ export function utilSplitLines(str: string) {
  * Encode an arbitrary string into a safe filename, encoding reversable.
  *
  * @param str String to encode into a filename.
- * @return Encoded filename.
+ * @returns Encoded filename.
  */
 export function utilFilenameEncode(str: string) {
-	return str.replace(/[^a-z0-9_\-\.\x20]/ig, c => {
+	return str.replace(/[^a-z0-9_\-.\x20]/ig, c => {
 		const code = c.charCodeAt(0);
 		return (code > 0xFF || c === '%') ?
 			encodeURIComponent(c) :
-			('%' + utilCharCodeToHex(code));
+			(`%${utilCharCodeToHex(code)}`);
 	})
 		.replace(/(^\x20)|(\x20$)/g, encodeURIComponent);
 }
@@ -206,7 +207,7 @@ export function utilFilenameEncode(str: string) {
  * Decode encoded safe filename.
  *
  * @param str Encoded filename.
- * @return Decoded filename.
+ * @returns Decoded filename.
  */
 export function utilFilenameDecode(str: string) {
 	return decodeURIComponent(str);

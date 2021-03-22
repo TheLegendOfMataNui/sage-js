@@ -2,6 +2,7 @@ import {
 	Primitive,
 	Structure
 } from '@sage-js/core';
+
 import {ExceptionInvalid} from '../exception/invalid';
 import {typed} from '../typed';
 
@@ -33,6 +34,8 @@ export abstract class Instruction extends Structure {
 
 	/**
 	 * The name.
+	 *
+	 * @returns The name.
 	 */
 	public get name() {
 		return (this.constructor as typeof Instruction).NAME;
@@ -40,6 +43,8 @@ export abstract class Instruction extends Structure {
 
 	/**
 	 * Size of the instruction.
+	 *
+	 * @returns Size of the instruction.
 	 */
 	public get size() {
 		return (this.constructor as typeof Instruction).SIZE;
@@ -47,6 +52,8 @@ export abstract class Instruction extends Structure {
 
 	/**
 	 * Argument count.
+	 *
+	 * @returns Argument count.
 	 */
 	public get argc() {
 		return (this.constructor as typeof Instruction).ARGC;
@@ -56,7 +63,7 @@ export abstract class Instruction extends Structure {
 	 * Get instruction argument dynamically by index.
 	 *
 	 * @param index Argument index.
-	 * @return Argument value or null.
+	 * @returns Argument value or null.
 	 */
 	public argGet(index: number): Primitive {
 		const r = (this as any)[`arg${index}`];
@@ -70,7 +77,7 @@ export abstract class Instruction extends Structure {
 	 * Get instruction argument dynamically by index.
 	 *
 	 * @param index Argument index.
-	 * @return Argument value or null.
+	 * @param value The value.
 	 */
 	public argSet(index: number, value: Primitive) {
 		const Type = (this.constructor as any)[`ARG${index}`];

@@ -1,5 +1,6 @@
 import {MapInstructionByName} from '../types';
 import {ExceptionInternal} from '../exception/internal';
+
 import {Instruction} from './class';
 import {instructionAbstractByNameAll} from './abstractmap';
 import {instructionBCLByNameAll} from './bclmap';
@@ -39,7 +40,7 @@ function init() {
  * Get constructor by name.
  *
  * @param name Instruction name.
- * @return The constructor or null.
+ * @returns The constructor or null.
  */
 export function instructionByName(name: string) {
 	if (!inited) {
@@ -51,7 +52,7 @@ export function instructionByName(name: string) {
 /**
  * Get all by name.
  *
- * @return The map.
+ * @returns The map.
  */
 export function instructionByNameAll() {
 	if (!inited) {

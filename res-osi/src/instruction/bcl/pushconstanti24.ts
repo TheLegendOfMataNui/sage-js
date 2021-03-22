@@ -1,17 +1,21 @@
+// Generated code.
+
 import {
 	BufferView,
 	PrimitiveInt8U
 } from '@sage-js/core';
+
 import {ExceptionUnimplemented} from '../../exception/unimplemented';
 import {typed} from '../../typed';
+
 import {InstructionBCL} from './class';
 
 /**
  * InstructionBCLPushConstanti24 constructor.
  */
 @typed.decorate('InstructionBCLPushConstanti24')
-export class InstructionBCLPushConstanti24
-extends InstructionBCL {
+export class InstructionBCLPushConstanti24 extends
+	InstructionBCL {
 	/**
 	 * Instruction size.
 	 */
@@ -52,7 +56,7 @@ extends InstructionBCL {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();

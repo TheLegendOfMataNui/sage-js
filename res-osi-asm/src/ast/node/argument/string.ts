@@ -1,4 +1,5 @@
 import {typed} from '../../../typed';
+
 import {ASTNodeArgument} from './class';
 
 /**

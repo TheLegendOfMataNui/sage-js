@@ -2,10 +2,12 @@ import {
 	utilNumberIsNaN,
 	utilStringToNumber
 } from '@sage-js/core';
+
 import {typed} from '../typed';
 import {ASTNodeStatementInstruction} from '../ast/node/statement/instruction';
 import {ASTNodeArgumentNumber} from '../ast/node/argument/number';
 import {ASTNodeArgumentString} from '../ast/node/argument/string';
+
 import {ParserDecoder} from './decoder';
 
 describe('ParserDecoder', () => {

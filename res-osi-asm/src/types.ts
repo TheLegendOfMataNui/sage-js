@@ -12,10 +12,12 @@ import {
 	ClassDefinition,
 	Subroutine
 } from '@sage-js/res-osi';
+
 import {ASTNodeStatementBlock} from './ast/node/statement/block';
 import {ASTNodeStatementInstruction} from './ast/node/statement/instruction';
 
 export interface IClassDefinitionMethodInfo {
+
 	/**
 	 * Class info.
 	 */
@@ -28,6 +30,7 @@ export interface IClassDefinitionMethodInfo {
 }
 
 export interface IDisassemblyStructuredFileMapper {
+
 	/**
 	 * Metadata mapper.
 	 */
@@ -73,14 +76,13 @@ export type MapSubroutineOffsetToId = Map<number, number>;
 
 export type MapFunctionOffsetToDefinitions = Map<number, FunctionDefinition[]>;
 
-export type MapClassMethodOffsetToDefinitions = Map<
-	number,
-	IClassDefinitionMethodInfo[]
->;
+export type MapClassMethodOffsetToDefinitions =
+	Map<number, IClassDefinitionMethodInfo[]>;
 
 export type MapSourceRange = Map<number, number[]>;
 
 export interface ITokenMeta {
+
 	/**
 	 * Type.
 	 */

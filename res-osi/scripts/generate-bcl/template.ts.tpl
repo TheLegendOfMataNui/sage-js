@@ -1,15 +1,19 @@
+// Generated code.
+
 import {
 ${importscore}
-} from '@sage-js/core';${importother}
+} from '@sage-js/core';
+${importother}
 import {typed} from '../../typed';
+
 import {InstructionBCL} from './class';
 
 /**
  * InstructionBCL${name} constructor.
  */
 @typed.decorate('InstructionBCL${name}')
-export class InstructionBCL${name}
-extends InstructionBCL {
+export class InstructionBCL${name} extends
+	InstructionBCL {
 	/**
 	 * Instruction size.
 	 */
@@ -40,7 +44,7 @@ ${argsstatic}${args}
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();${copies}

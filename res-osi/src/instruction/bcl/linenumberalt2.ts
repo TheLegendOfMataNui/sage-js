@@ -1,17 +1,21 @@
+// Generated code.
+
 import {
 	BufferView,
 	PrimitiveInt16U,
 	PrimitiveInt8U
 } from '@sage-js/core';
+
 import {typed} from '../../typed';
+
 import {InstructionBCL} from './class';
 
 /**
  * InstructionBCLLineNumberAlt2 constructor.
  */
 @typed.decorate('InstructionBCLLineNumberAlt2')
-export class InstructionBCLLineNumberAlt2
-extends InstructionBCL {
+export class InstructionBCLLineNumberAlt2 extends
+	InstructionBCL {
 	/**
 	 * Instruction size.
 	 */
@@ -62,7 +66,7 @@ extends InstructionBCL {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();

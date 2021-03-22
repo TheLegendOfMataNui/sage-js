@@ -29,7 +29,7 @@ export abstract class PrimitiveString extends Primitive {
 	/**
 	 * Convert to encoded string.
 	 *
-	 * @return Encoded string.
+	 * @returns Encoded string.
 	 */
 	public stringEncode() {
 		return JSON.stringify(this.value);
@@ -39,7 +39,7 @@ export abstract class PrimitiveString extends Primitive {
 	 * Decode new from string.
 	 *
 	 * @param str String encoded.
-	 * @return New instancce.
+	 * @returns New instancce.
 	 */
 	public stringDecodeNew(str: string) {
 		const Constructor = this.constructor as
@@ -67,7 +67,7 @@ export abstract class PrimitiveString extends Primitive {
 	/**
 	 * Get the float value.
 	 *
-	 * @return Float value.
+	 * @returns Float value.
 	 */
 	public valueOf() {
 		return this.value;
@@ -76,7 +76,7 @@ export abstract class PrimitiveString extends Primitive {
 	/**
 	 * Get the float value as string.
 	 *
-	 * @return Float string.
+	 * @returns Float string.
 	 */
 	public toString() {
 		return `${this.value}`;

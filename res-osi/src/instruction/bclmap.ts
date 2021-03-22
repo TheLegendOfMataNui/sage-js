@@ -1,9 +1,11 @@
 import {utilNumberToHex} from '@sage-js/core';
+
 import {ExceptionInternal} from '../exception/internal';
 import {
 	MapInstructionBCLByName,
 	MapInstructionBCLByOpcode
 } from '../types';
+
 import {InstructionBCL} from './bcl/class';
 import * as bcl from './bcl';
 
@@ -44,7 +46,7 @@ function init() {
  * Get constructor by name.
  *
  * @param name Instruction name.
- * @return The constructor or null.
+ * @returns The constructor or null.
  */
 export function instructionBCLByName(name: string) {
 	if (!inited) {
@@ -56,7 +58,7 @@ export function instructionBCLByName(name: string) {
 /**
  * Get all by name.
  *
- * @return The map.
+ * @returns The map.
  */
 export function instructionBCLByNameAll() {
 	if (!inited) {
@@ -69,7 +71,7 @@ export function instructionBCLByNameAll() {
  * Get constructor by opcode.
  *
  * @param opcode The opcode.
- * @return The constructor or null.
+ * @returns The constructor or null.
  */
 export function instructionBCLByOpcode(opcode: number) {
 	if (!inited) {
@@ -81,7 +83,7 @@ export function instructionBCLByOpcode(opcode: number) {
 /**
  * Get all by opcode.
  *
- * @return The map.
+ * @returns The map.
  */
 export function instructionBCLByOpcodeAll() {
 	if (!inited) {

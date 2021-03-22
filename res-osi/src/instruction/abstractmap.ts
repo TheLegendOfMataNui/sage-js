@@ -1,7 +1,7 @@
 import {ExceptionInternal} from '../exception/internal';
 import {MapInstructionAbstractByName} from '../types';
+
 import {InstructionAbstract} from './abstract/class';
-// tslint:disable-next-line: no-duplicate-imports
 import * as abstract from './abstract';
 
 let inited = false;
@@ -32,7 +32,7 @@ function init() {
  * Get constructor by name.
  *
  * @param name Instruction name.
- * @return The constructor or null.
+ * @returns The constructor or null.
  */
 export function instructionAbstractByName(name: string) {
 	if (!inited) {
@@ -44,7 +44,7 @@ export function instructionAbstractByName(name: string) {
 /**
  * Get all by name.
  *
- * @return The map.
+ * @returns The map.
  */
 export function instructionAbstractByNameAll() {
 	if (!inited) {

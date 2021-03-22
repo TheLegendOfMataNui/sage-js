@@ -1,4 +1,4 @@
-// tslint:disable: no-bitwise
+/* eslint-disable no-bitwise */
 
 export const MAX_SAFE_INTEGER = 0x1FFFFFFFFFFFFF;
 export const MIN_SAFE_INTEGER = -MAX_SAFE_INTEGER;

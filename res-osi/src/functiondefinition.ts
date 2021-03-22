@@ -32,7 +32,7 @@ export class FunctionDefinition extends Structure {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();
@@ -44,6 +44,8 @@ export class FunctionDefinition extends Structure {
 
 	/**
 	 * Byte size.
+	 *
+	 * @returns Byte size.
 	 */
 	public get size() {
 		return this.name.size + this.offset.size + this.argc.size;

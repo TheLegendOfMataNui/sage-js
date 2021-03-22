@@ -2,6 +2,7 @@ import {
 	utilStringRepeat,
 	utilStringPadRight
 } from '@sage-js/core';
+
 import {typed} from '../typed';
 import {ExceptionInternal} from '../exception/internal';
 import {ASTNodeIdentifier} from '../ast/node/identifier';
@@ -16,6 +17,7 @@ import {ASTNodeStatement} from '../ast/node/statement/class';
 import {ASTNodeStatementInstruction} from '../ast/node/statement/instruction';
 import {ASTNodeStatementBlock} from '../ast/node/statement/block';
 import {ASTNodeStatementLine} from '../ast/node/statement/line';
+
 import {Parser} from './class';
 
 /**
@@ -60,6 +62,8 @@ export class ParserEncoder extends Parser {
 
 	/**
 	 * Get the indent string.
+	 *
+	 * @returns Indent string.
 	 */
 	public get indentString() {
 		const char = this.optionIndentTab ? '\t' : ' ';
@@ -71,7 +75,7 @@ export class ParserEncoder extends Parser {
 	 * Encode AST to ASM.
 	 *
 	 * @param ast AST node.
-	 * @return ASM code.
+	 * @returns ASM code.
 	 */
 	public encode(ast: ASTNodeFile) {
 		return this.encodeStatements(ast.statements);
@@ -82,7 +86,7 @@ export class ParserEncoder extends Parser {
 	 *
 	 * @param ast AST node.
 	 * @param depth Indent depth.
-	 * @return ASM code.
+	 * @returns ASM code.
 	 */
 	public encodeStatements(
 		ast: ASTNodeStatements,
@@ -148,7 +152,7 @@ export class ParserEncoder extends Parser {
 	 *
 	 * @param ast AST node.
 	 * @param depth Indent depth.
-	 * @return ASM code.
+	 * @returns ASM code.
 	 */
 	public encodeStatement(
 		ast: ASTNodeStatement,
@@ -178,7 +182,7 @@ export class ParserEncoder extends Parser {
 	 *
 	 * @param ast AST node.
 	 * @param depth Indent depth.
-	 * @return ASM code.
+	 * @returns ASM code.
 	 */
 	public encodeStatementInstruction(
 		ast: ASTNodeStatementInstruction,
@@ -189,9 +193,7 @@ export class ParserEncoder extends Parser {
 		const stack = this._instructionAlignStack;
 		const stackSize = stack.length;
 		if (stackSize) {
-			const last = stack[stackSize - 1];
-			argCol = last[0];
-			comCol = last[1];
+			[argCol, comCol] = stack[stackSize - 1];
 		}
 
 		let r = this.encodeIdentifier(ast.identifier);
@@ -208,7 +210,7 @@ export class ParserEncoder extends Parser {
 	 *
 	 * @param ast AST node.
 	 * @param depth Indent depth.
-	 * @return ASM code.
+	 * @returns ASM code.
 	 */
 	public encodeStatementBlock(
 		ast: ASTNodeStatementBlock,
@@ -226,7 +228,7 @@ export class ParserEncoder extends Parser {
 	 *
 	 * @param ast AST node.
 	 * @param depth Indent depth.
-	 * @return ASM code.
+	 * @returns ASM code.
 	 */
 	public encodeStatementLine(
 		ast: ASTNodeStatementLine,
@@ -240,13 +242,13 @@ export class ParserEncoder extends Parser {
 	 *
 	 * @param ast AST node.
 	 * @param depth Indent depth.
-	 * @return ASM code.
+	 * @returns ASM code.
 	 */
 	public encodeBegin(
 		ast: ASTNodeBegin,
 		depth = 0
 	) {
-		let r = 'begin ' + this.encodeIdentifier(ast.identifier);
+		let r = `begin ${this.encodeIdentifier(ast.identifier)}`;
 
 		r = this._align(r, this.encodeArguments(ast.arguments), 0);
 
@@ -260,7 +262,7 @@ export class ParserEncoder extends Parser {
 	 *
 	 * @param ast AST node.
 	 * @param depth Indent depth.
-	 * @return ASM code.
+	 * @returns ASM code.
 	 */
 	public encodeEnd(
 		ast: ASTNodeEnd,
@@ -277,7 +279,7 @@ export class ParserEncoder extends Parser {
 	 * Encode AST to ASM.
 	 *
 	 * @param ast AST node.
-	 * @return ASM code.
+	 * @returns ASM code.
 	 */
 	public encodeIdentifier(
 		ast: ASTNodeIdentifier
@@ -289,7 +291,7 @@ export class ParserEncoder extends Parser {
 	 * Encode AST to ASM.
 	 *
 	 * @param ast AST node.
-	 * @return ASM code.
+	 * @returns ASM code.
 	 */
 	public encodeArguments(
 		ast: ASTNodeArguments
@@ -303,7 +305,7 @@ export class ParserEncoder extends Parser {
 	 * Encode AST to ASM.
 	 *
 	 * @param ast AST node.
-	 * @return ASM code.
+	 * @returns ASM code.
 	 */
 	public encodeArgument(
 		ast: ASTNodeArgument
@@ -315,7 +317,7 @@ export class ParserEncoder extends Parser {
 	 * Encode AST to ASM.
 	 *
 	 * @param ast AST node.
-	 * @return ASM code.
+	 * @returns ASM code.
 	 */
 	public encodeComment(
 		ast: ASTNodeComment
@@ -330,14 +332,14 @@ export class ParserEncoder extends Parser {
 	 * @param add String added.
 	 * @param column Column number.
 	 * @param empty Set to true to indent even when empty.
-	 * @return Aligned string.
+	 * @returns Aligned string.
 	 */
 	protected _align(str: string, add: string, column: number, empty = false) {
 		if (!empty && !add) {
 			return str;
 		}
 		if (column < str.length) {
-			return str + ' ' + add;
+			return `${str} ${add}`;
 		}
 		return utilStringPadRight(str, column, ' ') + add;
 	}
@@ -348,7 +350,7 @@ export class ParserEncoder extends Parser {
 	 * @param str String to be indented.
 	 * @param depth Indent depth.
 	 * @param empty Set to true to indent even when empty.
-	 * @return Indented string.
+	 * @returns Indented string.
 	 */
 	protected _indent(str: string, depth: number, empty = false) {
 		if (!empty && !str) {
@@ -362,9 +364,9 @@ export class ParserEncoder extends Parser {
 	 *
 	 * @param str String to be indented.
 	 * @param depth Indent depth.
-	 * @return Indented line.
+	 * @returns Indented line.
 	 */
 	protected _line(str: string, depth = 0) {
-		return this._indent(str, depth, false) + '\n';
+		return `${this._indent(str, depth, false)}\n`;
 	}
 }

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-default-export */
 import {flags} from '@oclif/command';
 import {
 	NAME as CORE_NAME,
@@ -11,6 +12,7 @@ import {
 	NAME as RES_OSI_ASM_NAME,
 	VERSION as RES_OSI_ASM_VERSION
 } from '@sage-js/res-osi-asm';
+
 import {
 	NAME,
 	VERSION
@@ -47,7 +49,7 @@ export default class Info extends Command {
 	 * Handler.
 	 */
 	public async run() {
-		// tslint:disable-next-line: no-unused
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const {args, flags} = this.parse(Info);
 
 		this.log('Version:');

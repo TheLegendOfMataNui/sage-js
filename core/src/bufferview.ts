@@ -38,7 +38,7 @@ const regexUpTo2C = /.{1,2}/g;
  * @param Constructor The typed array constructor to use.
  * @param d The DataView to create array from.
  * @param copy Optionally copy the buffer.
- * @return The array.
+ * @returns The array.
  */
 function viewAs8Array(
 	Constructor: Uint8ArrayConstructor | Int8ArrayConstructor,
@@ -61,8 +61,9 @@ function viewAs8Array(
 
 /**
  * Create an exception for invalid bits size.
+ *
  * @param bits The number of bits.
- * @return Exception object.
+ * @returns Exception object.
  */
 function exceptionInvalidBitsSize(bits: number) {
 	return new ExceptionValue(`Invalid bits size: ${bits}`);
@@ -115,14 +116,17 @@ export class BufferView extends Object {
 		const bufferView = data as IArrayBufferView;
 
 		// Check if a wrapper for ArrayBuffers, or a plain buffer.
-		let buffer = bufferView.buffer;
+		let {buffer} = bufferView;
 		if (buffer) {
 			// The Node style Buffer also implements these properties.
+			// eslint-disable-next-line prefer-destructuring
 			byteLength = bufferView.byteLength;
+			// eslint-disable-next-line prefer-destructuring
 			byteOffset = bufferView.byteOffset;
 		}
 		else {
 			buffer = data as ArrayBuffers;
+			// eslint-disable-next-line prefer-destructuring
 			byteLength = buffer.byteLength;
 			byteOffset = 0;
 		}
@@ -140,6 +144,8 @@ export class BufferView extends Object {
 
 	/**
 	 * True if little endian.
+	 *
+	 * @returns True if little endian.
 	 */
 	public get endianL() {
 		return this._endianL;
@@ -154,6 +160,8 @@ export class BufferView extends Object {
 
 	/**
 	 * True if big endian.
+	 *
+	 * @returns True if big endian.
 	 */
 	public get endianB() {
 		return !this._endianL;
@@ -168,6 +176,8 @@ export class BufferView extends Object {
 
 	/**
 	 * True if only readable.
+	 *
+	 * @returns True if read only.
 	 */
 	public get readonly() {
 		return this._readonly;
@@ -175,6 +185,8 @@ export class BufferView extends Object {
 
 	/**
 	 * Total bytes.
+	 *
+	 * @returns Total bytes.
 	 */
 	public get size() {
 		return this._dataview.byteLength;
@@ -182,6 +194,8 @@ export class BufferView extends Object {
 
 	/**
 	 * Get the current offset.
+	 *
+	 * @returns Current offset.
 	 */
 	public get offset() {
 		return this._offset;
@@ -197,6 +211,8 @@ export class BufferView extends Object {
 
 	/**
 	 * Remaining bytes from offset.
+	 *
+	 * @returns Remaining bytes from offset.
 	 */
 	public get remaining() {
 		return this.size - this.offset;
@@ -205,8 +221,8 @@ export class BufferView extends Object {
 	/**
 	 * Assert remaining size for optional offset.
 	 *
-	 * @param offset If non-negative, use specificed, else uses current offset.
 	 * @param size The number of bytes.
+	 * @param offset If non-negative, use specificed, else uses current offset.
 	 */
 	public assertRemaining(size: number = -1, offset = -1) {
 		if (offset < 0) {
@@ -235,7 +251,7 @@ export class BufferView extends Object {
 	 * Copy view and the underlying buffer, offset is not copied.
 	 *
 	 * @param readonly Optionally mark the instance read only.
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy(readonly = false) {
 		const Constructor = this.constructor as typeof BufferView;
@@ -253,7 +269,7 @@ export class BufferView extends Object {
 	 * @param size If non-negative, use specificed, else uses remaining size.
 	 * @param offset If non-negative, use specificed, else uses current offset.
 	 * @param readonly Optionally mark the instance read only.
-	 * @return New instance.
+	 * @returns New instance.
 	 */
 	public getView(size = -1, offset = -1, readonly = false) {
 		const Constructor = this.constructor as typeof BufferView;
@@ -271,9 +287,8 @@ export class BufferView extends Object {
 	 * Read a sub view of the current view, using same underlying buffer.
 	 *
 	 * @param size If non-negative, use specificed, else uses remaining size.
-	 * @param offset If non-negative, use specificed, else uses current offset.
 	 * @param readonly Optionally mark the instance read only.
-	 * @return New instance.
+	 * @returns New instance.
 	 */
 	public readView(size = -1, readonly = false) {
 		const r = this.getView(size, -1, readonly);
@@ -319,7 +334,7 @@ export class BufferView extends Object {
 	 * Get Int8S.
 	 *
 	 * @param offset If non-negative, use specificed, else uses current offset.
-	 * @return Integer value.
+	 * @returns Integer value.
 	 */
 	public getInt8S(offset = -1) {
 		return this._intGR(8, false, false, offset, false);
@@ -329,7 +344,7 @@ export class BufferView extends Object {
 	 * Get Int8U.
 	 *
 	 * @param offset If non-negative, use specificed, else uses current offset.
-	 * @return Integer value.
+	 * @returns Integer value.
 	 */
 	public getInt8U(offset = -1) {
 		return this._intGR(8, true, false, offset, false);
@@ -342,7 +357,6 @@ export class BufferView extends Object {
 	 *
 	 * @param value Integer value.
 	 * @param offset If non-negative, use specificed, else uses current offset.
-	 * @return Integer value.
 	 */
 	public setInt8S(value: number, offset = -1) {
 		this._intSW(value, 8, false, false, offset, false);
@@ -353,7 +367,6 @@ export class BufferView extends Object {
 	 *
 	 * @param value Integer value.
 	 * @param offset If non-negative, use specificed, else uses current offset.
-	 * @return Integer value.
 	 */
 	public setInt8U(value: number, offset = -1) {
 		this._intSW(value, 8, true, false, offset, false);
@@ -364,7 +377,7 @@ export class BufferView extends Object {
 	/**
 	 * Read Int8S.
 	 *
-	 * @return Integer value.
+	 * @returns Integer value.
 	 */
 	public readInt8S() {
 		return this._intGR(8, false, false, -1, true);
@@ -373,7 +386,7 @@ export class BufferView extends Object {
 	/**
 	 * Read Int8U.
 	 *
-	 * @return Integer value.
+	 * @returns Integer value.
 	 */
 	public readInt8U() {
 		return this._intGR(8, true, false, -1, true);
@@ -385,7 +398,6 @@ export class BufferView extends Object {
 	 * Write Int8S.
 	 *
 	 * @param value Integer value.
-	 * @return Integer value.
 	 */
 	public writeInt8S(value: number) {
 		this._intSW(value, 8, false, false, -1, true);
@@ -395,7 +407,6 @@ export class BufferView extends Object {
 	 * Write Int8U.
 	 *
 	 * @param value Integer value.
-	 * @return Integer value.
 	 */
 	public writeInt8U(value: number) {
 		this._intSW(value, 8, true, false, -1, true);
@@ -409,7 +420,7 @@ export class BufferView extends Object {
 	 * Get Int16S.
 	 *
 	 * @param offset If non-negative, use specificed, else uses current offset.
-	 * @return Integer value.
+	 * @returns Integer value.
 	 */
 	public getInt16S(offset = -1) {
 		return this._intGR(16, false, this.endianL, offset, false);
@@ -419,7 +430,7 @@ export class BufferView extends Object {
 	 * Get Int16U.
 	 *
 	 * @param offset If non-negative, use specificed, else uses current offset.
-	 * @return Integer value.
+	 * @returns Integer value.
 	 */
 	public getInt16U(offset = -1) {
 		return this._intGR(16, true, this.endianL, offset, false);
@@ -452,7 +463,7 @@ export class BufferView extends Object {
 	/**
 	 * Read Int16S.
 	 *
-	 * @return Integer value.
+	 * @returns Integer value.
 	 */
 	public readInt16S() {
 		return this._intGR(16, false, this.endianL, -1, true);
@@ -461,7 +472,7 @@ export class BufferView extends Object {
 	/**
 	 * Read Int16U.
 	 *
-	 * @return Integer value.
+	 * @returns Integer value.
 	 */
 	public readInt16U() {
 		return this._intGR(16, true, this.endianL, -1, true);
@@ -495,7 +506,7 @@ export class BufferView extends Object {
 	 * Get Int32S.
 	 *
 	 * @param offset If non-negative, use specificed, else uses current offset.
-	 * @return Integer value.
+	 * @returns Integer value.
 	 */
 	public getInt32S(offset = -1) {
 		return this._intGR(32, false, this.endianL, offset, false);
@@ -505,7 +516,7 @@ export class BufferView extends Object {
 	 * Get Int32U.
 	 *
 	 * @param offset If non-negative, use specificed, else uses current offset.
-	 * @return Integer value.
+	 * @returns Integer value.
 	 */
 	public getInt32U(offset = -1) {
 		return this._intGR(32, true, this.endianL, offset, false);
@@ -538,7 +549,7 @@ export class BufferView extends Object {
 	/**
 	 * Read Int32S.
 	 *
-	 * @return Integer value.
+	 * @returns Integer value.
 	 */
 	public readInt32S() {
 		return this._intGR(32, false, this.endianL, -1, true);
@@ -547,7 +558,7 @@ export class BufferView extends Object {
 	/**
 	 * Read Int32U.
 	 *
-	 * @return Integer value.
+	 * @returns Integer value.
 	 */
 	public readInt32U() {
 		return this._intGR(32, true, this.endianL, -1, true);
@@ -581,7 +592,7 @@ export class BufferView extends Object {
 	 * Get Float32.
 	 *
 	 * @param offset If non-negative, use specificed, else uses current offset.
-	 * @return Float value.
+	 * @returns Float value.
 	 */
 	public getFloat32(offset = -1) {
 		return this._floatGR(32, this.endianL, offset, false);
@@ -604,7 +615,7 @@ export class BufferView extends Object {
 	/**
 	 * Read Float32.
 	 *
-	 * @return Float value.
+	 * @returns Float value.
 	 */
 	public readFloat32() {
 		return this._floatGR(32, this.endianL, -1, true);
@@ -629,7 +640,7 @@ export class BufferView extends Object {
 	 * Get Float64.
 	 *
 	 * @param offset If non-negative, use specificed, else uses current offset.
-	 * @return Float value.
+	 * @returns Float value.
 	 */
 	public getFloat64(offset = -1) {
 		return this._floatGR(64, this.endianL, offset, false);
@@ -652,7 +663,7 @@ export class BufferView extends Object {
 	/**
 	 * Read Float64.
 	 *
-	 * @return Float value.
+	 * @returns Float value.
 	 */
 	public readFloat64() {
 		return this._floatGR(64, this.endianL, -1, true);
@@ -723,6 +734,7 @@ export class BufferView extends Object {
 	 * @param readable ReadableNew object.
 	 * @param offset Offset to get from.
 	 * @param size Size read.
+	 * @returns New readable.
 	 */
 	public getReadableNew<
 		T extends IBufferReadableNew
@@ -740,6 +752,7 @@ export class BufferView extends Object {
 	 *
 	 * @param readable ReadableNew object.
 	 * @param size Size read.
+	 * @returns New readable.
 	 */
 	public readReadableNew<
 		T extends IBufferReadableNew
@@ -755,7 +768,7 @@ export class BufferView extends Object {
 	 * Compare two instances data, offset ignored.
 	 *
 	 * @param other Other instance.
-	 * @return Index of the first bifferent byte, or -1.
+	 * @returns Index of the first bifferent byte, or -1.
 	 */
 	public compare(other: BufferView) {
 		const dT = this._dataview;
@@ -777,15 +790,15 @@ export class BufferView extends Object {
 				continue;
 			}
 
-			// tslint:disable-next-line: no-bitwise
+			// eslint-disable-next-line no-bitwise
 			if ((vT & 0xFF) !== (vO & 0xFF)) {
 				return i;
 			}
-			// tslint:disable-next-line: no-bitwise
+			// eslint-disable-next-line no-bitwise
 			if ((vT & 0xFF00) !== (vO & 0xFF00)) {
 				return i + 1;
 			}
-			// tslint:disable-next-line: no-bitwise
+			// eslint-disable-next-line no-bitwise
 			if ((vT & 0xFF0000) !== (vO & 0xFF0000)) {
 				return i + 2;
 			}
@@ -808,7 +821,7 @@ export class BufferView extends Object {
 	/**
 	 * Create a new ArrayBuffer from data, copying buffer.
 	 *
-	 * @return The ArrayBuffer.
+	 * @returns The ArrayBuffer.
 	 */
 	public toArrayBuffer() {
 		return this.toUint8Array().buffer;
@@ -817,7 +830,7 @@ export class BufferView extends Object {
 	/**
 	 * Create a new DataView from data, copying buffer.
 	 *
-	 * @return The DataView.
+	 * @returns The DataView.
 	 */
 	public toDataView() {
 		return new DataView(this.toArrayBuffer());
@@ -826,7 +839,7 @@ export class BufferView extends Object {
 	/**
 	 * Create a new Int8Array from data, copying buffer.
 	 *
-	 * @return The Int8Array.
+	 * @returns The Int8Array.
 	 */
 	public toInt8Array() {
 		return viewAs8Array(Int8Array, this._dataview, true);
@@ -835,7 +848,7 @@ export class BufferView extends Object {
 	/**
 	 * Create a new Uint8Array from data, copying buffer.
 	 *
-	 * @return The Uint8Array.
+	 * @returns The Uint8Array.
 	 */
 	public toUint8Array() {
 		return viewAs8Array(Uint8Array, this._dataview, true);
@@ -844,7 +857,7 @@ export class BufferView extends Object {
 	/**
 	 * Create an array of hex encoded bytes from the data.
 	 *
-	 * @return Array of hex characters.
+	 * @returns Array of hex characters.
 	 */
 	public toHexArray() {
 		const a = viewAs8Array(Uint8Array, this._dataview);
@@ -860,7 +873,7 @@ export class BufferView extends Object {
 	 * Create optionally delimited string of hex encoded bytes from data.
 	 *
 	 * @param delimiter An optional delimiter string.
-	 * @return Array of hex characters.
+	 * @returns Array of hex characters.
 	 */
 	public toHex(delimiter = '') {
 		return this.toHexArray().join(delimiter);
@@ -872,7 +885,7 @@ export class BufferView extends Object {
 	 * @param size Size of new instance.
 	 * @param endianL True for little endian, false for big endian.
 	 * @param readonly Optionally mark the instance read only.
-	 * @return New instance.
+	 * @returns New instance.
 	 */
 	public static fromSize(size: number, endianL: boolean, readonly = false) {
 		// ArrayBuffer will very likely throw on max size.
@@ -887,7 +900,7 @@ export class BufferView extends Object {
 	 * @param hex Hex characters.
 	 * @param endianL True for little endian, false for big endian.
 	 * @param readonly Optionally mark the instance read only.
-	 * @return New instance.
+	 * @returns New instance.
 	 */
 	public static fromHexArray(
 		hex: string[], endianL: boolean, readonly = false
@@ -912,7 +925,7 @@ export class BufferView extends Object {
 	 * @param hex Hex characters.
 	 * @param endianL True for little endian, false for big endian.
 	 * @param readonly Optionally mark the instance read only.
-	 * @return New instance.
+	 * @returns New instance.
 	 */
 	public static fromHex(hex: string, endianL: boolean, readonly = false) {
 		const matched = hex.replace(regexNoHex, '').match(regexUpTo2C) || [];
@@ -930,10 +943,10 @@ export class BufferView extends Object {
 	 *
 	 * @param depth Inspect depth.
 	 * @param opts Inspect options.
-	 * @return Formatted string.
+	 * @returns Formatted string.
 	 */
 	@decoratorInspect()
-	public inspect(depth: number, opts: NodeJS.InspectOptions) {
+	public inspect(depth: number, opts: any) {
 		return [
 			this.constructor.name,
 			'{',
@@ -950,10 +963,10 @@ export class BufferView extends Object {
 	/**
 	 * Concatenate multiple buffers together.
 	 *
-	 * @param endianL True for little endian, false for big endian.
 	 * @param datas Instances to merge together.
+	 * @param endianL True for little endian, false for big endian.
 	 * @param readonly Optionally mark the instance read only.
-	 * @return Merged instance.
+	 * @returns Merged instance.
 	 */
 	public static concat(
 		datas: BufferView[], endianL: boolean, readonly = false
@@ -989,7 +1002,8 @@ export class BufferView extends Object {
 	 * @param unsigned True for unsigned, false for signed.
 	 * @param endianL True for little endian, false for big endian.
 	 * @param offset If non-negative, use specificed, else uses current offset.
-	 * @return Integer value.
+	 * @param read Read option.
+	 * @returns Integer value.
 	 */
 	protected _intGR(
 		bits: number,
@@ -1041,6 +1055,7 @@ export class BufferView extends Object {
 	 * @param unsigned True for unsigned, false for signed.
 	 * @param endianL True for little endian, false for big endian.
 	 * @param offset If non-negative, use specificed, else uses current offset.
+	 * @param write Write option.
 	 */
 	protected _intSW(
 		value: number,
@@ -1105,7 +1120,8 @@ export class BufferView extends Object {
 	 * @param bits Float bits.
 	 * @param endianL True for little endian, false for big endian.
 	 * @param offset If non-negative, use specificed, else uses current offset.
-	 * @return Integer value.
+	 * @param read Read option.
+	 * @returns Integer value.
 	 */
 	protected _floatGR(
 		bits: number,
@@ -1144,6 +1160,7 @@ export class BufferView extends Object {
 	 * @param bits Float bits.
 	 * @param endianL True for little endian, false for big endian.
 	 * @param offset If non-negative, use specificed, else uses current offset.
+	 * @param write Write option.
 	 */
 	protected _floatSW(
 		value: number,

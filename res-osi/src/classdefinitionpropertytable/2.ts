@@ -3,8 +3,8 @@ import {ClassDefinitionPropertyTable} from './class';
 /**
  * ClassDefinitionPropertyTable2 constructor.
  */
-export class ClassDefinitionPropertyTable2
-extends ClassDefinitionPropertyTable {
+export class ClassDefinitionPropertyTable2 extends
+	ClassDefinitionPropertyTable {
 	/**
 	 * Size of entry count.
 	 */

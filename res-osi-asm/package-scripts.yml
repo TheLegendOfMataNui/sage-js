@@ -1,9 +1,8 @@
 scripts:
   lint:
-    default: concurrently "nps lint.scripts" "nps lint.src"
-    watch: concurrently "nps lint.scripts || true" "nps lint.src || true"
-    scripts: eslint .
-    src: tslint -p . -t stylish
+    default: concurrently "nps lint.es"
+    watch: concurrently "nps lint.es || true"
+    es: eslint .
 
   clean:
     default: concurrently "nps clean.logs" "nps clean.antlr" "nps clean.lib"

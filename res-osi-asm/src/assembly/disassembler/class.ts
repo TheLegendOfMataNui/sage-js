@@ -41,6 +41,7 @@ import {
 	InstructionBCLPushConstantColor8888,
 	InstructionBCLPushConstantColor5551
 } from '@sage-js/res-osi';
+
 import {typed} from '../../typed';
 import {
 	MapSubroutineOffsetToId,
@@ -93,13 +94,13 @@ export class AssemblyDisassembler extends Assembly {
 	 * Disassemble OSI to AST.
 	 *
 	 * @param osi OSI instance.
-	 * @return AST file.
+	 * @returns AST file.
 	 */
 	public disassemble(osi: OSI) {
 		const ast = new ASTNodeFile();
 
 		// Helper functions.
-		const entries = ast.statements.entries;
+		const {entries} = ast.statements;
 		const add = (...args: ASTNodeStatement[]) => {
 			entries.push(...args);
 		};
@@ -166,7 +167,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * Encode OSI AST metadata.
 	 *
 	 * @param osi OSI instance.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleMetadata(osi: OSI): ASTNodeStatement[] {
 		const ast = this._disassembleCreateStatementBlock('metadata');
@@ -189,7 +190,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * Encode OSI AST strings.
 	 *
 	 * @param osi OSI instance.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleStrings(osi: OSI): ASTNodeStatement[] {
 		return this.disassembleStringP8NTable(
@@ -203,7 +204,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * Encode OSI AST globals.
 	 *
 	 * @param osi OSI instance.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleGlobals(osi: OSI): ASTNodeStatement[] {
 		return this.disassembleStringP8NTable(
@@ -217,7 +218,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * Encode OSI AST symbols.
 	 *
 	 * @param osi OSI instance.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleSymbols(osi: OSI): ASTNodeStatement[] {
 		return this.disassembleStringP8NTable(
@@ -231,7 +232,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * Encode OSI AST sources.
 	 *
 	 * @param osi OSI instance.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleSources(osi: OSI): ASTNodeStatement[] {
 		return this.disassembleStringP8NTable(
@@ -247,7 +248,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * @param table Table to be encoded.
 	 * @param name Block name.
 	 * @param instruction Instruction names.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleStringP8NTable(
 		table: StringP8NTable,
@@ -255,7 +256,7 @@ export class AssemblyDisassembler extends Assembly {
 		instruction: string
 	): ASTNodeStatement[] {
 		const ast = this._disassembleCreateStatementBlock(name);
-		const entries = ast.statements.entries;
+		const {entries} = ast.statements;
 
 		const tableEntries = table.entries;
 		for (let i = 0; i < tableEntries.length; i++) {
@@ -283,7 +284,7 @@ export class AssemblyDisassembler extends Assembly {
 	 *
 	 * @param osi OSI instance.
 	 * @param subroutineOffsetToId Map of subroutine offsets to IDs.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleFunctions(
 		osi: OSI,
@@ -292,7 +293,7 @@ export class AssemblyDisassembler extends Assembly {
 		const ast = this._disassembleCreateStatementBlock('functions');
 		ast.begin.identifier.text = 'functions';
 
-		const entries = ast.statements.entries;
+		const {entries} = ast.statements;
 		const functionEntries = osi.header.functionTable.entries;
 		for (let i = 0; i < functionEntries.length; i++) {
 			const func = functionEntries[i];
@@ -314,7 +315,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * @param functionDefinition Function definition.
 	 * @param index Table index.
 	 * @param subroutineOffsetToId Map of subroutine offsets to IDs.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleFunction(
 		osi: OSI,
@@ -329,6 +330,7 @@ export class AssemblyDisassembler extends Assembly {
 
 		const offset = functionDefinition.offset.value;
 		const id = subroutineOffsetToId.get(offset);
+		// eslint-disable-next-line no-undefined
 		if (id === undefined) {
 			throw new ExceptionInvalid(
 				`No subroutine at offset: ${offset}`
@@ -357,7 +359,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * @param osi OSI instance.
 	 * @param subroutineOffsetToId Map of subroutine offsets to IDs.
 	 * @param parents Parent mappings.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleClasses(
 		osi: OSI,
@@ -367,7 +369,7 @@ export class AssemblyDisassembler extends Assembly {
 		const ast = this._disassembleCreateStatementBlock('classes');
 		parents = parents || osi.mapClassParents();
 
-		const entries = ast.statements.entries;
+		const {entries} = ast.statements;
 		const classEntries = osi.header.classTable.entries;
 		const nameByStructure = this._disassembleMapClassStructuresToNames(osi);
 		for (const {name, structure} of classEntries) {
@@ -404,7 +406,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * @param index Table index.
 	 * @param subroutineOffsetToId Map of subroutine offsets to IDs.
 	 * @param parentName Parent name or null.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleClass(
 		osi: OSI,
@@ -428,7 +430,7 @@ export class AssemblyDisassembler extends Assembly {
 			this._disassembleCreateArgumentFromString(name)
 		);
 
-		const entries = ast.statements.entries;
+		const {entries} = ast.statements;
 
 		for (const property of structure.itterProperties()) {
 			entries.push(...this.disassembleClassProperty(
@@ -453,7 +455,7 @@ export class AssemblyDisassembler extends Assembly {
 	 *
 	 * @param osi OSI instance.
 	 * @param property Class property.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleClassProperty(
 		osi: OSI,
@@ -479,9 +481,9 @@ export class AssemblyDisassembler extends Assembly {
 	 * Encode OSI AST class property.
 	 *
 	 * @param osi OSI instance.
-	 * @param property Class property.
+	 * @param method Class method.
 	 * @param subroutineOffsetToId Map offsets to ID.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleClassMethod(
 		osi: OSI,
@@ -492,6 +494,7 @@ export class AssemblyDisassembler extends Assembly {
 
 		const offset = method.offset.value;
 		const id = subroutineOffsetToId.get(offset);
+		// eslint-disable-next-line no-undefined
 		if (id === undefined) {
 			throw new ExceptionInvalid(
 				`No subroutine at offset: ${offset}`
@@ -525,7 +528,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * @param functionsByOffset Map function offset to function info.
 	 * @param classMethodByOffset Map class offset to method info.
 	 * @param classMethodImplementByOffset Map class offset to implement info.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleSubroutine(
 		osi: OSI,
@@ -543,6 +546,7 @@ export class AssemblyDisassembler extends Assembly {
 
 		const off = offset.value;
 		const id = subroutineOffsetToId.get(off);
+		// eslint-disable-next-line no-undefined
 		if (id === undefined) {
 			throw new ExceptionInvalid(
 				`No subroutine at offset: ${off}`
@@ -564,7 +568,7 @@ export class AssemblyDisassembler extends Assembly {
 		addLine(`address: 0x${utilNumberToHex(off)}`);
 
 		// Loop over the instructions.
-		const entries = ast.statements.entries;
+		const {entries} = ast.statements;
 		for (const instruction of subroutine.instructions) {
 			entries.push(...this.disassembleInstruction(
 				osi,
@@ -588,7 +592,7 @@ export class AssemblyDisassembler extends Assembly {
 			method
 		} of classMethodImplementByOffset.get(off) || []) {
 			const symbol = symbols[method.symbol.value];
-			const name = classInfo.name;
+			const {name} = classInfo;
 			addLine(
 				`implement: ${name.stringEncode()}.${symbol.stringEncode()}`
 			);
@@ -600,7 +604,7 @@ export class AssemblyDisassembler extends Assembly {
 			method
 		} of classMethodByOffset.get(off) || []) {
 			const symbol = symbols[method.symbol.value];
-			const name = classInfo.name;
+			const {name} = classInfo;
 			addLine(`method: ${name.stringEncode()}.${symbol.stringEncode()}`);
 		}
 
@@ -615,7 +619,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * @param instruction Subroutine instruction.
 	 * @param subroutineEntry Subroutine entry.
 	 * @param mapSourceRange Map sources to ranges.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	public disassembleInstruction(
 		osi: OSI,
@@ -658,7 +662,7 @@ export class AssemblyDisassembler extends Assembly {
 					else {
 						mapSourceRange.set(index, [line, line]);
 					}
-					break OUTER;
+					break;
 				}
 			}
 
@@ -675,7 +679,7 @@ export class AssemblyDisassembler extends Assembly {
 					else {
 						comment = '?';
 					}
-					break OUTER;
+					break;
 				}
 			}
 
@@ -692,7 +696,7 @@ export class AssemblyDisassembler extends Assembly {
 					else {
 						comment = '?';
 					}
-					break OUTER;
+					break;
 				}
 			}
 
@@ -735,13 +739,13 @@ export class AssemblyDisassembler extends Assembly {
 					else {
 						comment = '?';
 					}
-					break OUTER;
+					break;
 				}
 			}
 			for (const Instruction of [
 				InstructionBCLGetGameVariable,
 				InstructionBCLSetGameVariable,
-				InstructionBCLCallGameFunction,
+				InstructionBCLCallGameFunction
 			]) {
 				const cast = typed.cast(instruction, Instruction);
 				if (!cast) {
@@ -774,15 +778,15 @@ export class AssemblyDisassembler extends Assembly {
 					continue;
 				}
 				const index = cast.arg0.value;
-				// tslint:disable-next-line: no-bitwise
+				// eslint-disable-next-line no-bitwise
 				if (index & 0x8000) {
 					comment = 'global';
 
-					// tslint:disable-next-line: no-bitwise
+					// eslint-disable-next-line no-bitwise
 					const nameIndex = index ^ 0x8000;
 					const globalName = globals[nameIndex];
 					if (globalName) {
-						comment += ' ' + globalName.stringEncode();
+						comment += ` ${globalName.stringEncode()}`;
 					}
 					else {
 						comment += ' ?';
@@ -797,7 +801,7 @@ export class AssemblyDisassembler extends Assembly {
 			// Add newline after branchers.
 			for (const Instruction of [
 				InstructionAbstractCompareAndBranchIfFalseBranchTarget,
-				InstructionAbstractBranchAlwaysBranchTarget,
+				InstructionAbstractBranchAlwaysBranchTarget
 			]) {
 				const cast = typed.cast(instruction, Instruction);
 				if (!cast) {
@@ -846,7 +850,7 @@ export class AssemblyDisassembler extends Assembly {
 				break OUTER;
 			}
 		}
-		// tslint:disable-next-line: no-constant-condition
+		// eslint-disable-next-line no-constant-condition
 		while (false);
 
 		if (jumpedTo) {
@@ -872,7 +876,7 @@ export class AssemblyDisassembler extends Assembly {
 	 *
 	 * @param osi OSI instance.
 	 * @param instruction Instruction.
-	 * @return AST arguments.
+	 * @returns AST arguments.
 	 */
 	public disassembleInstructionArguments(
 		osi: OSI,
@@ -900,7 +904,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * @param argument Instruction argument.
 	 * @param argumentIndex Instruction argument index.
 	 * @param instruction Instruction.
-	 * @return AST argument.
+	 * @returns AST argument.
 	 */
 	public disassembleInstructionArgument(
 		osi: OSI,
@@ -952,7 +956,7 @@ export class AssemblyDisassembler extends Assembly {
 	 *
 	 * @param osi OSI instance.
 	 * @param mapSourceRange Map sources to ranges.
-	 * @return AST statements.
+	 * @returns AST statements.
 	 */
 	protected _disassembleMapSourceRangeComment(
 		osi: OSI,
@@ -980,7 +984,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * Map subroutine offsets to incremental IDs.
 	 *
 	 * @param osi OSI instance.
-	 * @return Map object.
+	 * @returns Map object.
 	 */
 	protected _disassembleMapSubroutineOffsetToId(
 		osi: OSI
@@ -1003,7 +1007,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * Map function offsets to function definitions.
 	 *
 	 * @param osi OSI instance.
-	 * @return Map object.
+	 * @returns Map object.
 	 */
 	protected _disassembleMapFunctionOffsetToDefinitions(
 		osi: OSI
@@ -1023,7 +1027,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * Map OSI class structures to names, with some sanity checking.
 	 *
 	 * @param osi OSI instance.
-	 * @return Map object.
+	 * @returns Map object.
 	 */
 	protected _disassembleMapClassStructuresToNames(osi: OSI) {
 		const names = new Set<string>();
@@ -1050,7 +1054,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * Map class method offsets to class definitions.
 	 *
 	 * @param osi OSI instance.
-	 * @return Map object.
+	 * @returns Map object.
 	 */
 	protected _disassembleMapClassMethodOffsetToDefinitions(
 		osi: OSI
@@ -1058,7 +1062,7 @@ export class AssemblyDisassembler extends Assembly {
 		// Create subroutine offset to class and method mappings.
 		const r = new Map() as MapClassMethodOffsetToDefinitions;
 		for (const classInfo of osi.header.classTable.entries) {
-			const structure = classInfo.structure;
+			const {structure} = classInfo;
 			for (const method of structure.itterMethods()) {
 				const off = method.offset.value;
 				const list = r.get(off) || [];
@@ -1074,7 +1078,7 @@ export class AssemblyDisassembler extends Assembly {
 	 *
 	 * @param osi OSI instance.
 	 * @param parents Parent mappings.
-	 * @return Map object.
+	 * @returns Map object.
 	 */
 	protected _disassembleMapclassMethodImplementsByOffset(
 		osi: OSI,
@@ -1088,7 +1092,7 @@ export class AssemblyDisassembler extends Assembly {
 		// Create subroutine offset to class and method mappings.
 		const r = new Map() as MapClassMethodOffsetToDefinitions;
 		for (const classInfo of osi.header.classTable.entries) {
-			const structure = classInfo.structure;
+			const {structure} = classInfo;
 			const extend = structure.extends;
 			const patentInfo = parents.get(classInfo) || null;
 			const extending = patentInfo ? patentInfo.structure : extend;
@@ -1126,7 +1130,8 @@ export class AssemblyDisassembler extends Assembly {
 	 * Create argument number from primitive int.
 	 *
 	 * @param value Primitive int.
-	 * @return AST argument.
+	 * @param base Integer base.
+	 * @returns AST argument.
 	 */
 	protected _disassembleCreateArgumentFromInt(
 		value: PrimitiveInt,
@@ -1141,7 +1146,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * Create argument number from primitive float.
 	 *
 	 * @param value Primitive float.
-	 * @return AST argument.
+	 * @returns AST argument.
 	 */
 	protected _disassembleCreateArgumentFromFloat(
 		value: PrimitiveFloat
@@ -1155,7 +1160,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * Create argument number from regular number primitive.
 	 *
 	 * @param value Number primitive.
-	 * @return AST argument.
+	 * @returns AST argument.
 	 */
 	protected _disassembleCreateArgumentFromNumber(
 		value: number
@@ -1169,7 +1174,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * Create argument string from primitive string.
 	 *
 	 * @param value Primitive string.
-	 * @return AST argument.
+	 * @returns AST argument.
 	 */
 	protected _disassembleCreateArgumentFromString(
 		value: PrimitiveString
@@ -1195,7 +1200,7 @@ export class AssemblyDisassembler extends Assembly {
 	/**
 	 * Create AST statement line.
 	 *
-	 * @return New instance.
+	 * @returns New instance.
 	 */
 	protected _disassembleCreateStatementLine() {
 		return new ASTNodeStatementLine();
@@ -1205,7 +1210,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * Create AST statement block.
 	 *
 	 * @param id Identifier string.
-	 * @return New instance.
+	 * @returns New instance.
 	 */
 	protected _disassembleCreateStatementBlock(id: string) {
 		const ast = new ASTNodeStatementBlock();
@@ -1218,7 +1223,7 @@ export class AssemblyDisassembler extends Assembly {
 	 * Create AST statement instruction.
 	 *
 	 * @param id Identifier string.
-	 * @return New instance.
+	 * @returns New instance.
 	 */
 	protected _disassembleCreateStatementInstruction(id: string) {
 		const ast = new ASTNodeStatementInstruction();
@@ -1231,7 +1236,7 @@ export class AssemblyDisassembler extends Assembly {
 	 *
 	 * @param symbols Symbols list.
 	 * @param symbol Symbol ID.
-	 * @return Arg an comment values.
+	 * @returns Arg an comment values.
 	 */
 	protected _disassembleConvertSymbolToArgumentComment(
 		symbols: PrimitiveStringP8N[],

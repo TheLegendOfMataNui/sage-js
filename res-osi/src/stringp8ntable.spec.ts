@@ -2,6 +2,7 @@ import {
 	BufferView,
 	PrimitiveStringP8N
 } from '@sage-js/core';
+
 import {StringP8NTable} from './stringp8ntable';
 
 const strings = [

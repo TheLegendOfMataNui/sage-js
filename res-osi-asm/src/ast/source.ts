@@ -1,5 +1,6 @@
 import {typed} from '../typed';
 import {SourceFile} from '../sourcefile';
+
 import {AST} from './class';
 
 /**
@@ -52,7 +53,7 @@ export class ASTSource extends AST {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();

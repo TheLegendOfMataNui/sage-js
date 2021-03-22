@@ -1,4 +1,6 @@
+/* eslint-disable import/no-default-export */
 import {join as pathJoin} from 'path';
+
 import {flags} from '@oclif/command';
 import {BufferView} from '@sage-js/core';
 import {
@@ -31,8 +33,9 @@ export default class ResOSIASMSAssemble extends Command {
 	/**
 	 * Description.
 	 */
-	public static readonly description =
-		'assemble an osi file, structured assembly';
+	public static readonly description = (
+		'assemble an osi file, structured assembly'
+	);
 
 	/**
 	 * Examples.
@@ -76,7 +79,6 @@ export default class ResOSIASMSAssemble extends Command {
 	 * Handler.
 	 */
 	public async run() {
-		// tslint:disable-next-line: no-unused
 		const {args, flags, argv} = this.parse(ResOSIASMSAssemble);
 		const outpath = args.osi;
 		const inpaths = argv.slice(1);
@@ -119,6 +121,7 @@ export default class ResOSIASMSAssemble extends Command {
 	 *
 	 * @param filepaths Paths to find sources.
 	 * @param ext File extension, should not be empty.
+	 * @returns The sources.
 	 */
 	protected async _findSources(filepaths: string[], ext: string) {
 		const r: string[] = [];
@@ -131,6 +134,7 @@ export default class ResOSIASMSAssemble extends Command {
 			}
 
 			// Skip if this path has already been visited.
+			// eslint-disable-next-line no-await-in-loop
 			const real = await realpath(entry);
 			if (visited.has(real)) {
 				continue;
@@ -138,6 +142,7 @@ export default class ResOSIASMSAssemble extends Command {
 			visited.add(real);
 
 			// Stat path, check check file, descend if directory..
+			// eslint-disable-next-line no-await-in-loop
 			const statInfo = await stat(entry);
 			const isDir = statInfo.isDirectory();
 			if (!isDir) {
@@ -149,9 +154,10 @@ export default class ResOSIASMSAssemble extends Command {
 			}
 
 			// List directory, skipping any dot files.
+			// eslint-disable-next-line no-await-in-loop
 			const dirList = await readdir(real);
 			for (const p of dirList) {
-				if (!p || p[0] === '.') {
+				if (!p || p.startsWith('.')) {
 					continue;
 				}
 				queue.push(pathJoin(entry, p));
@@ -164,10 +170,12 @@ export default class ResOSIASMSAssemble extends Command {
 	 * Read sources.
 	 *
 	 * @param filepaths Paths of source file.
+	 * @returns The sources.
 	 */
 	protected async _readSources(filepaths: string[]) {
 		const r: ASTNodeFile[] = [];
 		for (const filepath of filepaths) {
+			// eslint-disable-next-line no-await-in-loop
 			r.push(await this._readSource(filepath));
 		}
 		return r;
@@ -177,6 +185,7 @@ export default class ResOSIASMSAssemble extends Command {
 	 * Read source.
 	 *
 	 * @param filepath Path of source file.
+	 * @returns The AST.
 	 */
 	protected async _readSource(filepath: string) {
 		// Read file.

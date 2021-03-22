@@ -2,6 +2,7 @@ import {
 	PrimitiveInt32U,
 	PrimitiveStringP8N
 } from '@sage-js/core';
+
 import {ClassDefinition} from './classdefinition/class';
 import {ClassDefinitionProperty} from './classdefinitionproperty';
 import {ClassDefinitionMethod} from './classdefinitionmethod';
@@ -11,6 +12,7 @@ import {InstructionBCL} from './instruction/bcl/class';
 import {InstructionAbstract} from './instruction/abstract/class';
 
 export interface IClassDefinitionTableEntry {
+
 	/**
 	 * Class structure.
 	 */
@@ -23,6 +25,7 @@ export interface IClassDefinitionTableEntry {
 }
 
 export interface ISubroutineTableEntry {
+
 	/**
 	 * Subroutine offset.
 	 */
@@ -34,20 +37,14 @@ export interface ISubroutineTableEntry {
 	subroutine: Subroutine;
 }
 
-export type MapClassDefinitionExtends = Map<
-	ClassDefinition,
-	ClassDefinition | null
->;
+export type MapClassDefinitionExtends =
+	Map<ClassDefinition, ClassDefinition | null>;
 
-export type MapClassDefinitionTableEntryExtends = Map<
-	IClassDefinitionTableEntry,
-	IClassDefinitionTableEntry | null
->;
+export type MapClassDefinitionTableEntryExtends =
+	Map<IClassDefinitionTableEntry, IClassDefinitionTableEntry | null>;
 
-export type MapClassDefinitionTableEntryExtendsOptions = Map<
-	IClassDefinitionTableEntry,
-	IClassDefinitionTableEntry[]
->;
+export type MapClassDefinitionTableEntryExtendsOptions =
+	Map<IClassDefinitionTableEntry, IClassDefinitionTableEntry[]>;
 
 export type SubroutineTableEntryEach =
 	(data: ISubroutineTableEntry) => void;
@@ -65,6 +62,7 @@ export type MapInstructionByName =
 	Map<string, new() => Instruction>;
 
 export interface ITransformString {
+
 	/**
 	 * BCL constructor.
 	 */
@@ -82,6 +80,7 @@ export interface ITransformString {
 }
 
 export interface IClassDefinitionPropertyFound {
+
 	/**
 	 * Class structure.
 	 */
@@ -102,6 +101,7 @@ export type IClassDefinitionPropertyFind =
 	IClassDefinitionPropertyFound | null;
 
 export interface IClassDefinitionMethodFound {
+
 	/**
 	 * Class structure.
 	 */

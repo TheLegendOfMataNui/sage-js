@@ -2,18 +2,20 @@ import {
 	PrimitiveInt16S,
 	PrimitiveInt32U
 } from '@sage-js/core';
+
+import {typed} from '../../typed';
 import {
 	InstructionBCLCompareAndBranchIfFalse
 } from '../bcl/compareandbranchiffalse';
-import {typed} from '../../typed';
+
 import {InstructionAbstract} from './class';
 
 /**
  * InstructionAbstractCompareAndBranchIfFalseBranchTarget constructor.
  */
 @typed.decorate('InstructionAbstractCompareAndBranchIfFalseBranchTarget')
-export class InstructionAbstractCompareAndBranchIfFalseBranchTarget
-extends InstructionAbstract {
+export class InstructionAbstractCompareAndBranchIfFalseBranchTarget extends
+	InstructionAbstract {
 	/**
 	 * Instruction size.
 	 */
@@ -59,7 +61,7 @@ extends InstructionAbstract {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();

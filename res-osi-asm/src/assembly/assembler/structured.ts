@@ -5,10 +5,12 @@ import {
 	ClassDefinition,
 	ClassDefinitionMethod
 } from '@sage-js/res-osi';
+
 import {ExceptionInvalid} from '../../exception/invalid';
 import {SymbolToIndex} from '../../types';
 import {ASTNodeFile} from '../../ast/node/file';
 import {ASTNodeStatementBlock} from '../../ast/node/statement/block';
+
 import {AssemblyAssembler} from './class';
 
 /**
@@ -23,7 +25,7 @@ export class AssemblyAssemblerStructured extends AssemblyAssembler {
 	 * Assemble AST to OSI.
 	 *
 	 * @param ast AST file.
-	 * @return OSI instance.
+	 * @returns OSI instance.
 	 */
 	public assemble(ast: ASTNodeFile) {
 		return this.assembles([ast]);
@@ -32,8 +34,8 @@ export class AssemblyAssemblerStructured extends AssemblyAssembler {
 	/**
 	 * Assemble AST to OSI.
 	 *
-	 * @param ast AST file.
-	 * @return OSI instance.
+	 * @param asts AST files.
+	 * @returns OSI instance.
 	 */
 	public assembles(asts: ASTNodeFile[]) {
 		const osi = new OSI();
@@ -225,6 +227,7 @@ export class AssemblyAssemblerStructured extends AssemblyAssembler {
 	 * @param ast AST block.
 	 * @param osi OSI instance.
 	 * @param symbolToIndex Get symbol or add.
+	 * @returns The entend, name, and class structure.
 	 */
 	public assembleStructuredClass(
 		ast: ASTNodeStatementBlock,
@@ -302,8 +305,8 @@ export class AssemblyAssemblerStructured extends AssemblyAssembler {
 	 * Assemble structured class method AST block into definition.
 	 *
 	 * @param ast AST block.
+	 * @param osi OSI instance.
 	 * @param classDefinition Definition instance.
-	 * @param idToOffset Maps ID to offset.
 	 * @param symbolToIndex Get symbol or add.
 	 */
 	public assembleStructuredClassMethod(
@@ -316,7 +319,7 @@ export class AssemblyAssemblerStructured extends AssemblyAssembler {
 
 		const method = new ClassDefinitionMethod();
 
-		const argName = ast.begin.arguments.entries[0];
+		const [argName] = ast.begin.arguments.entries;
 		method.symbol = this._assembleConvertArgumentToSymbol(
 			argName,
 			symbolToIndex

@@ -3,6 +3,7 @@ import {
 	Structure,
 	BufferView
 } from '@sage-js/core';
+
 import {
 	IClassDefinitionPropertyFind,
 	IClassDefinitionMethodFind
@@ -43,7 +44,7 @@ export abstract class ClassDefinition extends Structure {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();
@@ -55,6 +56,8 @@ export abstract class ClassDefinition extends Structure {
 
 	/**
 	 * Get entry count size.
+	 *
+	 * @returns Size of entry count.
 	 */
 	public get entryCountSize() {
 		const Constructor = this.constructor as typeof ClassDefinition;
@@ -63,6 +66,8 @@ export abstract class ClassDefinition extends Structure {
 
 	/**
 	 * Byte size.
+	 *
+	 * @returns Byte size.
 	 */
 	public get size() {
 		let r = (
@@ -113,7 +118,6 @@ export abstract class ClassDefinition extends Structure {
 	 * Itterate ancestors by walking extends chain.
 	 *
 	 * @param includeThis Include this instance in the itterations.
-	 * @return Ancestor itterator.
 	 */
 	public * itterAncestors(includeThis = false) {
 		if (includeThis) {
@@ -131,7 +135,6 @@ export abstract class ClassDefinition extends Structure {
 	 *
 	 * @param self Include this instance in the itterations.
 	 * @param overrides Include overridden from parents.
-	 * @return Ancestor property itterator.
 	 */
 	public * itterAncestorsProperties(self = false, overrides = false) {
 		const seen = new Set<number>();
@@ -156,7 +159,6 @@ export abstract class ClassDefinition extends Structure {
 	 *
 	 * @param self Include this instance in the itterations.
 	 * @param overrides Include overridden from parents.
-	 * @return Ancestor method itterator.
 	 */
 	public * itterAncestorsMethods(self = false, overrides = false) {
 		const seen = new Set<number>();
@@ -178,8 +180,6 @@ export abstract class ClassDefinition extends Structure {
 
 	/**
 	 * Itterate properties by itterating ancestors, skipping the overridden.
-	 *
-	 * @return Property itterator.
 	 */
 	public * itterProperties() {
 		for (const entry of this.itterAncestorsProperties(true)) {
@@ -189,8 +189,6 @@ export abstract class ClassDefinition extends Structure {
 
 	/**
 	 * Itterate methods by itterating ancestors, skipping the overridden.
-	 *
-	 * @return Method itterator.
 	 */
 	public * itterMethods() {
 		for (const entry of this.itterAncestorsMethods(true)) {
@@ -202,7 +200,7 @@ export abstract class ClassDefinition extends Structure {
 	 * Find the first ancestor with property.
 	 *
 	 * @param symbol The symbol to find.
-	 * @return The index, entry, and class definition.
+	 * @returns The index, entry, and class definition.
 	 */
 	public findProperty(symbol: PrimitiveInt16U): IClassDefinitionPropertyFind {
 		const found = this.classPropertyTable.find(symbol);
@@ -221,7 +219,7 @@ export abstract class ClassDefinition extends Structure {
 	 * Find the first ancestor with method.
 	 *
 	 * @param symbol The symbol to find.
-	 * @return The index, entry, and class definition.
+	 * @returns The index, entry, and class definition.
 	 */
 	public findMethod(symbol: PrimitiveInt16U): IClassDefinitionMethodFind {
 		const found = this.classMethodTable.find(symbol);
@@ -239,7 +237,7 @@ export abstract class ClassDefinition extends Structure {
 	/**
 	 * Transform class to add extends property.
 	 *
-	 * @param map The parent.
+	 * @param extend The parent.
 	 */
 	public transformClassExtendsAdd(extend: ClassDefinition | null) {
 		if (extend) {

@@ -1,4 +1,5 @@
 import {typed} from '../../typed';
+
 import {ASTNode} from './class';
 
 /**
@@ -18,7 +19,7 @@ export class ASTNodeIdentifier extends ASTNode {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = super.copy();

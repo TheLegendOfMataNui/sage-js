@@ -1,17 +1,21 @@
+// Generated code.
+
 import {
 	BufferView,
 	PrimitiveInt8S,
 	PrimitiveInt8U
 } from '@sage-js/core';
+
 import {typed} from '../../typed';
+
 import {InstructionBCL} from './class';
 
 /**
  * InstructionBCLMemberFunctionArgumentCheck constructor.
  */
 @typed.decorate('InstructionBCLMemberFunctionArgumentCheck')
-export class InstructionBCLMemberFunctionArgumentCheck
-extends InstructionBCL {
+export class InstructionBCLMemberFunctionArgumentCheck extends
+	InstructionBCL {
 	/**
 	 * Instruction size.
 	 */
@@ -52,7 +56,7 @@ extends InstructionBCL {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();

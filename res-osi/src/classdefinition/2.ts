@@ -1,5 +1,6 @@
 import {ClassDefinitionPropertyTable2} from '../classdefinitionpropertytable/2';
 import {ClassDefinitionMethodTable2} from '../classdefinitionmethodtable/2';
+
 import {ClassDefinition} from './class';
 
 /**

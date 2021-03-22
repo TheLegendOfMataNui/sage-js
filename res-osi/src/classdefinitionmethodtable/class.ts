@@ -4,6 +4,7 @@ import {
 	BufferView,
 	ExceptionValue
 } from '@sage-js/core';
+
 import {ClassDefinitionMethod} from '../classdefinitionmethod';
 
 /**
@@ -27,7 +28,7 @@ export abstract class ClassDefinitionMethodTable extends Structure {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();
@@ -37,6 +38,8 @@ export abstract class ClassDefinitionMethodTable extends Structure {
 
 	/**
 	 * Get entry count size.
+	 *
+	 * @returns Size of entry count.
 	 */
 	public get entryCountSize() {
 		const Constructor =
@@ -46,6 +49,8 @@ export abstract class ClassDefinitionMethodTable extends Structure {
 
 	/**
 	 * Byte size.
+	 *
+	 * @returns Byte size.
 	 */
 	public get size() {
 		// Size of length marker, plus the size of each entry.
@@ -54,6 +59,8 @@ export abstract class ClassDefinitionMethodTable extends Structure {
 
 	/**
 	 * Byte size of content.
+	 *
+	 * @returns Byte size of content.
 	 */
 	public get sizeContent() {
 		let r = 0;
@@ -126,10 +133,10 @@ export abstract class ClassDefinitionMethodTable extends Structure {
 	 * Find entry.
 	 *
 	 * @param symbol The symbol to find.
-	 * @return The index and entry.
+	 * @returns The index and entry.
 	 */
 	public find(symbol: PrimitiveInt16U) {
-		const entries = this.entries;
+		const {entries} = this;
 		for (let i = 0; i < entries.length; i++) {
 			const entry = entries[i];
 			if (entry.symbol.value !== symbol.value) {

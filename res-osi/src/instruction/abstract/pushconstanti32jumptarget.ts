@@ -2,18 +2,20 @@ import {
 	PrimitiveInt32S,
 	PrimitiveInt32U
 } from '@sage-js/core';
+
+import {typed} from '../../typed';
 import {
 	InstructionBCLPushConstanti32
 } from '../bcl/pushconstanti32';
-import {typed} from '../../typed';
+
 import {InstructionAbstract} from './class';
 
 /**
  * InstructionAbstractPushConstanti32JumpTarget constructor.
  */
 @typed.decorate('InstructionAbstractPushConstanti32JumpTarget')
-export class InstructionAbstractPushConstanti32JumpTarget
-extends InstructionAbstract {
+export class InstructionAbstractPushConstanti32JumpTarget extends
+	InstructionAbstract {
 	/**
 	 * Instruction size.
 	 */
@@ -59,7 +61,7 @@ extends InstructionAbstract {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();

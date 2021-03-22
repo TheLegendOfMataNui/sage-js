@@ -5,6 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 
+// eslint-disable-next-line import/no-internal-modules
 const spec = require('./generate-bcl/spec.json');
 
 const outdir = path.join(__dirname, '../src/instruction/bcl');
@@ -16,6 +17,7 @@ const sourceTemplate = fs.readFileSync(
 );
 
 function arrayToLines(arr, indent) {
+	// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 	arr = arr.map(v => indent + v);
 	if (arr.length) {
 		arr = ['', ...arr];
@@ -139,6 +141,7 @@ function template(opcode, name, argTypes) {
 			.map(s => `\t${s}`)
 			.join(',\n'),
 		opcodehex:
+			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 			(opcode < 0x10 ? '0' : '') + opcode.toString(16).toUpperCase(),
 		size,
 		name,

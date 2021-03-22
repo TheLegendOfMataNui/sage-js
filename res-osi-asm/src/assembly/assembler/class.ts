@@ -21,6 +21,7 @@ import {
 	ClassDefinitionProperty,
 	ClassDefinitionMethod
 } from '@sage-js/res-osi';
+
 import {typed} from '../../typed';
 import {
 	MapIdentifierToASTNodeStatementInstruction,
@@ -63,7 +64,7 @@ export class AssemblyAssembler extends Assembly {
 	 * Assemble AST to OSI.
 	 *
 	 * @param ast AST file.
-	 * @return OSI instance.
+	 * @returns OSI instance.
 	 */
 	public assemble(ast: ASTNodeFile) {
 		const osi = new OSI();
@@ -99,7 +100,7 @@ export class AssemblyAssembler extends Assembly {
 		const blockSymbols =
 			this._assembleIdentifierMappedBlocksConsumeOneOptional(
 				blocksByID,
-				'symbols',
+				'symbols'
 			);
 		const blockSources =
 			this._assembleIdentifierMappedBlocksConsumeOneOptional(
@@ -277,7 +278,7 @@ export class AssemblyAssembler extends Assembly {
 	 * Assemble a generic string AST block into table.
 	 *
 	 * @param ast AST block.
-	 * @param osi OSI instance.
+	 * @param table String table.
 	 * @param blockID Block ID.
 	 * @param instructionID Instruction ID.
 	 */
@@ -388,7 +389,7 @@ export class AssemblyAssembler extends Assembly {
 		this._assembleAssertArgumentCount(ast.arguments, 3);
 		const definition = new FunctionDefinition();
 
-		const argIdNode = ast.arguments.entries[2];
+		const [,, argIdNode] = ast.arguments.entries;
 		const id = this._assembleDecodeArgumentNumber(argIdNode);
 		const offset = idToOffset.get(id);
 		if (!offset) {
@@ -530,7 +531,7 @@ export class AssemblyAssembler extends Assembly {
 		this._assembleAssertArgumentCount(ast.arguments, 1);
 		const property = new ClassDefinitionProperty();
 
-		const argName = ast.arguments.entries[0];
+		const [argName] = ast.arguments.entries;
 		property.symbol = this._assembleConvertArgumentToSymbol(
 			argName,
 			symbolToIndex
@@ -557,7 +558,7 @@ export class AssemblyAssembler extends Assembly {
 
 		const method = new ClassDefinitionMethod();
 
-		const argIdNode = ast.arguments.entries[1];
+		const [, argIdNode] = ast.arguments.entries;
 		const id = this._assembleDecodeArgumentNumber(argIdNode);
 		const offset = idToOffset.get(id);
 		if (!offset) {
@@ -567,7 +568,7 @@ export class AssemblyAssembler extends Assembly {
 			);
 		}
 
-		const argName = ast.arguments.entries[0];
+		const [argName] = ast.arguments.entries;
 		method.symbol = this._assembleConvertArgumentToSymbol(
 			argName,
 			symbolToIndex
@@ -581,7 +582,7 @@ export class AssemblyAssembler extends Assembly {
 	/**
 	 * Assemble subroutines AST blocks into OSI.
 	 *
-	 * @param ast AST blocks.
+	 * @param asts AST blocks.
 	 * @param osi OSI instance.
 	 * @param idToOffset Maps ID to offset.
 	 */
@@ -611,7 +612,7 @@ export class AssemblyAssembler extends Assembly {
 		idToOffset: MapIdToSubroutineOffset
 	) {
 		this._assembleAssertArgumentCount(ast.begin.arguments, 1);
-		const argIdNode = ast.begin.arguments.entries[0];
+		const [argIdNode] = ast.begin.arguments.entries;
 		const id = this._assembleDecodeArgumentNumber(argIdNode);
 
 		if (idToOffset.has(id)) {
@@ -632,7 +633,7 @@ export class AssemblyAssembler extends Assembly {
 	 *
 	 * @param ast AST block.
 	 * @param osi OSI instance.
-	 * @param idToOffset Maps ID to offset.
+	 * @returns The offset.
 	 */
 	public assembleSubroutineBody(
 		ast: ASTNodeStatementBlock,
@@ -723,6 +724,7 @@ export class AssemblyAssembler extends Assembly {
 	 * Decode argument AST into a number.
 	 *
 	 * @param argument AST argument.
+	 * @returns Decoded number.
 	 */
 	protected _assembleDecodeArgumentNumber(argument: ASTNodeArgument) {
 		if (!typed.cast(argument, ASTNodeArgumentNumber)) {
@@ -749,6 +751,7 @@ export class AssemblyAssembler extends Assembly {
 	 *
 	 * @param primitive Primitive object to decode new of.
 	 * @param argument AST argument.
+	 * @returns Decoded argument.
 	 */
 	protected _assembleDecodeArgument<
 		T extends Primitive
@@ -824,6 +827,7 @@ export class AssemblyAssembler extends Assembly {
 	 * Groups a list of statements by type, ignoring the empty lines.
 	 *
 	 * @param asts AST statements list.
+	 * @returns The blocks and instructions.
 	 */
 	protected _assembleGroupStatementsList(asts: ASTNodeStatements[]) {
 		const blocks: ASTNodeStatementBlock[] = [];
@@ -866,6 +870,7 @@ export class AssemblyAssembler extends Assembly {
 	 * Groups statements by type, ignoring the empty lines.
 	 *
 	 * @param ast AST statements.
+	 * @returns The blocks and instructions.
 	 */
 	protected _assembleGroupStatements(ast: ASTNodeStatements) {
 		return this._assembleGroupStatementsList([ast]);
@@ -875,6 +880,7 @@ export class AssemblyAssembler extends Assembly {
 	 * Map instructions by identifier.
 	 *
 	 * @param instructions AST instructions.
+	 * @returns The map.
 	 */
 	protected _assembleIdentifierMappedInstructions(
 		instructions: ASTNodeStatementInstruction[]
@@ -893,6 +899,7 @@ export class AssemblyAssembler extends Assembly {
 	 * Map blocks by identifier.
 	 *
 	 * @param blocks AST blocks.
+	 * @returns The map.
 	 */
 	protected _assembleIdentifierMappedBlocks(
 		blocks: ASTNodeStatementBlock[]
@@ -912,6 +919,7 @@ export class AssemblyAssembler extends Assembly {
 	 *
 	 * @param map Map object.
 	 * @param id Identifier string.
+	 * @returns The map.
 	 */
 	protected _assembleIdentifierMappedInstructionsConsume(
 		map: MapIdentifierToASTNodeStatementInstruction,
@@ -927,6 +935,7 @@ export class AssemblyAssembler extends Assembly {
 	 *
 	 * @param map Map object.
 	 * @param id Identifier string.
+	 * @returns The map.
 	 */
 	protected _assembleIdentifierMappedBlocksConsume(
 		map: MapIdentifierToASTNodeStatementBlock,
@@ -942,6 +951,7 @@ export class AssemblyAssembler extends Assembly {
 	 *
 	 * @param map Map object.
 	 * @param id Identifier string.
+	 * @returns The instruction or null.
 	 */
 	protected _assembleIdentifierMappedInstructionsConsumeOneOptional(
 		map: MapIdentifierToASTNodeStatementInstruction,
@@ -966,6 +976,7 @@ export class AssemblyAssembler extends Assembly {
 	 *
 	 * @param map Map object.
 	 * @param id Identifier string.
+	 * @returns The block or null.
 	 */
 	protected _assembleIdentifierMappedBlocksConsumeOneOptional(
 		map: MapIdentifierToASTNodeStatementBlock,
@@ -991,6 +1002,7 @@ export class AssemblyAssembler extends Assembly {
 	 * @param map Map object.
 	 * @param id Identifier string.
 	 * @param container Container element used for throwing exceptions.
+	 * @returns The instruction or null.
 	 */
 	protected _assembleIdentifierMappedInstructionsConsumeOne(
 		map: MapIdentifierToASTNodeStatementInstruction,
@@ -1019,6 +1031,7 @@ export class AssemblyAssembler extends Assembly {
 	 * @param map Map object.
 	 * @param id Identifier string.
 	 * @param container Container element used for throwing exceptions.
+	 * @returns The block or null.
 	 */
 	protected _assembleIdentifierMappedBlocksConsumeOne(
 		map: MapIdentifierToASTNodeStatementBlock,
@@ -1049,8 +1062,7 @@ export class AssemblyAssembler extends Assembly {
 	protected _assembleAssertInstructionByIdentifierEmpty(
 		map: MapIdentifierToASTNodeStatementInstruction
 	) {
-		// tslint:disable-next-line: no-unused
-		for (const [id, entry] of map) {
+		for (const [, entry] of map) {
 			throw new ExceptionASTNode(
 				'Unexpected instruction',
 				entry[0]
@@ -1066,8 +1078,7 @@ export class AssemblyAssembler extends Assembly {
 	protected _assembleAssertBlockByIdentifierEmpty(
 		map: MapIdentifierToASTNodeStatementBlock
 	) {
-		// tslint:disable-next-line: no-unused
-		for (const [id, entry] of map) {
+		for (const [, entry] of map) {
 			throw new ExceptionASTNode(
 				'Unexpected block',
 				entry[0]
@@ -1166,7 +1177,7 @@ export class AssemblyAssembler extends Assembly {
 	 *
 	 * @param ast Arg node.
 	 * @param symbolToIndex Get symbol or add.
-	 * @return Decoded symbol.
+	 * @returns Decoded symbol.
 	 */
 	protected _assembleConvertArgumentToSymbol(
 		ast: ASTNodeArgument,
@@ -1187,7 +1198,7 @@ export class AssemblyAssembler extends Assembly {
 	 * Symbol index getter, adding if necessary.
 	 *
 	 * @param osi OSI instance.
-	 * @return Getter function.
+	 * @returns Getter function.
 	 */
 	protected _assembleSymbolToIndex(osi: OSI): SymbolToIndex {
 		// Map existing symbol strings to indexes.

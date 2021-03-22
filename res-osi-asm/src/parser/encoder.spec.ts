@@ -19,7 +19,7 @@ describe('ParserEncoder', () => {
 			'end',
 			'last'
 		]
-	].map(lines => lines.join('\n') + '\n');
+	].map(lines => `${lines.join('\n')}\n`);
 	sources.forEach((source, sourceI) => {
 		it(`Source: ${sourceI}`, () => {
 			const decoder = new ParserDecoder();

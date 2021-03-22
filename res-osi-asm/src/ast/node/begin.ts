@@ -1,4 +1,5 @@
 import {typed} from '../../typed';
+
 import {ASTNodeIdentifier} from './identifier';
 import {ASTNodeArguments} from './arguments';
 import {ASTNodeComment} from './comment';
@@ -31,7 +32,7 @@ export class ASTNodeBegin extends ASTNode {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = super.copy();

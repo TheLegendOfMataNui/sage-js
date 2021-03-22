@@ -5,6 +5,7 @@ import {
 	PrimitiveInt32U,
 	ExceptionValue
 } from '@sage-js/core';
+
 import {MapClassDefinitionExtends} from './types';
 import {StringP8NTable} from './stringp8ntable';
 import {FunctionDefinitionTable} from './functiondefinitiontable';
@@ -69,7 +70,7 @@ export class Header extends Structure {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();
@@ -113,6 +114,8 @@ export class Header extends Structure {
 
 	/**
 	 * Byte size.
+	 *
+	 * @returns Byte size.
 	 */
 	public get size() {
 		let r = this.magic.size;
@@ -131,6 +134,8 @@ export class Header extends Structure {
 
 	/**
 	 * File magic.
+	 *
+	 * @returns File magic.
 	 */
 	public get magic() {
 		return Header.MAGIC;
@@ -138,6 +143,8 @@ export class Header extends Structure {
 
 	/**
 	 * Does the file version have a source table.
+	 *
+	 * @returns Has a source table.
 	 */
 	public get hasSourceTable() {
 		return this.versionMajor.value === 4;
@@ -145,6 +152,8 @@ export class Header extends Structure {
 
 	/**
 	 * Size of the class member counts, 1 if major version of 4, else 2.
+	 *
+	 * @returns Size of member count.
 	 */
 	public get classMemberCountSize() {
 		return this.versionMajor.value === 4 ? 1 : 2;
@@ -159,9 +168,11 @@ export class Header extends Structure {
 
 	/**
 	 * Create new class definition table based on classMemberCountSize.
+	 *
+	 * @returns ClassDefinitionTable instance.
 	 */
-	public newClassDefinitionTable() {
-		const classMemberCountSize = this.classMemberCountSize;
+	public newClassDefinitionTable(): ClassDefinitionTable {
+		const {classMemberCountSize} = this;
 		switch (classMemberCountSize) {
 			case 1: {
 				return new ClassDefinitionTable1();

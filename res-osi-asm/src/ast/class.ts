@@ -11,7 +11,7 @@ export abstract class AST extends Object {
 	/**
 	 * Create new instance of same type.
 	 *
-	 * @return New instance.
+	 * @returns New instance.
 	 */
 	public createNew() {
 		const Constructor = this.constructor as new() => AST;
@@ -21,7 +21,7 @@ export abstract class AST extends Object {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();

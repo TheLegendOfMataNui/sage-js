@@ -1,5 +1,6 @@
-import {typed} from '../typed';
 import {Exception as CoreException} from '@sage-js/core';
+
+import {typed} from '../typed';
 
 /**
  * Exception constructor.

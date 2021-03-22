@@ -20,7 +20,7 @@ export class StringP8NTable extends Structure {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();
@@ -30,6 +30,8 @@ export class StringP8NTable extends Structure {
 
 	/**
 	 * Byte size.
+	 *
+	 * @returns Byte size.
 	 */
 	public get size() {
 		// Size of length marker, plus the size of each entry.

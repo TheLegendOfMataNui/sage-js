@@ -34,13 +34,7 @@ describe('constants', () => {
 		});
 	});
 
-	for (const {
-		bits,
-		IntUArray,
-		IntURange,
-		IntSArray,
-		IntSRange
-	} of [
+	for (const {bits, IntUArray, IntURange, IntSArray, IntSRange} of [
 		{
 			bits: 8,
 			IntUArray: Uint8Array,
@@ -63,26 +57,26 @@ describe('constants', () => {
 			IntSRange: [INT32S_MIN, INT32S_MAX]
 		}
 	]) {
-		// tslint:disable-next-line: no-bitwise
+		// eslint-disable-next-line no-bitwise
 		const uMax = 0xFFFFFFFF >>> (32 - bits);
 
 		const uMin = 0;
 
-		// tslint:disable-next-line: no-bitwise
+		// eslint-disable-next-line no-bitwise
 		const sMax = uMax >>> 1;
 
-		// tslint:disable-next-line: no-bitwise
+		// eslint-disable-next-line no-bitwise
 		const sMin = ~sMax;
 
 		describe(`INT${bits}U_MIN`, () => {
 			it('expected value', () => {
-				const v = IntURange[0];
+				const [v] = IntURange;
 				expect(v).toBe(uMin);
 			});
 
 			it('can use', () => {
 				const a = new IntUArray(1);
-				const v = IntURange[0];
+				const [v] = IntURange;
 				a[0] = v;
 				expect(a[0]).toBe(v);
 			});
@@ -97,13 +91,13 @@ describe('constants', () => {
 
 		describe(`INT${bits}U_MAX`, () => {
 			it('expected value', () => {
-				const v = IntURange[1];
+				const [, v] = IntURange;
 				expect(v).toBe(uMax);
 			});
 
 			it('can use', () => {
 				const a = new IntUArray(1);
-				const v = IntURange[1];
+				const [, v] = IntURange;
 				a[0] = v;
 				expect(a[0]).toBe(v);
 			});
@@ -118,13 +112,13 @@ describe('constants', () => {
 
 		describe(`INT${bits}S_MIN`, () => {
 			it('expected value', () => {
-				const v = IntSRange[0];
+				const [v] = IntSRange;
 				expect(v).toBe(sMin);
 			});
 
 			it('can use', () => {
 				const a = new IntSArray(1);
-				const v = IntSRange[0];
+				const [v] = IntSRange;
 				a[0] = v;
 				expect(a[0]).toBe(v);
 			});
@@ -139,13 +133,13 @@ describe('constants', () => {
 
 		describe(`INT${bits}S_MAX`, () => {
 			it('expected value', () => {
-				const v = IntSRange[1];
+				const [, v] = IntSRange;
 				expect(v).toBe(sMax);
 			});
 
 			it('can use', () => {
 				const a = new IntSArray(1);
-				const v = IntSRange[1];
+				const [, v] = IntSRange;
 				a[0] = v;
 				expect(a[0]).toBe(v);
 			});

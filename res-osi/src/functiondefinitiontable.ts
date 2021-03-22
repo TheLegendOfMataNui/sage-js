@@ -2,6 +2,7 @@ import {
 	Structure,
 	BufferView
 } from '@sage-js/core';
+
 import {FunctionDefinition} from './functiondefinition';
 
 /**
@@ -20,7 +21,7 @@ export class FunctionDefinitionTable extends Structure {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();
@@ -30,6 +31,8 @@ export class FunctionDefinitionTable extends Structure {
 
 	/**
 	 * Byte size.
+	 *
+	 * @returns Byte size.
 	 */
 	public get size() {
 		// Size of length marker, plus the size of each entry.

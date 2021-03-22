@@ -6,6 +6,7 @@ import {
 import {BufferView} from '../../../bufferview';
 import {ExceptionValue} from '../../../exception/value';
 import {ExceptionRange} from '../../../exception/range';
+
 import {PrimitiveStringP8} from './8';
 
 const unitsGood = [
@@ -39,7 +40,7 @@ describe('PrimitiveStringP8', () => {
 				it(JSON.stringify(v), () => {
 					expect(() => {
 						try {
-							// tslint:disable-next-line: no-unused-expression
+							// eslint-disable-next-line no-new
 							new PrimitiveStringP8(v);
 						}
 						catch (err) {
@@ -56,7 +57,7 @@ describe('PrimitiveStringP8', () => {
 				it(JSON.stringify(v), () => {
 					expect(() => {
 						try {
-							// tslint:disable-next-line: no-unused-expression
+							// eslint-disable-next-line no-new
 							new PrimitiveStringP8(v);
 						}
 						catch (err) {

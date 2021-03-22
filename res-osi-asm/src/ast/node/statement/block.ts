@@ -2,6 +2,7 @@ import {typed} from '../../../typed';
 import {ASTNodeBegin} from '../begin';
 import {ASTNodeEnd} from '../end';
 import {ASTNodeStatements} from '../statements';
+
 import {ASTNodeStatement} from './class';
 
 /**
@@ -31,7 +32,7 @@ export class ASTNodeStatementBlock extends ASTNodeStatement {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = super.copy();

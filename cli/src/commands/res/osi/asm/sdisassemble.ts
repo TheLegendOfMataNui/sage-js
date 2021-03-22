@@ -1,5 +1,6 @@
 import {createHash} from 'crypto';
 import {join as pathJoin} from 'path';
+
 import {flags} from '@oclif/command';
 import {
 	BufferView,
@@ -30,6 +31,7 @@ import {Command} from '../../../../command';
 /**
  * ResOSIASMSDisassemble command.
  */
+// eslint-disable-next-line import/no-default-export
 export default class ResOSIASMSDisassemble extends Command {
 	/**
 	 * Aliases.
@@ -41,8 +43,9 @@ export default class ResOSIASMSDisassemble extends Command {
 	/**
 	 * Description.
 	 */
-	public static readonly description =
-		'disassemble an osi file, structured assembly';
+	public static readonly description = (
+		'disassemble an osi file, structured assembly'
+	);
 
 	/**
 	 * Examples.
@@ -117,7 +120,6 @@ export default class ResOSIASMSDisassemble extends Command {
 	 * Handler.
 	 */
 	public async run() {
-		// tslint:disable-next-line: no-unused
 		const {args, flags} = this.parse(ResOSIASMSDisassemble);
 
 		// Read file and compute a hash.
@@ -256,6 +258,7 @@ export default class ResOSIASMSDisassemble extends Command {
 			encoder.reset();
 
 			const filepath = pathJoin(dirpath, filename);
+			// eslint-disable-next-line no-await-in-loop
 			await outputFile(filepath, asm, {
 				encoding: 'utf8'
 			});
@@ -268,7 +271,7 @@ export default class ResOSIASMSDisassemble extends Command {
 	 * @param osi OSI instance.
 	 * @param ext File extension, must not be empty.
 	 * @param nesting Nest classes in directories.
-	 * @return Mapper instance.
+	 * @returns Mapper instance.
 	 */
 	protected _createFileMapper(osi: OSI, ext: string, nesting: boolean):
 	IDisassemblyStructuredFileMapper {
@@ -296,7 +299,7 @@ export default class ResOSIASMSDisassemble extends Command {
 			const fn = `${utilFilenameEncode(name)}${ext}`;
 			const dirp: string[] = [];
 			for (const d of dirs) {
-				if (!d || d[0] === '.') {
+				if (!d || d.startsWith('.')) {
 					return `${utilFilenameEncode(file)}${ext}`;
 				}
 				dirp.push(utilFilenameEncode(d));

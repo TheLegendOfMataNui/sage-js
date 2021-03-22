@@ -39,7 +39,7 @@ export class SourceFile extends Object {
 	 *
 	 * @param start Start index.
 	 * @param end End index.
-	 * @return Source lines in range.
+	 * @returns Source lines in range.
 	 */
 	public getLines(start = 0, end = -1) {
 		const lines = utilNormalizeNewlines(this.code).split('\n');

@@ -4,6 +4,7 @@ import {
 	decoratorProperty,
 	PrimitiveInt32U
 } from '@sage-js/core';
+
 import {ExceptionInternal} from './exception/internal';
 import {ExceptionInvalid} from './exception/invalid';
 import {ExceptionSubroutine} from './exception/subroutine';
@@ -27,15 +28,13 @@ export class SubroutineTable extends Structure {
 	 * Subroutine by offset.
 	 */
 	@decoratorProperty(false)
-	protected _mapOffsetSubroutine: Map<number, Subroutine> =
-		new Map();
+	protected _mapOffsetSubroutine: Map<number, Subroutine> = new Map();
 
 	/**
 	 * Offset by subroutine.
 	 */
 	@decoratorProperty(false)
-	protected _mapSubroutineOffset: Map<Subroutine, number> =
-		new Map();
+	protected _mapSubroutineOffset: Map<Subroutine, number> = new Map();
 
 	/**
 	 * Cached last.
@@ -57,7 +56,7 @@ export class SubroutineTable extends Structure {
 	/**
 	 * Copy instance.
 	 *
-	 * @return Copied instance.
+	 * @returns Copied instance.
 	 */
 	public copy() {
 		const r = this.createNew();
@@ -72,6 +71,8 @@ export class SubroutineTable extends Structure {
 
 	/**
 	 * Byte size.
+	 *
+	 * @returns Byte size.
 	 */
 	public get size() {
 		let r = 0;
@@ -83,6 +84,8 @@ export class SubroutineTable extends Structure {
 
 	/**
 	 * Get the base offset.
+	 *
+	 * @returns Base offset.
 	 */
 	public get baseOffset() {
 		return this._baseOffset;
@@ -101,7 +104,7 @@ export class SubroutineTable extends Structure {
 	 * Check if entry exists by offset.
 	 *
 	 * @param offset Subroutine offset.
-	 * @return True if present, false if not.
+	 * @returns True if present, false if not.
 	 */
 	public hasByOffset(offset: PrimitiveInt32U) {
 		return this._mapOffsetSubroutine.has(offset.value);
@@ -111,7 +114,7 @@ export class SubroutineTable extends Structure {
 	 * Check if entry exists by subroutine.
 	 *
 	 * @param subroutine Subroutine object.
-	 * @return True if present, false if not.
+	 * @returns True if present, false if not.
 	 */
 	public hasBySubroutine(subroutine: Subroutine) {
 		return this._mapSubroutineOffset.has(subroutine);
@@ -121,7 +124,7 @@ export class SubroutineTable extends Structure {
 	 * Get the entry at an offset.
 	 *
 	 * @param offset Subroutine offset.
-	 * @return Entry object or null.
+	 * @returns Entry object or null.
 	 */
 	public getByOffset(
 		offset: PrimitiveInt32U
@@ -137,7 +140,7 @@ export class SubroutineTable extends Structure {
 	 * Get the entry for a subroutine.
 	 *
 	 * @param subroutine Subroutine object.
-	 * @return Entry object or null.
+	 * @returns Entry object or null.
 	 */
 	public getBySubroutine(
 		subroutine: Subroutine
@@ -192,7 +195,7 @@ export class SubroutineTable extends Structure {
 	/**
 	 * Get the last entry, using caching for speed.
 	 *
-	 * @return Entry object or null.
+	 * @returns Entry object or null.
 	 */
 	public getLast(): ISubroutineTableEntry | null {
 		// Get the cached last from cache, or find and cache.
@@ -226,7 +229,8 @@ export class SubroutineTable extends Structure {
 	/**
 	 * Add an existing subroutine, after the last one if existing.
 	 *
-	 * @return Entry object.
+	 * @param subroutine Subroutine instance.
+	 * @returns Entry object.
 	 */
 	public addSubroutine(
 		subroutine: Subroutine
@@ -275,7 +279,7 @@ export class SubroutineTable extends Structure {
 	 * Instructions must be added before another instruction can be appended.
 	 * It is also not possible to update offsets or write if any left empty.
 	 *
-	 * @return Entry object.
+	 * @returns Entry object.
 	 */
 	public addNew(): ISubroutineTableEntry {
 		return this.addSubroutine(new Subroutine());
@@ -283,8 +287,6 @@ export class SubroutineTable extends Structure {
 
 	/**
 	 * Itterate over subroutines in offset order.
-	 *
-	 * @return The itterator.
 	 */
 	public * itter() {
 		// Maps are defined to itterate in insertion order.
@@ -374,7 +376,7 @@ export class SubroutineTable extends Structure {
 		]
 			.sort((a, b) => a - b);
 
-		const subOffsetsNext = () => subOffsets.length ? subOffsets[0] : null;
+		const subOffsetsNext = () => (subOffsets.length ? subOffsets[0] : null);
 
 		const baseOffset = this._baseOffset.value;
 
@@ -406,7 +408,6 @@ export class SubroutineTable extends Structure {
 
 			// Check if this subroutine read past the start of the next one.
 			const nextExpected = subOffsetsNext();
-			// tslint:disable-next-line: early-exit
 			if (nextExpected !== null && offsetNext > nextExpected) {
 				const info = `${offsetNext} > ${nextExpected}`;
 				throw new ExceptionSubroutine(
@@ -415,7 +416,6 @@ export class SubroutineTable extends Structure {
 			}
 		}
 
-		// tslint:disable-next-line: early-exit
 		if (subOffsets.length) {
 			const remaining = subOffsets.length;
 			throw new ExceptionSubroutine(

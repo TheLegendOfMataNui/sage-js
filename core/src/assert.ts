@@ -8,7 +8,7 @@ import {ExceptionValue} from './exception/value';
  * @param value String to test.
  * @param name Name of value.
  * @param raise Raise or return exceptions.
- * @return Exception object or null.
+ * @returns Exception object or null.
  */
 export function assertSingleLine(
 	value: string,
@@ -32,7 +32,7 @@ export function assertSingleLine(
  * @param value String to test.
  * @param name Name of value.
  * @param raise Raise or return exceptions.
- * @return Exception object or null.
+ * @returns Exception object or null.
  */
 export function assertCstring(
 	value: string,
@@ -40,6 +40,7 @@ export function assertCstring(
 	raise = true
 ) {
 	let ex = null;
+	// eslint-disable-next-line no-control-regex
 	if (!/^[\x01-\xFF]*$/.test(value)) {
 		const s = JSON.stringify(value);
 		ex = new ExceptionValue(`Value not a CString: ${name} = ${s}`);
@@ -56,7 +57,7 @@ export function assertCstring(
  * @param value Value to test.
  * @param name Name of value.
  * @param raise Raise or return exceptions.
- * @return Exception object or null.
+ * @returns Exception object or null.
  */
 export function assertInteger(
 	value: number,
@@ -81,11 +82,11 @@ export function assertInteger(
  * Test if number is in range.
  *
  * @param value Value to test.
- * @param min Minimunm value.
- * @param min Maximunm value.
  * @param name Name of value.
+ * @param min Minimunm value.
+ * @param max Maximunm value.
  * @param raise Maximunm value.
- * @return Exception object or null.
+ * @returns Exception object or null.
  */
 export function assertRange(
 	value: number,
@@ -112,11 +113,11 @@ export function assertRange(
  * Test if number is integer and in range.
  *
  * @param value Value to test.
- * @param min Minimunm value.
- * @param min Maximunm value.
  * @param name Name of value.
+ * @param min Minimunm value.
+ * @param max Maximunm value.
  * @param raise Maximunm value.
- * @return Exception object or null.
+ * @returns Exception object or null.
  */
 export function assertIntegerRange(
 	value: number,

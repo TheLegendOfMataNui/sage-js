@@ -8,10 +8,10 @@ const nodeUtilInspectProp = nodeUtilInspectSymbol || nodeUtilInspectProperty;
 /**
  * Decorate property with defaults.
  *
- * @param enumerable Is enumerable
- * @param configurable Is configurable
- * @param writable Is writable
- * @return Decorator function.
+ * @param enumerable Is enumerable.
+ * @param configurable Is configurable.
+ * @param writable Is writable.
+ * @returns Decorator function.
  */
 export function decoratorProperty(
 	enumerable = true,
@@ -33,10 +33,10 @@ export function decoratorProperty(
 /**
  * Decorate method with defaults.
  *
- * @param enumerable Is enumerable
- * @param configurable Is configurable
- * @param writable Is writable
- * @return Decorator function.
+ * @param enumerable Is enumerable.
+ * @param configurable Is configurable.
+ * @param writable Is writable.
+ * @returns Decorator function.
  */
 export function decoratorMethod(
 	enumerable = false,
@@ -58,8 +58,8 @@ export function decoratorMethod(
 /**
  * Decorate enumerable.
  *
- * @param enumerable Is enumerable
- * @return Decorator function.
+ * @param enumerable Is enumerable.
+ * @returns Decorator function.
  */
 export function decoratorEnumerable(enumerable: boolean) {
 	return function(
@@ -75,8 +75,8 @@ export function decoratorEnumerable(enumerable: boolean) {
 /**
  * Decorate configurable.
  *
- * @param configurable Is configurable
- * @return Decorator function.
+ * @param configurable Is configurable.
+ * @returns Decorator function.
  */
 export function decoratorConfigurable(configurable: boolean) {
 	return function(
@@ -92,8 +92,8 @@ export function decoratorConfigurable(configurable: boolean) {
 /**
  * Decorate writable.
  *
- * @param writable Is writable
- * @return Decorator function.
+ * @param writable Is writable.
+ * @returns Decorator function.
  */
 export function decoratorWritable(writable: boolean) {
 	return function(
@@ -109,7 +109,7 @@ export function decoratorWritable(writable: boolean) {
 /**
  * Decorate node inspect property.
  *
- * @return Decorator function.
+ * @returns Decorator function.
  */
 export function decoratorInspect() {
 	return function(

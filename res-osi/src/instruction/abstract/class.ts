@@ -2,6 +2,7 @@ import {
 	BufferView,
 	Primitive
 } from '@sage-js/core';
+
 import {typed} from '../../typed';
 import {ExceptionInstruction} from '../../exception/instruction';
 import {Instruction} from '../class';
@@ -9,8 +10,8 @@ import {Instruction} from '../class';
 /**
  * InstructionAbstract constructor.
  */
-export abstract class InstructionAbstract
-extends Instruction {
+export abstract class InstructionAbstract extends
+	Instruction {
 	/**
 	 * Byte size.
 	 */
@@ -35,6 +36,8 @@ extends Instruction {
 
 	/**
 	 * Size of the instruction.
+	 *
+	 * @returns Byte size.
 	 */
 	public get size() {
 		return (this.constructor as typeof InstructionAbstract).SIZE;
@@ -42,6 +45,8 @@ extends Instruction {
 
 	/**
 	 * Argument count.
+	 *
+	 * @returns Argument count.
 	 */
 	public get argc() {
 		return (this.constructor as typeof InstructionAbstract).ARGC;
@@ -75,17 +80,17 @@ extends Instruction {
 	 * Get instruction argument dynamically by index.
 	 *
 	 * @param index Argument index.
-	 * @return Argument value or null.
+	 * @returns Argument value or null.
 	 */
-	public argGet(index: number): Primitive {
-		return super.argGet(index) as Primitive;
+	public argGet(index: number) {
+		return super.argGet(index);
 	}
 
 	/**
 	 * Get instruction argument dynamically by index.
 	 *
 	 * @param index Argument index.
-	 * @return Argument value or null.
+	 * @param value The value.
 	 */
 	public argSet(index: number, value: Primitive) {
 		super.argSet(index, value);
