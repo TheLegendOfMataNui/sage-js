@@ -174,13 +174,12 @@ describe('typed', () => {
 		/**
 		 * Something class.
 		 */
+		@typed.decorate('Something')
 		abstract class Something extends Object {
 			constructor() {
 				super();
 			}
 		}
-		// TODO: Replace with proper decorators once the Babel bug is fixed.
-		typed.decorate('Something')(Something);
 
 		/**
 		 * SomethingAlpha class.

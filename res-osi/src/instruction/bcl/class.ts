@@ -12,6 +12,7 @@ import {Instruction} from '../class';
 /**
  * InstructionBCL constructor.
  */
+@typed.decorate('InstructionBCL')
 export abstract class InstructionBCL extends
 	Instruction {
 	/**
@@ -78,4 +79,3 @@ export abstract class InstructionBCL extends
 		);
 	}
 }
-typed.decorate('InstructionBCL')(InstructionBCL);

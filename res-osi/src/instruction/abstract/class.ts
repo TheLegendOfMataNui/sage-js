@@ -10,6 +10,7 @@ import {Instruction} from '../class';
 /**
  * InstructionAbstract constructor.
  */
+@typed.decorate('InstructionAbstract')
 export abstract class InstructionAbstract extends
 	Instruction {
 	/**
@@ -96,4 +97,3 @@ export abstract class InstructionAbstract extends
 		super.argSet(index, value);
 	}
 }
-typed.decorate('InstructionAbstract')(InstructionAbstract);

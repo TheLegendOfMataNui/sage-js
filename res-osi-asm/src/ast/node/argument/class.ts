@@ -4,6 +4,7 @@ import {ASTNode} from '../class';
 /**
  * ASTNodeArgument constructor.
  */
+@typed.decorate('ASTNodeArgument')
 export abstract class ASTNodeArgument extends ASTNode {
 	/**
 	 * Argument text.
@@ -25,4 +26,3 @@ export abstract class ASTNodeArgument extends ASTNode {
 		return r;
 	}
 }
-typed.decorate('ASTNodeArgument')(ASTNodeArgument);

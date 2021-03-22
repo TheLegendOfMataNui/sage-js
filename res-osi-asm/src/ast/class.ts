@@ -3,6 +3,7 @@ import {typed} from '../typed';
 /**
  * AST constructor.
  */
+@typed.decorate('AST')
 export abstract class AST extends Object {
 	constructor() {
 		super();
@@ -28,4 +29,3 @@ export abstract class AST extends Object {
 		return r;
 	}
 }
-typed.decorate('AST')(AST);

@@ -7,6 +7,7 @@ import {Primitive} from '../class';
  *
  * @param value Value of the string.
  */
+@typed.decorate('PrimitiveString')
 export abstract class PrimitiveString extends Primitive {
 	/**
 	 * String value.
@@ -82,4 +83,3 @@ export abstract class PrimitiveString extends Primitive {
 		return `${this.value}`;
 	}
 }
-typed.decorate('PrimitiveString')(PrimitiveString);

@@ -5,6 +5,7 @@ import {AST} from '../class';
 /**
  * ASTNode constructor.
  */
+@typed.decorate('ASTNode')
 export abstract class ASTNode extends AST {
 	/**
 	 * Location information.
@@ -26,4 +27,3 @@ export abstract class ASTNode extends AST {
 		return r;
 	}
 }
-typed.decorate('ASTNode')(ASTNode);

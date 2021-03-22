@@ -8,6 +8,7 @@ import {BufferView} from '../bufferview';
 /**
  * The base class for primitive types.
  */
+@typed.decorate('Primitive')
 export abstract class Primitive extends Object implements
 IBufferReadableNew, IBufferWriteable {
 	constructor() {
@@ -48,4 +49,3 @@ IBufferReadableNew, IBufferWriteable {
 	 */
 	public abstract stringEncode(): string;
 }
-typed.decorate('Primitive')(Primitive);

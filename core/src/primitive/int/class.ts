@@ -11,6 +11,7 @@ import {Primitive} from '../class';
  *
  * @param value Value of the integer.
  */
+@typed.decorate('PrimitiveInt')
 export abstract class PrimitiveInt extends Primitive {
 	/**
 	 * The maximum allowed value.
@@ -153,4 +154,3 @@ export abstract class PrimitiveInt extends Primitive {
 		return `${this.constructor.name} { value: ${this.value} }`;
 	}
 }
-typed.decorate('PrimitiveInt')(PrimitiveInt);

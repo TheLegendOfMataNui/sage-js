@@ -7,6 +7,7 @@ import {Primitive} from '../class';
  *
  * @param value Value of the float.
  */
+@typed.decorate('PrimitiveFloat')
 export abstract class PrimitiveFloat extends Primitive {
 	/**
 	 * Bit size.
@@ -105,4 +106,3 @@ export abstract class PrimitiveFloat extends Primitive {
 		return `${this.constructor.name} { value: ${this.value} }`;
 	}
 }
-typed.decorate('PrimitiveFloat')(PrimitiveFloat);

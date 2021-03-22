@@ -12,6 +12,7 @@ import {PrimitiveString} from '../class';
  *
  * @param value Value of the string.
  */
+@typed.decorate('PrimitiveStringP')
 export abstract class PrimitiveStringP extends PrimitiveString {
 	/**
 	 * Length bit size.
@@ -174,4 +175,3 @@ export abstract class PrimitiveStringP extends PrimitiveString {
 		}
 	}
 }
-typed.decorate('PrimitiveStringP')(PrimitiveStringP);

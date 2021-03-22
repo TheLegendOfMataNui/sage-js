@@ -9,6 +9,7 @@ import {typed} from '../typed';
 /**
  * The base class for Instruction types.
  */
+@typed.decorate('Instruction')
 export abstract class Instruction extends Structure {
 	/**
 	 * Instruction name.
@@ -88,4 +89,3 @@ export abstract class Instruction extends Structure {
 		(this as any)[`arg${index}`] = cast;
 	}
 }
-typed.decorate('Instruction')(Instruction);
