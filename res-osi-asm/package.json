@@ -1,7 +1,7 @@
 {
 	"name": "@sage-js/res-osi-asm",
 	"description": "SAGE resource OSI ASM",
-	"version": "0.11.1",
+	"version": "0.12.0",
 	"keywords": [],
 	"main": "lib/index",
 	"exports": {
@@ -34,8 +34,8 @@
 	},
 	"dependencies": {
 		"@babel/runtime": "^7.13.10",
-		"@sage-js/core": "^0.11.1",
-		"@sage-js/res-osi": "^0.11.1",
+		"@sage-js/core": "^0.12.0",
+		"@sage-js/res-osi": "^0.12.0",
 		"antlr4ts": "^0.5.0-alpha.4"
 	},
 	"devDependencies": {
