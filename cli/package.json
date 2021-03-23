@@ -85,9 +85,11 @@
 		"typescript": "^4.2.3"
 	},
 	"files": [
+		"/README.md",
 		"/bin",
 		"/lib",
-		"/oclif.manifest.json"
+		"/oclif.manifest.json",
+		"/module.mjs"
 	],
 	"oclif": {
 		"commands": "./lib/commands",
