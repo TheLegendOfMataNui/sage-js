@@ -1,5 +1,6 @@
 /* eslint-disable import/no-default-export */
 import {join as pathJoin} from 'path';
+import {promises} from 'fs';
 
 import {flags} from '@oclif/command';
 import {BufferView} from '@sage-js/core';
@@ -8,21 +9,22 @@ import {
 	ParserDecoder,
 	ASTNodeFile
 } from '@sage-js/res-osi-asm';
-import {
-	readFile,
-	writeFile,
-	stat,
-	readdir,
-	realpath
-} from 'fs-extra';
 
 import {OSI_ASMS_PROJECT_SOURCE_EXT} from '../../../../constants';
+import {outputFile} from '../../../../util';
 import {Command} from '../../../../command';
+
+const {
+	realpath,
+	stat,
+	readdir,
+	readFile
+} = promises;
 
 /**
  * ResOSIASMSAssemble command.
  */
-export default class ResOSIASMSAssemble extends Command {
+export class ResOSIASMSAssemble extends Command {
 	/**
 	 * Aliases.
 	 */
@@ -113,7 +115,7 @@ export default class ResOSIASMSAssemble extends Command {
 		view.writeWritable(osi);
 
 		// Write buffer to file.
-		await writeFile(outpath, buffer);
+		await outputFile(outpath, buffer);
 	}
 
 	/**
@@ -206,3 +208,4 @@ export default class ResOSIASMSAssemble extends Command {
 		return ast;
 	}
 }
+export default ResOSIASMSAssemble;

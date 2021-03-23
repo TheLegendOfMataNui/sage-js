@@ -1,5 +1,6 @@
 /* eslint-disable import/no-default-export */
 import {createHash} from 'crypto';
+import {promises} from 'fs';
 
 import {flags} from '@oclif/command';
 import {BufferView} from '@sage-js/core';
@@ -9,18 +10,17 @@ import {
 	ParserEncoder,
 	ASTNodeStatementLine
 } from '@sage-js/res-osi-asm';
-import {
-	readFile,
-	outputFile
-} from 'fs-extra';
 
 import {NAME, VERSION} from '../../../../meta';
 import {Command} from '../../../../command';
+import {outputFile} from '../../../../util';
+
+const {readFile} = promises;
 
 /**
  * ResOSIASMDisassemble command.
  */
-export default class ResOSIASMDisassemble extends Command {
+export class ResOSIASMDisassemble extends Command {
 	/**
 	 * Aliases.
 	 */
@@ -155,8 +155,7 @@ export default class ResOSIASMDisassemble extends Command {
 		const asm = encoder.encode(ast);
 
 		// Write ASM to file.
-		await outputFile(args.asm, asm, {
-			encoding: 'utf8'
-		});
+		await outputFile(args.asm, asm);
 	}
 }
+export default ResOSIASMDisassemble;

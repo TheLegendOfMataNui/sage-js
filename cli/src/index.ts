@@ -2,6 +2,8 @@ export {run} from '@oclif/command';
 export * from './meta';
 export * from './typed';
 export * from './constants';
+export * from './util';
+export * from './command';
 export * from './commands/info';
 export * from './commands/res/osi/asm/assemble';
 export * from './commands/res/osi/asm/disassemble';

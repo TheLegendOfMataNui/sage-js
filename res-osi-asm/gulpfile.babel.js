@@ -36,6 +36,20 @@ async function babelTarget(src, srcOpts, dest, modules) {
 			preset[1].modules = modules;
 		}
 	}
+	if (!modules) {
+		babelOptions.plugins.push([
+			'esm-resolver', {
+				source: {
+					extensions: [
+						[
+							['.js', '.mjs', '.jsx', '.mjsx', '.ts', '.tsx'],
+							'.mjs'
+						]
+					]
+				}
+			}
+		]);
+	}
 
 	// Read the package JSON.
 	const pkg = await packageJSON();
@@ -47,30 +61,49 @@ async function babelTarget(src, srcOpts, dest, modules) {
 		["'@NAME@'", JSON.stringify(pkg.name)]
 	].map(v => gulpReplace(...v));
 
-	// Updated antlr4ts does not generate the problematic comments so disabled.
-	//
-	// Work around Babel bug by removing empty annotations.
-	// The annotations causes self-referencing class properties to fail.
-	// Remove this code once the bug is fixed.
-	// Fortunately they can all be removed without issue in this ugly hack.
-	// const filterAntlr = gulpFilter([
-	// 	'*/antlr/*Lexer.ts',
-	// 	'*/antlr/*Parser.ts'
-	// ], {restore: true});
-	// const filterAntlrReplaces = [
-	// 	['@Override', '/*@Override*/'],
-	// 	['@NotNull', '/*@NotNull*/'],
-	// 	['@RuleVersion(0)', '/*@RuleVersion(0)*/']
-	// ].map(v => gulpReplace(...v));
+	const filterAntlr = gulpFilter([
+		'*/antlr/*Lexer.ts',
+		'*/antlr/*Listener.ts',
+		'*/antlr/*Parser.ts'
+	], {restore: true});
+	const filterAntlrReplaces = [
+		// ['@Override', '/*@Override*/'],
+		// ['@NotNull', '/*@NotNull*/'],
+		// ['@RuleVersion(0)', '/*@RuleVersion(0)*/'],
+		...[
+			'antlr4ts/CharStream',
+			'antlr4ts/Decorators',
+			'antlr4ts/FailedPredicateException',
+			'antlr4ts/Lexer',
+			'antlr4ts/NoViableAltException',
+			'antlr4ts/Parser',
+			'antlr4ts/ParserRuleContext',
+			'antlr4ts/RecognitionException',
+			'antlr4ts/RuleContext',
+			'antlr4ts/RuleVersion',
+			'antlr4ts/Token',
+			'antlr4ts/TokenStream',
+			'antlr4ts/Vocabulary',
+			'antlr4ts/VocabularyImpl',
+			'antlr4ts/atn/ATN',
+			'antlr4ts/atn/ATNDeserializer',
+			'antlr4ts/atn/LexerATNSimulator',
+			'antlr4ts/atn/ParserATNSimulator',
+			'antlr4ts/misc/Utils',
+			'antlr4ts/tree/ParseTreeListener',
+			'antlr4ts/tree/ParseTreeVisitor',
+			'antlr4ts/tree/TerminalNode'
+		].map(s => [`"${s}"`, `"${s}.js"`])
+	].map(v => gulpReplace(...v));
 
 	await pumpP(...[
 		gulp.src(src, srcOpts),
 		filterMeta,
 		...filterMetaReplaces,
 		filterMeta.restore,
-		// filterAntlr,
-		// ...filterAntlrReplaces,
-		// filterAntlr.restore,
+		filterAntlr,
+		...filterAntlrReplaces,
+		filterAntlr.restore,
 		gulpSourcemaps.init(),
 		gulpBabel(babelOptions),
 		gulpRename(path => {

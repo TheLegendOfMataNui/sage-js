@@ -1,21 +1,22 @@
 /* eslint-disable import/no-default-export */
+import {promises} from 'fs';
+
 import {flags} from '@oclif/command';
 import {BufferView} from '@sage-js/core';
 import {
 	AssemblyAssembler,
 	ParserDecoder
 } from '@sage-js/res-osi-asm';
-import {
-	readFile,
-	writeFile
-} from 'fs-extra';
 
+import {outputFile} from '../../../../util';
 import {Command} from '../../../../command';
+
+const {readFile} = promises;
 
 /**
  * ResOSIASMAssemble command.
  */
-export default class ResOSIASMAssemble extends Command {
+export class ResOSIASMAssemble extends Command {
 	/**
 	 * Aliases.
 	 */
@@ -98,6 +99,7 @@ export default class ResOSIASMAssemble extends Command {
 		view.writeWritable(osi);
 
 		// Write buffer to file.
-		await writeFile(args.osi, buffer);
+		await outputFile(args.osi, buffer);
 	}
 }
+export default ResOSIASMAssemble;

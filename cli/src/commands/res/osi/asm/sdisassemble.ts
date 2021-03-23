@@ -1,5 +1,7 @@
+/* eslint-disable import/no-default-export */
 import {createHash} from 'crypto';
 import {join as pathJoin} from 'path';
+import {promises} from 'fs';
 
 import {flags} from '@oclif/command';
 import {
@@ -19,20 +21,18 @@ import {
 	ASTNodeStatementLine,
 	MapSubroutineReferenceCount
 } from '@sage-js/res-osi-asm';
-import {
-	readFile,
-	outputFile
-} from 'fs-extra';
 
 import {NAME, VERSION} from '../../../../meta';
 import {OSI_ASMS_PROJECT_SOURCE_EXT} from '../../../../constants';
+import {outputFile} from '../../../../util';
 import {Command} from '../../../../command';
+
+const {readFile} = promises;
 
 /**
  * ResOSIASMSDisassemble command.
  */
-// eslint-disable-next-line import/no-default-export
-export default class ResOSIASMSDisassemble extends Command {
+export class ResOSIASMSDisassemble extends Command {
 	/**
 	 * Aliases.
 	 */
@@ -215,9 +215,7 @@ export default class ResOSIASMSDisassemble extends Command {
 		const asm = encoder.encode(file);
 
 		// Write ASM to file.
-		await outputFile(filepath, asm, {
-			encoding: 'utf8'
-		});
+		await outputFile(filepath, asm);
 	}
 
 	/**
@@ -259,9 +257,7 @@ export default class ResOSIASMSDisassemble extends Command {
 
 			const filepath = pathJoin(dirpath, filename);
 			// eslint-disable-next-line no-await-in-loop
-			await outputFile(filepath, asm, {
-				encoding: 'utf8'
-			});
+			await outputFile(filepath, asm);
 		}
 	}
 
@@ -384,3 +380,4 @@ export default class ResOSIASMSDisassemble extends Command {
 		}));
 	}
 }
+export default ResOSIASMSDisassemble;

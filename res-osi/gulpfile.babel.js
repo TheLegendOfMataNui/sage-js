@@ -36,6 +36,20 @@ async function babelTarget(src, srcOpts, dest, modules) {
 			preset[1].modules = modules;
 		}
 	}
+	if (!modules) {
+		babelOptions.plugins.push([
+			'esm-resolver', {
+				source: {
+					extensions: [
+						[
+							['.js', '.mjs', '.jsx', '.mjsx', '.ts', '.tsx'],
+							'.mjs'
+						]
+					]
+				}
+			}
+		]);
+	}
 
 	// Read the package JSON.
 	const pkg = await packageJSON();

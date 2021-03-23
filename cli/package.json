@@ -4,6 +4,17 @@
 	"version": "0.11.1",
 	"keywords": [],
 	"main": "lib/index",
+	"exports": {
+		"./module.mjs": "./module.mjs",
+		".": [
+			{
+				"import": "./lib/index.mjs",
+				"require": "./lib/index.js",
+				"default": "./lib/index.js"
+			},
+			"./lib/index.js"
+		]
+	},
 	"types": "lib/index.d.ts",
 	"bin": {
 		"sage-js": "./bin/run"
@@ -32,8 +43,6 @@
 		"@sage-js/core": "^0.11.1",
 		"@sage-js/res-osi": "^0.11.1",
 		"@sage-js/res-osi-asm": "^0.11.1",
-		"@types/fs-extra": "^9.0.8",
-		"fs-extra": "^9.1.0",
 		"source-map-support": "^0.5.19"
 	},
 	"devDependencies": {
@@ -52,6 +61,7 @@
 		"@types/source-map-support": "^0.5.3",
 		"@typescript-eslint/eslint-plugin": "^4.18.0",
 		"@typescript-eslint/parser": "^4.18.0",
+		"babel-plugin-esm-resolver": "^2.1.0",
 		"chai": "^4.3.4",
 		"eslint": "^7.22.0",
 		"eslint-plugin-import": "^2.22.1",

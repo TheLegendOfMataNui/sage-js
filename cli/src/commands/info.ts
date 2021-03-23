@@ -22,7 +22,7 @@ import {Command} from '../command';
 /**
  * ResOSIASMDisassemble command.
  */
-export default class Info extends Command {
+export class Info extends Command {
 	/**
 	 * Description.
 	 */
@@ -69,3 +69,4 @@ export default class Info extends Command {
 		this.log('');
 	}
 }
+export default Info;
